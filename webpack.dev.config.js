@@ -39,9 +39,10 @@ module.exports = {
     }),
   ],
   devServer: {
-    port: 3000,
-    inline: true,
-    stats: 'minimal'
+    port:     3000,
+    inline:   true,
+    stats:    'minimal',
+    headers:  { 'Access-Control-Allow-Origin': '*' }
   },
 };
 

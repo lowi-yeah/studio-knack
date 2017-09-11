@@ -34,16 +34,14 @@
             </div>  
           </div>
           <div class="image">
-            <img src="{{ index .Params.images 0 }}">
+            <img src="{{ (index .Params.images 0).url }}">
+            <link class="pallete" href="{{ (index .Params.images 0).pallete }}">
           </div>            
         </div>  
       </a>  
     </section>
   {{ end }}
-
- 
 </div>
-
 
 <div class="page-load-status">
   <p class="infinite-scroll-request"></p>
