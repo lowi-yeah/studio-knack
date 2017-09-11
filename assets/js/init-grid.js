@@ -242,7 +242,6 @@ function _imageBrightness(image) {
 
   let img = document.querySelector('#debug > img')
 
-  console.log('_imageBrightness')
   console.log('image', img)
   console.log('ηDebug', ηDebug)
 
