@@ -6,6 +6,7 @@ import InfiniteScroll from 'infinite-scroll'
 import {scaleLinear}  from 'd3-scale'
 import isMobile       from 'ismobilejs'
 import anime          from 'animejs'
+import tinycolor      from 'tinycolor2'
 
 // function isTouchDevice() { 
 //   console.log('isMobile', isMobile)
@@ -61,9 +62,9 @@ function _resizeCaption(caption) {
   if(isTouchDevice()) {
     _setFontSize(caption, 16)
     caption.style.opacity         = 1
-    caption.style['align-self']   = 'flex-end'
-    caption.style['text-shadow']  = 'none'
-    caption.style.background      = 'rgb(255, 255, 255)'
+    // caption.style['align-self']   = 'flex-end'
+    // caption.style['text-shadow']  = 'none'
+    // caption.style.background      = 'rgb(255, 255, 255)'
     return}
 
   let cw        = caption.offsetWidth,
@@ -228,6 +229,20 @@ function _initFilters(isotope, menu) {
   // filter once upon init
   _filter() } 
 
+function _loadPallete(url) {
+
+  return new Promise((resolve, reject) => {
+    var request = new XMLHttpRequest()
+    request.open('GET', url, true)
+    
+    request.onload = () => {
+      if (request.status >= 200 && request.status < 400) 
+        resolve(JSON.parse(request.responseText))
+      else reject() }
+    
+    request.onerror = reject
+    request.send() })}
+
 export default function initGrid(menu) {
   let base = document.querySelector(selector);
   if (!base) return
@@ -247,11 +262,23 @@ export default function initGrid(menu) {
         let box     = item.element.getElementsByClassName('box')[0],
             content = box.getElementsByClassName('content')[0],
             caption = content.getElementsByClassName('overlay')[0]
-                        .getElementsByClassName('text')[0]
+                             .getElementsByClassName('text')[0],
+            image   = content.getElementsByClassName('image')[0],
+            img     = image.getElementsByTagName('img')[0],
+            pallete = image.getElementsByTagName('link')[0]
+
+        _loadPallete(pallete.getAttribute('href'))
+          .then(p => {
+            let main = tinycolor(p.colors[0].hex), primary
+            if(main.isLight()) primary = p.dominant_colors.vibrant_light || p.colors[0]
+            else  primary = p.dominant_colors.vibrant_dark || p.colors[0] 
+            caption.style.color = primary.hex })
+
         _sizeUp(item.element)
         _randomizePadding(box)
         _resizeCaption(caption)
         _initOverlay(content)})
+
     isotope.layout()
 
     // upon append, initialize the new grid items. then re-layout
@@ -260,7 +287,18 @@ export default function initGrid(menu) {
         let box     = item.getElementsByClassName('box')[0],
             content = box.getElementsByClassName('content')[0],
             caption = content.getElementsByClassName('overlay')[0]
-                        .getElementsByClassName('text')[0]
+                        .getElementsByClassName('text')[0],
+            image   = content.getElementsByClassName('image')[0],
+            img     = image.getElementsByTagName('img')[0],
+            pallete = image.getElementsByTagName('link')[0]
+
+        _loadPallete(pallete.getAttribute('href'))
+          .then(p => {
+            let main = tinycolor(p.colors[0].hex), primary
+            if(main.isLight()) primary = p.dominant_colors.vibrant_light || p.colors[0]
+            else  primary = p.dominant_colors.vibrant_dark || p.colors[0] 
+            caption.style.color = primary.hex })
+
         _sizeUp(item)
         _randomizePadding(box)
         _resizeCaption(caption)

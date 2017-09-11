@@ -1,4 +1,7 @@
-const htmlTag = require('html-tag');
+let _         = require('lodash'),
+    htmlTag   = require('html-tag'),
+    getPixels = require('get-pixels'),
+    tinycolor = require('tinycolor2')
 
 // This function helps transforming structures
 // —eg. [{ tagName: 'meta', attributes: { name: 'description', content: 'foobar' } }]—
@@ -6,7 +9,6 @@ const htmlTag = require('html-tag');
 const toHtml = (tags) => (
   tags.map(({ tagName, attributes, content }) => (
     htmlTag(tagName, attributes, content) )).join(''))
-
 
 function _aboutContent(item) {
   let type = item.entity.itemType.name
@@ -16,14 +18,51 @@ function _aboutContent(item) {
     return {image: { url:   item.image.url({ w: 800, auto: 'compress' }),
                      ratio: item.image.width/item.image.height }}}
   if(type === 'teammember') { 
-    console.log('teammember', item.name)
-    return {
-      teammember: {
-        image:        { url:   item.image.url({ w: 800, auto: 'compress' }),
-                        ratio: item.image.width/item.image.height },
-        name:         item.name,
-        role:         item.role,
-        description:  item.description}}}}
+    return {teammember: {
+              image:        { url:   item.image.url({ w: 800, auto: 'compress' }),
+                              ratio: item.image.width/item.image.height },
+              name:         item.name,
+              role:         item.role,
+              description:  item.description}}}}
+
+function _download(uri) {
+  return new Promise(function(resolve, reject){
+    request.head(uri, function(err, res, body) {
+        if(err) reject(err)
+        resolve(res)})})}
+
+function _getImageBrightness(image) {
+  return new Promise((resolve, reject) => {
+    let url = image.url({ w: 32, auto: 'compress' })
+    getPixels(url, function(err, pixels) {
+      if(err) reject(err)
+
+      let [width, height, channels] = pixels.shape,
+          sumBrightness = 0
+  
+      for(let x = 0; x < width; x++) {
+        for(let y = 0; y < height; y++) {
+          let channels      = pixels.pick(x, y, null),
+              [cn]          = channels.shape,
+              rgb           = _(cn)
+                                .range()
+                                .reduce((ρ, ι) => {
+                                  if(ι === 0) ρ.r = channels.get(ι)
+                                  if(ι === 1) ρ.g = channels.get(ι)
+                                  if(ι === 2) ρ.b = channels.get(ι)
+                                  if(ι === 3) ρ.a = channels.get(ι)/255.0
+                                  return ρ }, {}),
+              color         = tinycolor(rgb)
+          sumBrightness += _.round(color.getBrightness())}}
+  
+      resolve({ url: image.url({ w: 800, auto: 'compress' }),
+                brightness: _.round(sumBrightness/(width * height))})})})}
+
+function _processImages(images) {
+  let promises = _.map(images, _getImageBrightness)
+  return Promise.all(promises)
+}
+
 
 // Arguments that will receive the mapping function:
 //
@@ -39,7 +78,6 @@ function _aboutContent(item) {
 // https://github.com/datocms/js-datocms-client/blob/master/docs/dato-cli.md
 
 module.exports = (dato, root, i18n) => {
-
   
   // Add to the existing Hugo config files some properties coming from data
   // stored on DatoCMS
@@ -68,8 +106,6 @@ module.exports = (dato, root, i18n) => {
     seoMetaTags:      toHtml(dato.home.seoMetaTags),
     filters:          categories })
 
-  // console.log('dato.aboutPage', dato.aboutPage.content)
-
   // Create a markdown file with content coming from the `about_page` item
   // type stored in DatoCMS
   root.createPost(`content/about.md`, 'yaml', {
@@ -84,23 +120,55 @@ module.exports = (dato, root, i18n) => {
 
   // Entries
   // ————————————————————————————————
-  // Create directory (or empty it if already exists)...
-  root.directory('content/entry', dir => {
-    // ...and for each entry stored online...
-    dato.entries.forEach((entry, index) => {
-      // ...create a markdown file with all the metadata in the frontmatter
-      dir.createPost(`${entry.slug}.md`, 'yaml', {
-        frontmatter: {
-          title:       entry.title,
-          images:      entry.gallery.map(item => item.url({ w: 800, auto: 'compress' })),
-          date:        entry.date,
-          category:    entry.category,
-          location:    entry.location,
-          latlng:      entry.latlng,
-          size:        entry.size,
-          weight:      entry.date,
-          emphasis:    entry.emphasis,
-          seoMetaTags: toHtml(entry.seoMetaTags) },
-        content: entry.description || '' }) }) })
+  // async doesn't work :(
+  // new Promise( resolve => root.directory('content/entry', dir => resolve(dir)))
+  //   .then(dir => {
+  //     let entriesҎ = _.map(dato.entries, (entry, index) => {
+  //                         return new Promise((resolve, reject) => {
+  //                           _processImages(entry.gallery)
+  //                             .then(images => {
+  //                               let frontmatter = { title:       entry.title,
+  //                                                   // images:      images,
+  //                                                   date:        entry.date,
+  //                                                   category:    entry.category,
+  //                                                   location:    entry.location,
+  //                                                   latlng:      entry.latlng,
+  //                                                   size:        entry.size,
+  //                                                   weight:      entry.date,
+  //                                                   emphasis:    entry.emphasis,
+  //                                                   seoMetaTags: toHtml(entry.seoMetaTags) },
+  //                                   content     = entry.description || '' ,
+  //                                   post        = { frontmatter, content}
+  //                               resolve([`${entry.slug}.md`, 'yaml', post])})})})
+  //     Promise.all(entriesҎ)
+  //       .then( entries => {
+  //         console.log('dirr', dir.createPost)
+  //         _.each(entries, ([slug, format, post]) => {
+  //           dir.createPost(slug, format, post)
+  //         })
+  //         done = true
+  //       })
+  //   })
 
+  root.directory('content/entry', dir => {
+    let entries = _.map(dato.entries, (entry, index) => {
+                      let frontmatter = { title:        entry.title,
+                                          images:       _.map(entry.gallery, image => 
+                                                            { return { url:     image.url({ w: 800, auto: 'compress' }),
+                                                                       pallete: image.url({ w: 800, palette: 'json', colors: '2' }) }}),
+                                          date:         entry.date,
+                                          category:     entry.category,
+                                          location:     entry.location,
+                                          latlng:       entry.latlng,
+                                          size:         entry.size,
+                                          weight:       entry.date,
+                                          emphasis:     entry.emphasis,
+                                          seoMetaTags:  toHtml(entry.seoMetaTags) },
+                          content     = entry.description || '' ,
+                          post        = { frontmatter, content}
+                        return [`${entry.slug}.md`, 'yaml', post]})
+    _.each(entries, ([slug, format, post]) => {
+      dir.createPost(slug, format, post)
+    })                      
+  })
 }

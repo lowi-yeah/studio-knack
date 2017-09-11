@@ -30,7 +30,8 @@
     "lory.js": "^2.2.1",
     "masonry": "^0.0.2",
     "packery": "^2.1.1",
-    "scroll-lazy": "^1.0.3"
+    "scroll-lazy": "^1.0.3",
+    "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -43,6 +44,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.11.2",
     "fontkit": "^1.7.7",
+    "get-pixels": "^3.3.0",
     "html-tag": "^0.2.1",
     "import-glob-loader": "^1.1.0",
     "node-sass": "^3.13.0",
