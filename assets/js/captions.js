@@ -67,8 +67,6 @@ function _closestEdge(x,y,w,h) {
 // the container size
 // the  bigger the container, the biggger and silmmer the font
 function _resize(caption) {
-
-  console.log('_resize', caption)
   // as touch devices have no hover, we don't transition the caption
   // but render it in small text at the bottom of the container
   if(isTouchDevice()) {
@@ -78,7 +76,6 @@ function _resize(caption) {
     // caption.style['text-shadow']  = 'none'
     // caption.style.background      = 'rgb(255, 255, 255)'
     return}
-
   let cw        = caption.offsetWidth,
       pw        = caption.parentElement.parentElement.offsetWidth,
       ratioW    = pw/cw,
