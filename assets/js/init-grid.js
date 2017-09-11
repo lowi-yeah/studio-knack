@@ -6,6 +6,7 @@ import InfiniteScroll from 'infinite-scroll'
 import {scaleLinear}  from 'd3-scale'
 import isMobile       from 'ismobilejs'
 import anime          from 'animejs'
+import html2canvas    from 'html2canvas/dist/html2canvas'
 
 // function isTouchDevice() { 
 //   console.log('isMobile', isMobile)
@@ -228,6 +229,44 @@ function _initFilters(isotope, menu) {
   // filter once upon init
   _filter() } 
 
+function _imageBrightness(image) {
+
+  // get the debug delement
+  let ηDebug = document.getElementById('debug')
+
+  // clear the debug element
+  while (ηDebug.hasChildNodes()) ηDebug.removeChild(ηDebug.lastChild)
+
+  // append an image copy
+  ηDebug.appendChild(image.cloneNode())
+
+  let img = document.querySelector('#debug > img')
+
+  console.log('_imageBrightness')
+  console.log('image', img)
+  console.log('ηDebug', ηDebug)
+
+  html2canvas(ηDebug, { allowTaint: true,
+                        taintTest: false,
+                        background: undefined,
+                        logging: true })
+
+    .then(function(canvas) {
+      let ctx       = canvas.getContext('2d'),
+          imageData = ctx.getImageData(0, 0, canvas.width, canvas.height),
+          data      = imageData.data
+  
+      console.log('canvas', canvas)
+      console.log('ctx', ctx)
+      console.log('imageData', imageData)
+      // console.log('data', data)
+  
+      document.getElementById('debug-canvas').appendChild(canvas)
+  
+      // document
+    })
+}
+
 export default function initGrid(menu) {
   let base = document.querySelector(selector);
   if (!base) return
@@ -247,15 +286,24 @@ export default function initGrid(menu) {
         let box     = item.element.getElementsByClassName('box')[0],
             content = box.getElementsByClassName('content')[0],
             caption = content.getElementsByClassName('overlay')[0]
-                        .getElementsByClassName('text')[0]
-        //     image   = content.getElementsByClassName('image')[0]
-        //                 .getElementsByTagName('img')[0]
+                        .getElementsByClassName('text')[0],
+            image   = content.getElementsByClassName('image')[0]
+                        .getElementsByTagName('img')[0]
 
 
         _sizeUp(item.element)
         _randomizePadding(box)
         _resizeCaption(caption)
         _initOverlay(content)})
+
+    let ιtem   = _.nth(isotope.items, 1),
+        ιmage  = ιtem.element.getElementsByClassName('box')[0]
+                  .getElementsByClassName('content')[0]
+                  .getElementsByClassName('image')[0]
+                  .getElementsByTagName('img')[0]
+    _imageBrightness(ιmage)
+
+
     isotope.layout()
 
     // upon append, initialize the new grid items. then re-layout

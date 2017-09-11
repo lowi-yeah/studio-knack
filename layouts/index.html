@@ -1,5 +1,9 @@
 {{ partial "header.html" . }}
-{{ partial "hero.html" . }}
+
+<div id="debug-canvas"></div>
+<div id="debug"></div>
+
+<!-- {{ partial "hero.html" . }} -->
 
 {{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
    
