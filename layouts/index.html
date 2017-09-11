@@ -1,9 +1,9 @@
 {{ partial "header.html" . }}
 
 <div id="debug-canvas"></div>
-<div id="debug"></div>
+<!-- <div id="debug"></div> -->
 
-<!-- {{ partial "hero.html" . }} -->
+{{ partial "hero.html" . }}
 
 {{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
    
@@ -29,7 +29,7 @@
       <a class="box" href="{{ .Permalink }}">
         <div class="content">
           <div class="overlay">
-            <div class="text" > 
+            <div class="text caption" > 
               {{ .Title }}
             </div>  
           </div>
