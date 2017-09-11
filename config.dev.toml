@@ -1,0 +1,14 @@
+baseurl = "/"
+Paginate = 12
+[params]
+  env = "development"
+[[menu.main]]
+  name = "Home"
+  weight = 1
+  identifier = "home"
+  url = "/"
+
+# datocms:start
+title = "studio knack"
+languageCode = "en"
+# datocms:end

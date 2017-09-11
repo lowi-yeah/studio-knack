@@ -1,0 +1,182 @@
+@keyframes animatedNext
+  from 
+    background-position: 0 0
+  
+  to 
+    background-position: 6px 0
+
+#next
+  display: flex
+  a
+    @extend .title
+    @extend .is-1
+    +text-stroke()
+    font-variant: small-caps
+    flex: 1 0 auto
+    background-color: #ffffff
+    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")
+    background-position: 0 0
+
+    // workaround for isotope layout
+    margin-top: 480px
+    
+    &:hover
+      animation: animatedNext 1s linear infinite
+
+.page-load-status 
+  display: none
+  position: fixed
+  right: 0
+  bottom: 0
+  width: 100%
+
+  @keyframes loading 
+    from 
+      width: 0%
+    to 
+      width: 100%
+
+  .infinite-scroll-request
+    $height: 33vh
+    height: $height
+    width: 100%
+    position: relative
+    overflow: hidden
+    background-color: transparent
+    &:before
+      display: block
+      position: absolute
+      content: ""
+      left: 0px
+      width: 0px
+      height: $height
+      // background-color: #ffffff
+      background-color: transparent
+      background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")
+      animation: loading 2s linear infinite
+
+
+
+
+
+// Encode/Decode urls:
+// http://www.utilities-online.info/urlencode/
+
+.grid-item 
+  color: $black
+  width: 33.333% 
+  +mobile 
+    width: 100% 
+  
+  &[size="2"] 
+    width: 66.666% 
+    +mobile 
+      width: 100%
+
+  &[size="3"] 
+    width: 100%
+
+  &[emphasis] 
+    .box
+      +pb('lines-45-b', 8px, $white, $red, 1, 'none')
+      &:hover
+        +pb('lines-45-b', 36px, $white, $red, 1, 'none')
+
+      & > .content > .overlay > .text
+        +text-stroke($color: $red)
+
+  // &[category="Architektur"] 
+  //   .box
+  //     +pb('lines-45-a', 4px, $white, $black, 1, 'none')
+  //     &:hover
+  //       +pb('lines-45-a', 24px, $white, $black, 1, 'none')
+
+
+  // &[category="Other"] 
+  //   .box
+  //     +pb('lines-45-b', 25px, $white, $black, 1, 'none')
+  //     &:hover
+  //       +pb('lines-45-b', 100px, $white, $black, 1, 'none')
+
+  // &[category="Studio"] 
+  //   .box
+  //     +pb('lines-b', 25px, $white, $black, 1, 'none')
+  //     &:hover
+  //       +pb('lines-b', 100px, $white, $black, 1, 'none')
+
+
+  // &[category="Marke im Raum"] 
+  //   .box
+  //     +pb('lines-a', 12px, $white, $black, 1, 'none')
+  //     &:hover
+  //       +pb('lines-a', 24px, $white, $black, 1, 'none')
+  
+  // &[category="Kommunikationsdesign"] 
+  //   .box
+  //     +pb('lines-c', 48px, $white, $black, 1, 'none')
+  //     &:hover
+  //       +pb('lines-c', 64px, $white, $black, 1, 'none')
+
+  // &[category="Produktdesign"] 
+  //   @keyframes animProduct
+  //     from 
+  //       background-position: 0 0
+  //     to 
+  //       background-position: 8px 8px
+
+  //   .box
+  //     background-color: #ffffff
+  //     background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cg%20fill%3D%27%23000000%27%20fill-opacity%3D%271%27%3E%3Cpath%20d%3D%27M0%200h4v4H0V0zm4%204h4v4H4V4z%27/%3E%3C/g%3E%3C/svg%3E")
+  //     &:hover
+  //       animation: animProduct 1s linear infinite
+
+  .box
+
+    &:hover 
+      box-shadow: none
+    
+    &:after 
+      transition: background-size .32s linear
+
+
+    & > .content
+      width: 100%
+      height: 100%
+      position: relative
+      overflow: hidden
+      box-shadow: 2px 2px $black
+
+
+      .image
+        width: 100%
+
+        img
+          height: 100%
+  
+      .overlay
+        position: absolute
+        width: 100%
+        height: 100%
+        top: 0%
+        left: -100%
+        z-index: 10
+        display: flex
+        align-items: center
+        
+        .text
+          +text-stroke($color: $white)
+          text-align: center
+          color: $black
+          font-weight: 500
+          align-items: center
+          // padding: 0.5rem
+          padding: 0.25rem 0.5rem
+          flex: 1 1 auto
+          font-size: 92px
+          opacity: 0
+          transition: font-size 0.4s ease, opacity 0.4s ease
+
+// +touch
+//   .grid-item > .box > .content > .overlay
+//     .text
+//       align-items: flex-end

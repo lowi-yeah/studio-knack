@@ -1,0 +1,126 @@
+@function text-stroke($size: 2, $color: #fff, $correction: 0) {
+  $radius: $size - $correction;
+  $stroke: ();
+
+  @for $i from -$size through $size {
+    @for $k from -$size through $size {
+
+      $x: $k;
+      $y: $i;
+
+      @if $k > 0 {
+        $x: $k - 0.5;
+      } @elseif $k < 0 {
+        $x: $k + 0.5;
+      }
+
+      @if $i > 0 {
+        $y: $i - 0.5;
+      } @elseif $i < 0 {
+        $y: $i + 0.5;
+      }
+
+      @if ($x*$x + $y*$y <= $radius*$radius) {
+        $stroke: append($stroke, $i*1px $k*1px 0 $color, comma);
+      }
+    }
+  }
+
+  @return $stroke;
+}
+
+@mixin text-stroke($size: 2, $color: #fff, $correction: 0) {
+  text-shadow: text-stroke($size, $color, $correction);
+}
+
+@function stripes($list, $size: 4){
+  $stripe-list:();
+  @each $color in $list {
+    @if lightness($color) > 50% {
+      $text-list:append($text-list, $black, comma);
+    } 
+    @else {
+      $text-list:append($text-list, $white, comma);
+    }
+  }
+  @return $text-list;
+}
+
+// @mixin stripes($color1: #fff, $color2: #000, $angle: 45deg, $width: 4px ) {
+//   background: repeating-linear-gradient(
+//     $angle,
+//     $color1,
+//     $color1 $width,
+//     $color2 $width,
+//     $color2 2 * $width )}
+
+/*
+  (TEXT) PARAMS
+  =================
+  1. Namespace
+  2. Intensity
+  3. Text color
+  4. Background color (flat)
+  5. Highlight #1 color
+  6. Highlight #2 color
+  7. Width (px)
+  8. Height (px)
+*/
+
+@mixin textGlitch($name, $intensity, $textColor, $background, $highlightColor1, $highlightColor2, $width, $height) {
+  
+  color: $textColor;
+  position: relative;
+  $steps: $intensity;
+
+  font-weight: 800;
+  font-style : normal;
+  text-shadow: 2px 2px 0 $black;
+  
+  // Ensure the @keyframes are generated at the root level
+  @at-root {
+    // We need two different ones
+    @for $i from 1 through 2 {
+      @keyframes #{$name}-anim-#{$i} {
+        @for $i from 0 through $steps {
+          #{percentage($i*(1/$steps))} {
+            clip: rect(
+              random($height)+px,
+              $width+px,
+              random($height)+px,
+              0
+            );
+          }
+        }
+      }
+    }
+  }
+  
+  &:before,
+  &:after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: $background;
+    clip: rect(0, 0, 0, 0);
+  }
+  
+  &:after {
+    left: 2px;
+    font-weight: 800;
+    font-style: oblique;
+    animation: #{$name}-anim-1 2s infinite linear alternate-reverse;
+  }
+  
+  &:before {
+    left: -2px;
+    text-shadow: -1px -1px $black;
+    animation: #{$name}-anim-2 3s infinite linear alternate-reverse;
+    font-weight: $weight-semibold;
+    font-weight: 900;
+    font-style : normal;
+  }
+  
+}

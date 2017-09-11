@@ -1,0 +1,74 @@
+<section id="hero">
+  <svg id="bam" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="matrix(1 0 0 -1 0 0)" >
+    <defs>
+      <filter id="bam-filter">
+        <feFlood y="0" height="1" flood-color="#ffffff" result="black" />
+        <feFlood y="0" height="1" flood-color="#68FCF4" result="flood1" />
+        <feFlood y="0" height="1" flood-color="#E93CD3" result="flood2" />
+        <feFlood y="0" height="1" flood-color="#FEF266" result="flood3" />
+
+        <feOffset in="SourceGraphic" dx="16"  dy="0" result="off1a"/>
+        <feOffset in="SourceGraphic" dx="12"  dy="0" result="off1b"/>
+        <feOffset in="SourceGraphic" dx="-16" dy="0" result="off2a"/>
+        <feOffset in="SourceGraphic" dx="-12" dy="0" result="off2b"/>
+
+        <feComposite in="flood1" in2="off1a" operator="in" result="comp1" />
+        <feComposite in="flood2" in2="off2a" operator="in" result="comp2" />
+        <feComposite in="flood3" in2="off1b" operator="in" result="comp3" />
+    
+        <feMerge result="merge1">
+          <feMergeNode in = "black" />
+          <feMergeNode in = "comp1" />
+          <feMergeNode in = "comp2" />
+          <feMergeNode in = "comp3" />
+        </feMerge>
+    
+        <feMerge result="merge2">
+          <feMergeNode in="black" />
+          <feMergeNode in = "comp1" />
+          <feMergeNode in = "comp2" />
+          <feMergeNode in = "comp3" />
+          <feMergeNode in = "off2b" />
+        </feMerge>
+        
+        <feMerge >
+          <feMergeNode in="SourceGraphic" />  
+           
+          <!-- <feMergeNode in="merge1" /> -->
+          <feMergeNode in="merge2" />
+
+        </feMerge>
+      </filter>
+    </defs>
+    <g class="glyphs" filter="url(#bam-filter)"></g>
+  </svg>
+  {{ partial "glyphs.svg" . }}
+
+
+  
+<!--   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600px" height="100px" viewBox="0 0 600 100">
+    <style type="text/css">
+    
+    <![CDATA[
+    
+      text {
+      filter: url(#filter);
+      fill: white;
+        font-family: 'Share Tech Mono', sans-serif;
+        font-size: 100px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+        }
+    ]]>
+    </style>
+  
+    
+    <g>
+      <text x="0" y="100">studio knack</text>
+    </g>
+  </svg>   -->
+
+ <!--  <h1 id='headline'>
+      {{ .Site.Data.settings.name }}
+  </h1> -->
+</section>

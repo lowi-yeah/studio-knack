@@ -1,0 +1,79 @@
+{{ partial "header.html" . }}
+
+<article id="about">
+  <header>
+    <div class="wrap">
+      <h1 class="smallcaps">
+        About
+      </h1>
+    </div>
+  </header>
+
+  <section class="content">
+    <div class="about grid">
+
+      <section class="grid-item section gallery">
+        <div class="slider js_slider">
+          <div class="frame js_frame">
+            <ul class="slides js_slides">
+              {{ range .Params.images }}
+                <li class="js_slide">
+                  <img src="{{ . }}"></img>
+                </li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+
+      </section>
+
+      {{ range .Params.content }}
+        
+        <!-- image content -->
+        {{ with .image }}
+          <section class="grid-item section image">
+            <div class="content">
+              <img src="{{ .url }}" ></img>
+            </div>
+          </section>
+        {{ end }} 
+
+          <!-- text content — rendered as markdown -->
+        {{ with .text }} 
+          <section class="grid-item section text">
+            <div class="box">
+              <div class="content">
+                {{ . | markdownify }} 
+              </div>
+            </div>
+          </section>
+        {{ end }} 
+
+         <!-- team member -->
+        {{ with .teammember }}
+          <section class="grid-item section teammember">
+            <div class="box">
+              <div class="content">
+                <img src="{{ .image.url }}" ></img>
+                <div class="box">
+                  <p class="title"> {{ .name }} </p>
+                  <!-- <p class="role"> {{ .role }} </p> -->
+                  {{ .description | markdownify }} 
+                </div>  
+              </div>
+            </div>
+          </section>
+        {{ end }} 
+        
+      {{ end }}
+      
+    </div>
+  </section>
+ 
+  
+</article>
+
+{{ partial "back.html" . }}
+{{ partial "footer.html" . }}
+
+

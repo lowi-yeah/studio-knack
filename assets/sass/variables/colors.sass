@@ -1,0 +1,68 @@
+$orange:    #ffce8e
+$green:     #9dff8e
+$turquoise: #8ef7ff
+$blue:      #8f88f4
+$purple:    #c873ce
+$red:       #da7f79
+
+$magenta: #E93CD3
+$yellow:  #FEF266
+$cyan:    #68FCF4
+
+// Add pink and its invert
+$pink: #ffb3b3
+$pink-invert: #fff
+
+// 3. Set the derived variables
+// Use the new pink as the primary color
+$primary: $black
+$primary-invert: $pink-invert
+// Use the existing orange as the danger color
+$danger: $orange
+
+$light-bg-color:    $white
+$dark-body-color:   $black
+$base-body-color:   $black
+$light-body-color:  $white
+$active-color:      $red
+$border-color:      $black
+
+// Primary colors
+// ————————————————————————————————
+$primary: $turquoise !default
+$info:    $blue !default
+$success: $green !default
+$warning: $yellow !default
+$danger:  $red !default
+$light:   $white-ter !default
+$dark:    $grey-darker !default
+
+// Inverted colors
+// ————————————————————————————————
+// $orange-invert:     findColorInvert($orange) !default
+// $yellow-invert:     findColorInvert($yellow) !default
+// $green-invert:      findColorInvert($green) !default
+// $turquoise-invert:  findColorInvert($turquoise) !default
+// $blue-invert:       findColorInvert($blue) !default
+// $purple-invert:     findColorInvert($purple) !default
+// $red-invert:        findColorInvert($red) !default
+
+// $primary-invert:  $turquoise-invert !default
+// $info-invert:     $blue-invert !default
+// $success-invert:  $green-invert !default
+// $warning-invert:  $yellow-invert !default
+// $danger-invert:   $red-invert !default
+// $light-invert:    $dark !default
+// $dark-invert:     $light !default
+
+// General colors
+$background: $white-ter !default
+
+$border: $grey-lighter !default
+$border-hover: $grey-light !default
+
+// Text colors
+$text: $grey-dark !default
+$text-invert: findColorInvert($text) !default
+$text-light: $grey !default
+$text-strong: $grey-darker !default

@@ -1,0 +1,35 @@
+#about
+  header
+    height: 100vh
+    display: flex
+    align-items: center
+
+    .wrap
+      @extend .has-text-centered
+      flex: 1 0 auto
+
+      h1
+        font-size: 96px
+
+  section.content
+    position: absolute
+    width: 100%
+
+  .about.grid
+    .grid-item.text
+      .box
+        .content
+          box-shadow: none
+
+    .grid-item.image
+      .content
+        img
+          border: 2px solid $red
+
+    .grid-item.teammember
+      .box
+        .content
+          box-shadow: none
+
+
+      

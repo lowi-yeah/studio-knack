@@ -1,0 +1,54 @@
+{{ partial "header.html" . }}
+{{ partial "hero.html" . }}
+
+{{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
+   
+<div id="filters">
+  <!-- <p> Filter </p> -->
+  {{ range .Site.Data.settings.filters  }}
+    <label class="filter checkbox">
+      <span class="c-wrap">
+        <input type="checkbox" filter="{{.}}" checked=true>
+      </span>
+      {{.}}
+    </label>
+  {{ end }}
+</div>
+
+<div class="main grid">
+  {{ range $paginator.Pages }}
+    <section 
+      class="grid-item section"
+      {{ with .Params.size }} size="{{ . }}" {{ end }} 
+      {{ with .Params.emphasis }} emphasis="{{ . }}" {{ end }}
+      {{ with .Params.category }} category="{{ . }}" {{ end }} >
+      <a class="box" href="{{ .Permalink }}">
+        <div class="content">
+          <div class="overlay">
+            <div class="text" > 
+              {{ .Title }}
+            </div>  
+          </div>
+          <div class="image">
+            <img src="{{ index .Params.images 0 }}">
+          </div>            
+        </div>  
+      </a>  
+    </section>
+  {{ end }}
+
+ 
+</div>
+
+
+<div class="page-load-status">
+  <p class="infinite-scroll-request"></p>
+</div>
+
+{{ if .Paginator.HasNext }} 
+  <div id="next" class="container is-fluid">
+    <a class="button" href="{{ .Paginator.Next.URL }}">next</a>
+  </div>  
+{{ end }}
+
+{{ partial "footer.html" . }}

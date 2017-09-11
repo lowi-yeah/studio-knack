@@ -1,0 +1,99 @@
+html
+  overflow-x: scroll
+  // background: $grey
+
+svg#logo
+  -webkit-filter: drop-shadow( 2px 2px $black )
+  filter: drop-shadow( 2px 2px $black )
+  path
+    fill: $white
+
+.navigation 
+  position: fixed
+  top: 1rem
+  left: 1rem
+  display: flex
+  align-items: center
+
+  // display: none
+  // visibility: hidden
+
+  .button
+    flex: 0 0 auto
+
+  .title
+    flex: 0 1 auto
+
+.stroke 
+  +text-stroke()
+
+.icon.is-large
+  font-size: 2rem
+
+
+//           _   _    _
+//  __ _ _ _| |_(_)__| |___
+// / _` | '_|  _| / _| / -_)
+// \__,_|_|  \__|_\__|_\___|
+article.single
+  padding-top: 64vh !important
+
+  & > section
+    width: 640px
+    background: $white
+    box-shadow: 10px 10px 0px 0px rgba($black,0.81)
+    border: 2px solid rgba($black,0.81)
+    position: absolute
+    
+    &:hover
+      cursor: move
+
+
+.controls a 
+  color: $black
+  background: $red
+
++mobile
+  article.single > section
+    width: 100vw
+
+//   __ _ _ _
+//  / _(_) | |_ ___ _ _
+// |  _| | |  _/ -_) '_|
+// |_| |_|_|\__\___|_|
+#filters
+  display: none
+  // display: flex
+  position: fixed
+  top: 1rem
+  right: 6rem
+  align-items: center
+  z-index: 98
+  height: 64px
+
+  p
+    flex: 0 0 auto
+    margin-bottom: 0
+
+  label
+    flex: 0 0 auto
+    font-weight: 700
+    font-variant: small-caps
+    margin-left: 0.5rem
+    // +text-stroke($size: 4)
+    // display: block
+
+  .c-wrap
+    // padding-left: 0.81rem
+    // margin-right: 0.5rem
+    // background: $white
+
+  input[type="checkbox"]
+    width: 1.25rem
+    height: 1.25rem
+
++touch
+  #filters
+    top: 0.5rem
+    right: 1rem
+    

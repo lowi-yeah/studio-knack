@@ -1,0 +1,31 @@
+.item:hover::after 
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  background-size: 80px;
+  background-color: white;
+  
+  content: '';
+  z-index: -1;
+
+
+.item:nth-child(3)::after 
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  background-size: 10px;
+  background-color: #333333;
+  background-image: url(data:image/svg+xml,%3Csvg%20version%3D%271.1%27%20id%3D%27Layer_1%27%20xmln…h3.535L0%2C3.535V0z%20M8.465%2C12L12%2C8.465V12H8.465z%27/%3E%0A%3C/svg%3E);
+  content: '';
+  z-index: -1;
+
+.item:after 
+  transition: background-color .5s, background-size .2s linear;
