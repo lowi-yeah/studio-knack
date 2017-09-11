@@ -151,7 +151,7 @@ function init() {
 
   let scale = _initGlyphs()
 
-  // _start(10, _update)
+  _start(10, _update)
   // filters.init(scale) 
 }
 

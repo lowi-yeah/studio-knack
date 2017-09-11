@@ -31,7 +31,9 @@ function _sizeUp(element) {
   let size = element.getAttribute('size')
   if(size) element.setAttribute('size', size) 
   else {
-    size = _.sample([50, 75, 100, 33.3, 66.6]) + '%'
+    // size = _.sample([50, 75, 100, 33.3, 66.6]) + '%'
+    size = '33.3%'
+    // if (isMobile.phone || isMobile.seven_inch ) size = '100%'
     if (isMobile.phone || isMobile.seven_inch ) size = '100%'
     element.style.width = size } }
 
