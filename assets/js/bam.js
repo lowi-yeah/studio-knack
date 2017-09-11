@@ -142,7 +142,6 @@ function _initGlyphs() {
   
   _addEvent(window, 'resize', _.debounce(_layoutFrame, 150))
   _update(true)
-  _start(10, _update)
   return _layoutFrame() }
 
 function init() {
@@ -151,6 +150,8 @@ function init() {
   if(!hero) return
 
   let scale = _initGlyphs()
+
+  // _start(10, _update)
   // filters.init(scale) 
 }
 

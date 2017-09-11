@@ -248,6 +248,10 @@ export default function initGrid(menu) {
             content = box.getElementsByClassName('content')[0],
             caption = content.getElementsByClassName('overlay')[0]
                         .getElementsByClassName('text')[0]
+        //     image   = content.getElementsByClassName('image')[0]
+        //                 .getElementsByTagName('img')[0]
+
+
         _sizeUp(item.element)
         _randomizePadding(box)
         _resizeCaption(caption)
