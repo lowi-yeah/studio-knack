@@ -13,9 +13,9 @@ import ςaption        from './captions'
 InfiniteScroll.imagesLoaded = imagesLoaded
 
 
-// let LAYOUT_MODE = 'fitRows'
+let LAYOUT_MODE = 'fitRows'
 // let LAYOUT_MODE = 'masonry'
-let LAYOUT_MODE = 'packery'
+// let LAYOUT_MODE = 'packery'
 
 let selector = '.main.grid'
 let PROBABILITY = 0.72
@@ -69,7 +69,7 @@ function _resizeItem(item) {
 
     if(device === 'tablet') {
       // two columns
-      width   = _.random(1, true) < PROBABILITY ? 
+      width   = _.random(1, true) < 0.5 ? 
                   (ww * ɢʀ) : 
                   (ww * (1-ɢʀ))
 
@@ -78,12 +78,16 @@ function _resizeItem(item) {
                   (width * (1+ɢʀ)) }
 
     if(device === 'desktop') {
-      // three columns
-      let δ   = [ww*(1-ɢʀ), ww*(ɢʀ*ɢʀ), ww*(ɢʀ*(1-ɢʀ)) ]
-      width   = _.sample(δ)
-      height  = ((_.random(1, true) > PROBABILITY) || (width === ww*(ɢʀ*(1-ɢʀ)))) ? 
-                  (width * (1+ɢʀ)):
-                  (width * ɢʀ) }
+      // two columns
+      width   = _.random(1, true) < PROBABILITY ? 
+                  (ww * ɢʀ) : 
+                  (ww * (1-ɢʀ))
+
+      height  = _.random(1, true) < 0.5 ? 
+                  (width * ɢʀ) : 
+                  (width * (1+ɢʀ)) }
+
+     
 
     if(device === 'widescreen') {
       // three columns
@@ -94,12 +98,18 @@ function _resizeItem(item) {
                   (width * ɢʀ) }
 
      if(device === 'fullhd') {
-      // three columns
-      let δ   = [ww*(ɢʀ*ɢʀ), ww*(ɢʀ*(1-ɢʀ)), ww*(ɢʀ*ɢʀ*ɢʀ), ww*(ɢʀ*ɢʀ*(1-ɢʀ))]
-      width   = _.sample(δ)
-      height  = _.random(1, true) > PROBABILITY ? 
+       // three columns
+      let δ       = [ww*(1-ɢʀ), ww*(ɢʀ*ɢʀ), ww*(ɢʀ*(1-ɢʀ)) ]
+          width   = _.sample(δ)
+          height  = ((_.random(1, true) > PROBABILITY) || (width === ww*(ɢʀ*(1-ɢʀ)))) ? 
                   (width * (1+ɢʀ)):
                   (width * ɢʀ) }
+      // // four
+      // let δ   = [ww*(ɢʀ*ɢʀ), ww*(ɢʀ*(1-ɢʀ)), ww*(ɢʀ*ɢʀ*ɢʀ), ww*(ɢʀ*ɢʀ*(1-ɢʀ))]
+      // width   = _.sample(δ)
+      // height  = _.random(1, true) > PROBABILITY ? 
+      //             (width * (1+ɢʀ)):
+      //             (width * ɢʀ) }
 
     // clamp to window height
     height              = _.min([height, wh])
