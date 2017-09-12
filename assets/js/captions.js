@@ -192,8 +192,6 @@ function _initOverlay(item) {
 function init(item) {
   // console.log('init caption', item)
   let caption = item.querySelector('.caption')
-  console.log('caption', caption)
-  
   _resize(caption)
   _initOverlay(item.querySelector('.content'))
 

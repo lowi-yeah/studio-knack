@@ -28,13 +28,12 @@
       {{ with .Params.category }} category="{{ . }}" {{ end }} >
       <a class="box" href="{{ .Permalink }}">
         <div class="content">
-          <div class="overlay">
+         <!--  <div class="overlay">
             <div class="text caption" > 
               {{ .Title }}
             </div>  
-          </div>
-          <div class="image">
-            <img src="{{ (index .Params.images 0).url }}">
+          </div> -->
+          <div class="image" style="background-image:url({{ (index .Params.images 0).url }})">
             <link class="pallete" href="{{ (index .Params.images 0).pallete }}">
           </div>            
         </div>  
