@@ -190,7 +190,6 @@ function _initOverlay(item) {
 //     pallete = image.getElementsByTagName('link')[0]
 
 function init(item) {
-  // console.log('init caption', item)
   let caption = item.querySelector('.caption')
   _resize(caption)
   _initOverlay(item.querySelector('.content'))

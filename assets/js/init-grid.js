@@ -57,9 +57,6 @@ function _resizeItem(item) {
         width   = ww, 
         height  = ww*ɢʀ
 
-    console.log('device',device)
-
-
     if(device === 'mobile') {
       // one column
       width   = ww
@@ -86,8 +83,6 @@ function _resizeItem(item) {
       height  = _.random(1, true) < 0.5 ? 
                   (width * ɢʀ) : 
                   (width * (1+ɢʀ)) }
-
-     
 
     if(device === 'widescreen') {
       // three columns
@@ -158,7 +153,7 @@ function _initializeItems(items, isotope) {
   _.each(items, item => {
     _resizeItem(item)
     _randomizePadding(item)
-    // ςaption.init(item)
+    ςaption.init(item)
   })
   isotope.layout()
 }
