@@ -203,14 +203,15 @@ function init(item) {
 
   // defer so that the overlay element has time to get settled
   _.defer(() => {
-    let offset = -εOverlay.clientHeight + 'px',
+    let offset    = -εOverlay.clientHeight + 'px',
+        duration  = 500,
         animation
     
     util.addEvent(image, 'mouseenter', () => {
           let options = { targets: εOverlay,
                           top: offset,
                           easing: _.sample(EASINGS),
-                          duration: 500 }
+                          duration: duration }
           if(animation) animation.pause()
           animation = anime(options)})
 
@@ -218,8 +219,10 @@ function init(item) {
           let options = { targets: εOverlay,
                           top: '2px',
                           easing: _.sample(EASINGS),
-                          duration: 500 }
-          if(animation) animation.pause()
+                          duration: duration }
+          if(animation) {
+            animation.seek(duration)
+            animation.pause() }
           animation = anime(options)})
   })
 
