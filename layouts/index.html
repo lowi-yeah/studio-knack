@@ -27,18 +27,16 @@
       {{ with .Params.emphasis }} emphasis="{{ . }}" {{ end }}
       {{ with .Params.category }} category="{{ . }}" {{ end }} >
       <a class="box" href="{{ .Permalink }}">
-        <div class="content">
-          <div class="overlay">
-            <div class="text caption" > 
-              {{ .Title }}
-            </div>  
-          </div>
-          <div class="image">
-            <img src="{{ (index .Params.images 0).url }}">
-            <link class="pallete" href="{{ (index .Params.images 0).pallete }}">
-          </div>            
+        <div class="image">
+          <img src="{{ (index .Params.images 0).url }}">
+          <link class="pallete" href="{{ (index .Params.images 0).pallete }}">
+        </div>        
+      </a>
+      <div class="overlay">
+        <div class="text caption" > 
+          {{ .Title }}
         </div>  
-      </a>  
+      </div>
     </section>
   {{ end }}
 </div>
