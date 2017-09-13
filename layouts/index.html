@@ -23,27 +23,27 @@
   {{ range $paginator.Pages }}
     <section 
       class="grid-item section"
-      {{ with .Params.size }} size="{{ . }}" {{ end }} 
+      {{ with .Title }} data-caption="{{ . }}" {{ end }} 
       {{ with .Params.emphasis }} emphasis="{{ . }}" {{ end }}
       {{ with .Params.category }} category="{{ . }}" {{ end }} >
       <a class="box" href="{{ .Permalink }}">
-        <div class="image">
-          <img src="{{ (index .Params.images 0).url }}">
-          <link class="pallete" href="{{ (index .Params.images 0).pallete }}">
-        </div>        
-      </a>
-      <div class="overlay">
-        <div class="text caption" > 
-          {{ .Title }}
+        <div class="content">
+          <div class="image">
+            <img src="{{ (index .Params.images 0).url }}">
+            <link class="pallete" href="{{ (index .Params.images 0).pallete }}">
+          </div>            
         </div>  
-      </div>
+      </a>
     </section>
   {{ end }}
 </div>
 
+
+
 <div class="page-load-status">
   <p class="infinite-scroll-request"></p>
 </div>
+<div id="overlay-frame"></div>
 
 {{ if .Paginator.HasNext }} 
   <div id="next" class="container is-fluid">

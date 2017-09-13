@@ -1,6 +1,9 @@
 import {scaleLinear}  from 'd3-scale'
 import tinycolor      from 'tinycolor2'
 import anime          from 'animejs'
+import util           from './util'
+
+let EASINGS = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
 
 let fontWeights     = [400, 700, 800, 900],
     fontWeightΣ     = scaleLinear()
@@ -183,34 +186,62 @@ function _initOverlay(item) {
                 duration: duration })
         break }}
       }
-
-// let box     = item.getElementsByClassName('box')[0],
-//     content = box.getElementsByClassName('content')[0],
-//     caption = content.getElementsByClassName('overlay')[0]
-//                 .getElementsByClassName('text')[0],
-//     image   = content.getElementsByClassName('image')[0],
-//     img     = image.getElementsByTagName('img')[0],
-//     pallete = image.getElementsByTagName('link')[0]
-
 function init(item) {
-  // console.log('init caption', item)
-  let caption = item.querySelector('.caption')
-  console.log('caption', caption)
-  
-  _resize(caption)
-  _initOverlay(item.querySelector('.content'))
 
-  // adjust the colors of each caption based on the background image
-  // advanced image-schmafu going on here.
-  // it works, because images are hosted via datoCMS which in turn uses 
-  // imgix (https://docs.imgix.com/apis/url) and thus allows for the automated 
-  // extraction of color palletes
-  _loadPallete(item)
-    .then(p => {
-      let main = tinycolor(p.colors[0].hex), primary
-      if(main.isLight()) primary = p.dominant_colors.vibrant_light || p.colors[0]
-      else  primary = p.dominant_colors.vibrant_dark || p.colors[0] 
-      caption.style.color = primary.hex })
+
+  let image     = item.getElementsByTagName('img')[0],
+      caption   = item.getAttribute('data-caption'),
+      εFrame    = document.getElementById('overlay-frame'),
+      εOverlay  = document.createElement('div'),
+      εCaption  = document.createElement('div')
+
+  εOverlay.classList.add('overlay')
+  εCaption.classList.add('caption')
+  εCaption.innerHTML = caption
+  εOverlay.appendChild(εCaption)
+  εFrame.appendChild(εOverlay)
+
+  // defer so that the overlay element has time to get settled
+  _.defer(() => {
+    let offset = -εOverlay.clientHeight + 'px',
+        animation
+    
+    util.addEvent(image, 'mouseenter', () => {
+          let options = { targets: εOverlay,
+                          top: offset,
+                          easing: _.sample(EASINGS),
+                          duration: 500 }
+          if(animation) animation.pause()
+          animation = anime(options)})
+
+    util.addEvent(image, 'mouseleave', () => {
+          let options = { targets: εOverlay,
+                          top: '2px',
+                          easing: _.sample(EASINGS),
+                          duration: 500 }
+          if(animation) animation.pause()
+          animation = anime(options)})
+  })
+
+  // util.addEvent(image, 'mouseleave', () => console.log('leave'))
+  
+  // mouseenter
+  // mouseleave
+
+  // _resize(caption)
+  // _initOverlay(item.querySelector('.content'))
+
+  // // adjust the colors of each caption based on the background image
+  // // advanced image-schmafu going on here.
+  // // it works, because images are hosted via datoCMS which in turn uses 
+  // // imgix (https://docs.imgix.com/apis/url) and thus allows for the automated 
+  // // extraction of color palletes
+  // _loadPallete(item)
+  //   .then(p => {
+  //     let main = tinycolor(p.colors[0].hex), primary
+  //     if(main.isLight()) primary = p.dominant_colors.vibrant_light || p.colors[0]
+  //     else  primary = p.dominant_colors.vibrant_dark || p.colors[0] 
+  //     caption.style.color = primary.hex })
 }
 
 export default { init: init }
