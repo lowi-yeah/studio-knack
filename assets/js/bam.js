@@ -1,4 +1,5 @@
-import filters from './bam-filters'
+import filters    from './bam-filters'
+import util from './util'
 
 let HERO_ROOT   = 'hero',
     GLYPHS_ROOT = 'glyphs',
@@ -7,25 +8,6 @@ let HERO_ROOT   = 'hero',
     NORMAL      = 1000,
     hero, glyphsRoot, svg, g,
     text, lines, glyphlines
-
-function _addEvent(object, type, callback) {
-  if (object == null || typeof(object) == 'undefined') return
-  if (object.addEventListener) object.addEventListener(type, callback, false)
-  else if (object.attachEvent) object.attachEvent('on' + type, callback)
-  else object['on'+type] = callback }
-
-function _start(fps, fn) {
-  let fpsInterval   = 1000 / fps, 
-      then          = Date.now() + 2000,
-      startTime     = then, now, elapsed,
-      animate     = () => {
-                      requestAnimationFrame(animate)
-                      now = Date.now()
-                      elapsed = now - then
-                      if (elapsed > fpsInterval) {
-                        then = now - (elapsed % fpsInterval)
-                        fn() }}
-  animate() }
 
 function _glyphMetrics(cut) {
   return _.reduce(cut.attributes, (ρ, α) => {
@@ -139,8 +121,8 @@ function _initGlyphs() {
   g           = svg.querySelector(G)
   text        = _makeText()
   lines       = text.split(/\s/)
-  
-  _addEvent(window, 'resize', _.debounce(_layoutFrame, 150))
+
+  util.addEvent(window, 'resize', _.debounce(_layoutFrame, 150))
   _update(true)
   return _layoutFrame() }
 
@@ -151,7 +133,7 @@ function init() {
 
   let scale = _initGlyphs()
 
-  // _start(10, _update)
+  util.startAnimation(10, _update)
   // filters.init(scale) 
 }
 
