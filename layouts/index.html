@@ -3,7 +3,7 @@
 <div id="debug-canvas"></div>
 <!-- <div id="debug"></div> -->
 
-{{ partial "hero.html" . }}
+<!-- {{ partial "hero.html" . }} -->
 
 {{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
    
@@ -43,7 +43,8 @@
 <div class="page-load-status">
   <p class="infinite-scroll-request"></p>
 </div>
-<div id="overlay-frame"></div>
+
+{{ partial "overlays.html" . }}
 
 {{ if .Paginator.HasNext }} 
   <div id="next" class="container is-fluid">

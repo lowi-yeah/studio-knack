@@ -17,7 +17,12 @@ function startAnimation(fps, fn) {
                         fn() }}
   animate() }
 
+function clearElement(element) {
+  while (element.hasChildNodes()) element.removeChild(element.lastChild)
+}
+
 export default {
   addEvent:       addEvent,
-  startAnimation: startAnimation
+  startAnimation: startAnimation,
+  clearElement:   clearElement
 }

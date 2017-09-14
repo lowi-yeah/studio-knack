@@ -1,6 +1,7 @@
 import {scaleLinear}  from 'd3-scale'
 import tinycolor      from 'tinycolor2'
 import anime          from 'animejs'
+import svgText        from './svg-text'
 import util           from './util'
 
 let EASINGS = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
@@ -186,44 +187,44 @@ function _initOverlay(item) {
                 duration: duration })
         break }}
       }
+
+function _make(text) {
+  let frame   = document.getElementById('all-overlays'),
+      overlay = document.createElement('div'),
+      teχt    = svgText.init(text, overlay)
+
+      // caption = document.createElement('div')
+  // caption.classList.add('caption')
+  // caption.innerHTML = text
+  // overlay.appendChild(caption)
+
+  overlay.classList.add('overlay')
+  frame.appendChild(overlay)
+  return teχt}
+
 function init(item) {
 
 
-  let image     = item.getElementsByTagName('img')[0],
-      caption   = item.getAttribute('data-caption'),
-      εFrame    = document.getElementById('overlay-frame'),
-      εOverlay  = document.createElement('div'),
-      εCaption  = document.createElement('div')
-
-  εOverlay.classList.add('overlay')
-  εCaption.classList.add('caption')
-  εCaption.innerHTML = caption
-  εOverlay.appendChild(εCaption)
-  εFrame.appendChild(εOverlay)
+  let image   = item.getElementsByTagName('img')[0],
+      text    = item.getAttribute('data-caption'),
+      overlay = document.getElementById('overlay'),
+      caption = _make(text)
 
   // defer so that the overlay element has time to get settled
   _.defer(() => {
-    let offset    = -εOverlay.clientHeight + 'px',
-        duration  = 500,
+    let duration  = 500,
         animation
     
     util.addEvent(image, 'mouseenter', () => {
-          let options = { targets: εOverlay,
-                          top: offset,
-                          easing: _.sample(EASINGS),
-                          duration: duration }
-          if(animation) animation.pause()
-          animation = anime(options)})
+      util.clearElement(overlay)
+      overlay.appendChild(caption.cloneNode(true))
+      overlay.style.top = -(caption.clientHeight + 48) + 'px'
+    })
 
     util.addEvent(image, 'mouseleave', () => {
-          let options = { targets: εOverlay,
-                          top: '2px',
-                          easing: _.sample(EASINGS),
-                          duration: duration }
-          if(animation) {
-            animation.seek(duration)
-            animation.pause() }
-          animation = anime(options)})
+      util.clearElement(overlay)
+      overlay.style.top = '2px'
+    })
   })
 
   // util.addEvent(image, 'mouseleave', () => console.log('leave'))

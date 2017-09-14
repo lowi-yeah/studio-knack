@@ -1,11 +1,15 @@
 #overlay-frame
+
   position: fixed
-  bottom: 0
-  width: 100%
+  top: 100vh
+  left: 0
+  width: 100vw
+  height: 100vh
   z-index: 200
-  .overlay
+  #overlay
     // display: none
     // visibility: hidden
+    pointer-events: none
     position: absolute
     top: 2px
     width: 100%
@@ -13,15 +17,35 @@
     z-index: 10
     display: flex
     background: rgba($yellow, 0.81)
-    
-    .caption
-      margin: 1.5rem 1rem
-      text-align: left
-      color: $black
-      font-weight: 500
-      padding: 0.25rem 0.5rem
-      flex: 1 1 auto
-      font-size: 36px
-      opacity: 1
-      transition: font-size 0.4s ease, opacity 0.4s ease
+    padding: 1.5rem
 
+    
+  .caption
+    margin: 1.5rem 1rem
+    text-align: left
+    color: $black
+    font-weight: 500
+    padding: 0.25rem 0.5rem
+    flex: 1 1 auto
+    font-size: 36px
+    opacity: 1
+    transition: font-size 0.4s ease, opacity 0.4s ease
+
+  #all-overlays
+    // display: none
+    // visibility: hidden
+    // height: 0
+    width: 100%
+    height: 100%
+    border: 1px solid $red
+    position: absolute
+
+    .overlay
+      position: absolute
+      width: 100%
+      height: 100%
+
+      // svg
+      //   flex: 1 0 auto
+      //   width: 100%
+      //   height: 100%        

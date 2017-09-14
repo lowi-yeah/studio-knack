@@ -16,7 +16,7 @@ function _glyphMetrics(cut) {
 
 function _getGlyphCuts(char) {
   let nodes = _(glyphsRoot.childNodes)
-                .find(ε => ε.id === ('glyph-' + char)) 
+                .find(ε => ε.id === ('glyph-' + char.charCodeAt(0))) 
                 .childNodes
   return  _(nodes)
             .filter(ι => ι.nodeType === 1)
@@ -69,8 +69,8 @@ function _layoutFrame() {
 
 function _layoutLine(glyphs, index, lines) {
   let δ = _.reduce(glyphs, (σ, glyph) => {
-              let /*scale   = 1,*/
-                  scale   = NORMAL / glyph.μ.height,
+              let scale   = 1,
+                  /*scale   = NORMAL / glyph.μ.height,*/
                   offset  = { x: σ.x /*+ glyph.μ.left*/,
                               y: 0.72 * NORMAL * (lines.length - index - 1) }
               _transform(glyph.g, {offset, scale})
@@ -80,7 +80,7 @@ function _layoutLine(glyphs, index, lines) {
   return {glyphs, δ}}
 
 function _randomGlyph(char) {
-  let ς = `#glyph-${char}`,
+  let ς = `#glyph-${char.charCodeAt(0)}`,
       ζ = glyphsRoot.querySelector(ς),
       η = _(ζ.childNodes)
             .filter(n => n.nodeType === 1)
