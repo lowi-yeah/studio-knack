@@ -73,7 +73,9 @@ function _initializeItems(items) {
   _.each(items, item => {
     _sizeUp(item)
     _randomizePadding(item)
-    ςaption.init(item)})}
+    ςaption.init(item)
+  })}
+
 
 export default function initGrid(menu) {
   let base = document.querySelector(selector);
@@ -81,7 +83,8 @@ export default function initGrid(menu) {
 
   let isotope   = new Isotope( base, {itemSelector: '.grid-item',
                                       layoutMode:   'packery',
-                                      filter:       '*' }),
+                                      // layoutMode:   'masonry',
+                                      filter:       '*'}),
       infScroll = new InfiniteScroll( base, { path:     '#next > a',
                                               append:   '.grid-item',
                                               outlayer: isotope,
@@ -91,7 +94,10 @@ export default function initGrid(menu) {
       items     = _.map(isotope.items, item =>  item.element)
 
     _initializeItems(items)
+    // isotope.on( 'layoutComplete', ( isotopeItems ) => 
+    //   _initializeCaptions(_.map(isotopeItems, item =>  item.element)))
     isotope.layout()
+
 
     // upon append, initialize the new grid items. then re-layout
     infScroll.on( 'append', (response, path, items) => {

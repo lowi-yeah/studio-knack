@@ -1,4 +1,5 @@
-import filters from './bam-filters'
+import filters    from './bam-filters'
+import util from './util'
 
 let HERO_ROOT   = 'hero',
     GLYPHS_ROOT = 'glyphs',
@@ -8,25 +9,6 @@ let HERO_ROOT   = 'hero',
     hero, glyphsRoot, svg, g,
     text, lines, glyphlines
 
-function _addEvent(object, type, callback) {
-  if (object == null || typeof(object) == 'undefined') return
-  if (object.addEventListener) object.addEventListener(type, callback, false)
-  else if (object.attachEvent) object.attachEvent('on' + type, callback)
-  else object['on'+type] = callback }
-
-function _start(fps, fn) {
-  let fpsInterval   = 1000 / fps, 
-      then          = Date.now() + 2000,
-      startTime     = then, now, elapsed,
-      animate     = () => {
-                      requestAnimationFrame(animate)
-                      now = Date.now()
-                      elapsed = now - then
-                      if (elapsed > fpsInterval) {
-                        then = now - (elapsed % fpsInterval)
-                        fn() }}
-  animate() }
-
 function _glyphMetrics(cut) {
   return _.reduce(cut.attributes, (ρ, α) => {
               ρ[α.name] = _.isNaN(parseFloat(α.value)) ? α.value : parseFloat(α.value)
@@ -34,7 +16,7 @@ function _glyphMetrics(cut) {
 
 function _getGlyphCuts(char) {
   let nodes = _(glyphsRoot.childNodes)
-                .find(ε => ε.id === ('glyph-' + char)) 
+                .find(ε => ε.id === ('glyph-' + char.charCodeAt(0))) 
                 .childNodes
   return  _(nodes)
             .filter(ι => ι.nodeType === 1)
@@ -87,8 +69,8 @@ function _layoutFrame() {
 
 function _layoutLine(glyphs, index, lines) {
   let δ = _.reduce(glyphs, (σ, glyph) => {
-              let /*scale   = 1,*/
-                  scale   = NORMAL / glyph.μ.height,
+              let scale   = 1,
+                  /*scale   = NORMAL / glyph.μ.height,*/
                   offset  = { x: σ.x /*+ glyph.μ.left*/,
                               y: 0.72 * NORMAL * (lines.length - index - 1) }
               _transform(glyph.g, {offset, scale})
@@ -98,7 +80,7 @@ function _layoutLine(glyphs, index, lines) {
   return {glyphs, δ}}
 
 function _randomGlyph(char) {
-  let ς = `#glyph-${char}`,
+  let ς = `#glyph-${char.charCodeAt(0)}`,
       ζ = glyphsRoot.querySelector(ς),
       η = _(ζ.childNodes)
             .filter(n => n.nodeType === 1)
@@ -139,8 +121,8 @@ function _initGlyphs() {
   g           = svg.querySelector(G)
   text        = _makeText()
   lines       = text.split(/\s/)
-  
-  _addEvent(window, 'resize', _.debounce(_layoutFrame, 150))
+
+  util.addEvent(window, 'resize', _.debounce(_layoutFrame, 150))
   _update(true)
   return _layoutFrame() }
 
@@ -151,7 +133,7 @@ function init() {
 
   let scale = _initGlyphs()
 
-  // _start(10, _update)
+  util.startAnimation(10, _update)
   // filters.init(scale) 
 }
 

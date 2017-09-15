@@ -1,11 +1,18 @@
 import {scaleLinear}  from 'd3-scale'
 import tinycolor      from 'tinycolor2'
 import anime          from 'animejs'
+import svgText        from './svg-text'
+import util           from './util'
 
-let fontWeights     = [400, 700, 800, 900],
-    fontWeightΣ     = scaleLinear()
+let EASINGS     = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack'],
+    DIRECTIONS  = ['left', 'bottom', 'right'],
+    PADDING_TOP = 24
+
+let fontWeights = [400, 700, 800, 900],
+    fontWeightΣ = scaleLinear()
                         .domain([64, 16])
                         .rangeRound([0, 3])
+
 fontWeightΣ.clamp(true)
 
 // helper function to detect whether or not the browser is touchy
@@ -67,8 +74,6 @@ function _closestEdge(x,y,w,h) {
 // the container size
 // the  bigger the container, the biggger and silmmer the font
 function _resize(caption) {
-
-  console.log('_resize', caption)
   // as touch devices have no hover, we don't transition the caption
   // but render it in small text at the bottom of the container
   if(isTouchDevice()) {
@@ -86,8 +91,7 @@ function _resize(caption) {
       newƒSize  = ƒSize * ratioW
   _setFontSize(caption, newƒSize)
   // we need the delays so that the elements have a chance to get redrawn
-  _.delay(() => _captionHeight(caption, ƒSize, 0), 100)
-}
+  _.delay(() => _captionHeight(caption, ƒSize, 0), 100) }
 
 function _coordinates(self, e) {
   function _offset({x, y}, ε) {
@@ -100,7 +104,6 @@ function _coordinates(self, e) {
   x = e.pageX - x
   y = e.pageY - y
   return {x, y} }
-
 
 function _initOverlay(item) {
   if(isTouchDevice()) { // check if we have a touch device, if so show the text
@@ -184,33 +187,124 @@ function _initOverlay(item) {
         break }}
       }
 
-// let box     = item.getElementsByClassName('box')[0],
-//     content = box.getElementsByClassName('content')[0],
-//     caption = content.getElementsByClassName('overlay')[0]
-//                 .getElementsByClassName('text')[0],
-//     image   = content.getElementsByClassName('image')[0],
-//     img     = image.getElementsByTagName('img')[0],
-//     pallete = image.getElementsByTagName('link')[0]
+function _makeCaption(text) {
+  let frame   = document.getElementById('all-overlays'),
+      teχt    = svgText.init(text, frame)
+  frame.appendChild(teχt)
+  return teχt }
+
+function _copyCaption(ηCaption) {
+  let ς = document.createElement('div')
+  ς.classList.add('caption-frame')
+  ς.style.height = `${ηCaption.clientHeight}px`
+  ς.appendChild(ηCaption.cloneNode(true))
+  return ς }
+
+function _animate(target, options) {
+  let α = { autoplay: false,
+            targets: target,
+            easing: _.sample(EASINGS),
+            duration: _.random(120, 320)}
+  _.each(options, (v, k) => α[k] = v)
+  return anime(α)}
+
+function _makeBackground(ηFrame, height) {
+  let β         = document.createElement('div'),
+      direction = _.sample(DIRECTIONS), 
+      transform
+
+  // three choices for the position:
+  // right, left & to the bottom
+  if(direction === 'left') 
+    transform = [ `translateX(${-window.innerWidth}px)`,
+                  `translateY(0px)`]
+  if(direction === 'right') 
+    transform = [ `translateX(${window.innerWidth}px)`,
+                  `translateY(0px)`]
+  if(direction === 'bottom') 
+    transform = [ `translateX(0px)`,
+                  `translateY(${height}px)`]
+
+  β.classList.add('caption-bg')
+  β.style.height    = `${height}px`
+  β.style.transform = transform.join(' ')
+
+  ηFrame.appendChild(β)
+  return β }
+
+function _showCaption(ηc, height) {
+  let direction = _.sample(DIRECTIONS)
+  if(direction === 'left')    ηc.style.transform = `translateX(${-window.innerWidth}px)`
+  if(direction === 'right')   ηc.style.transform = `translateX(${window.innerWidth}px)`
+  if(direction === 'bottom')  ηc.style.transform = `translateY(${height}px)`
+
+  let options = { translateX: '0px', 
+                  translateY: '0px',
+                  autoplay:   false}
+  return _animate(ηc, options)}
+
+function _hideCaption(ηc, height) {
+
+  // pick a random animation direction
+  let direction = _.sample(DIRECTIONS), 
+      options   = { autoplay: true }
+
+  if(direction === 'left') options.translateX =  `${-window.innerWidth}px`
+  if(direction === 'right') options.translateX = `${window.innerWidth}px`
+  if(direction === 'bottom') options.translateY = `${height}px`
+
+  return _animate(ηc, options)}
+
+function _showBackground(ηβ) {
+  let options = { translateX: '0px', 
+                  translateY: '0px',
+                  autoplay:   true}
+  return _animate(ηβ, options) }
+
+function _hideBackground(ηβ, height) {
+  // pick a random animation direction
+  let direction = _.sample(DIRECTIONS), 
+      options   = { autoplay: true }
+
+  if(direction === 'left') options.translateX   = `${-window.innerWidth}px`
+  if(direction === 'right') options.translateX  = `${window.innerWidth}px`
+  if(direction === 'bottom') options.translateY = `${height}px`
+
+  return _animate(ηβ, options)}
 
 function init(item) {
-  // console.log('init caption', item)
-  let caption = item.querySelector('.caption')
-  console.log('caption', caption)
-  
-  _resize(caption)
-  _initOverlay(item.querySelector('.content'))
+  let image     = item.getElementsByTagName('img')[0],        // the hover target
+      text      = item.getAttribute('data-caption'),          // the capure text
+      ηFrame    = document.getElementById('overlay-frame'),   // frame DOM node 
+      ηCaption  = _makeCaption(text)                         // generate the caption node
 
-  // adjust the colors of each caption based on the background image
-  // advanced image-schmafu going on here.
-  // it works, because images are hosted via datoCMS which in turn uses 
-  // imgix (https://docs.imgix.com/apis/url) and thus allows for the automated 
-  // extraction of color palletes
-  _loadPallete(item)
-    .then(p => {
-      let main = tinycolor(p.colors[0].hex), primary
-      if(main.isLight()) primary = p.dominant_colors.vibrant_light || p.colors[0]
-      else  primary = p.dominant_colors.vibrant_dark || p.colors[0] 
-      caption.style.color = primary.hex })
-}
+  // defer so that the DOM has time to get settled
+  _.defer(() => {
+    let duration  = 500,
+        cHeight   = ηCaption.clientHeight,
+        bgΔ       = anime({ targets: '.nil', duration: 1}),   // make some dummy animations
+        cΔ        = anime({ targets: '.nil', duration: 1}),   // just to get them initialized
+        ηβ, ηc
+
+    util.addEvent(image, 'mouseenter', () => {
+      ηβ  = _makeBackground(ηFrame, cHeight + PADDING_TOP)   // create a background DOM node
+      ηc  = _copyCaption(ηCaption)
+      cΔ  = _showCaption(ηc, cHeight) 
+
+      ηFrame.appendChild(ηc)
+      bgΔ = _showBackground(ηβ) 
+
+      // when showing, we wait for the background to finish before showing the caption
+      bgΔ.finished.then(() => cΔ.play()) })
+
+    util.addEvent(image, 'mouseleave', () => {
+      bgΔ.pause()
+      cΔ  = _hideCaption(ηc, cHeight)
+      bgΔ = _hideBackground(ηβ, cHeight + PADDING_TOP)
+
+      // when hiding, we wait for the animations to finish and then remove the dom nodes
+      bgΔ.finished.then(() => ηβ.parentNode.removeChild(ηβ))
+      cΔ.finished.then(() => ηc.parentNode.removeChild(ηc))})
+  })}
 
 export default { init: init }
