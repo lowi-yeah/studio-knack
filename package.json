@@ -18,6 +18,7 @@
     "animejs": "^2.0.2",
     "bulma": "^0.5.1",
     "d3-scale": "^1.0.6",
+    "d3-selection": "^1.1.0",
     "draggabilly": "^2.1.1",
     "figlet": "^1.2.0",
     "gsap": "^1.20.2",
@@ -29,6 +30,7 @@
     "livereload": "^0.6.0",
     "lory.js": "^2.2.1",
     "masonry": "^0.0.2",
+    "material-shadows": "^3.0.1",
     "packery": "^2.1.1",
     "scroll-lazy": "^1.0.3",
     "tinycolor2": "^1.4.1"

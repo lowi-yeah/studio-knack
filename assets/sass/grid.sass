@@ -84,9 +84,6 @@
       &:hover
         +pb('lines-45-b', 36px, $white, $red, 1, 'none')
 
-      & > .content > .overlay > .text
-        // +text-stroke($color: $red)
-
   // &[category="Architektur"] 
   //   .box
   //     +pb('lines-45-a', 4px, $white, $black, 1, 'none')
@@ -133,60 +130,24 @@
   //       animation: animProduct 1s linear infinite
 
   .box
-    flex: 1 0 auto
-    display: flex
-
+    box-shadow: none
     &:hover 
       box-shadow: none
-    
+      
     &:after 
       transition: background-size .32s linear
 
-
-    & > .content
+    .image
       width: 100%
-      height: 100%
       position: relative
-      overflow: hidden
-      box-shadow: 4px 4px $black, -4px -4px $white
-      flex: 1 0 auto
-
-
-      .image
-        width: 100%
+      img
         height: 100%
-        background-size: cover
-        background-repeat: no-repeat
-        background-position: center
-
-        // img
-        //   height: 100%
-  
-      .overlay
+      .shadow
+        pointer-events: none
+        top: 0
         position: absolute
-        width: 100%
         height: 100%
-        top: 0%
-        left: -100%
-        // left: 0%
-        z-index: 10
-        display: flex
-        align-items: center
-        
-        .text
-          // +text-stroke($color: $white)
-          text-align: center
-          color: $black
-          font-weight: 500
-          align-items: center
-          // padding: 0.5rem
-          padding: 0.25rem 0.5rem
-          flex: 1 1 auto
-          font-size: 64px
-          opacity: 0
-          transition: font-size 0.4s ease, opacity 0.4s ease
+        width: 100%
+        box-shadow: inset 0px 0px 8px 0px $grey
 
-// +touch
-//   .grid-item > .box > .content > .overlay
-//     .text
-//       align-items: flex-end
+
