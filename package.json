@@ -30,6 +30,7 @@
     "livereload": "^0.6.0",
     "lory.js": "^2.2.1",
     "masonry": "^0.0.2",
+    "material-shadows": "^3.0.1",
     "packery": "^2.1.1",
     "scroll-lazy": "^1.0.3",
     "tinycolor2": "^1.4.1"

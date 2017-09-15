@@ -2805,6 +2805,10 @@ masonry@^0.0.2:
   dependencies:
     ejs "0.7.1"
 
+material-shadows@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/material-shadows/-/material-shadows-3.0.1.tgz#586ad12b167360a8e4e897bf7530cb69acea5110"
+
 math-expression-evaluator@^1.2.14:
   version "1.2.14"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.14.tgz#39511771ed9602405fba9affff17eb4d2a3843ab"

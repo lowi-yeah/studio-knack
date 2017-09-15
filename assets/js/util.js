@@ -21,8 +21,15 @@ function clearElement(element) {
   while (element.hasChildNodes()) element.removeChild(element.lastChild)
 }
 
+function guid() {
+  let s4 = () =>  Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1)
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() }
+
 export default {
   addEvent:       addEvent,
   startAnimation: startAnimation,
-  clearElement:   clearElement
+  clearElement:   clearElement,
+  guid:           guid
 }

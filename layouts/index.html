@@ -3,7 +3,7 @@
 <div id="debug-canvas"></div>
 <!-- <div id="debug"></div> -->
 
-<!-- {{ partial "hero.html" . }} -->
+{{ partial "hero.html" . }}
 
 {{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
    
@@ -30,6 +30,7 @@
         <div class="content">
           <div class="image">
             <img src="{{ (index .Params.images 0).url }}">
+            <div class="shadow"></div>
             <link class="pallete" href="{{ (index .Params.images 0).pallete }}">
           </div>            
         </div>  

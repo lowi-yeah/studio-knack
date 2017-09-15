@@ -7,8 +7,7 @@ let GLYPHS_ROOT = document.getElementById('glyphs'),
 function _glyphMetrics(cut) {
   return _.reduce(cut.attributes, (ρ, α) => {
             ρ[α.name] = _.isNaN(parseFloat(α.value)) ? α.value : parseFloat(α.value)
-            return ρ }, {})
-}
+            return ρ }, {})}
 
 function _randomGlyph(char) {
   // char = char.toUpperCase()
@@ -24,8 +23,7 @@ function _randomGlyph(char) {
 function _transformGlyph(ε, {offset, scale}) {
   offset  = offset || {x: 0, y: 0}
   scale   = scale || 1
-  ε.setAttribute('transform', `matrix(${scale} 0 0 ${scale} ${offset.x} ${offset.y})`) 
-}
+  ε.setAttribute('transform', `matrix(${scale} 0 0 ${scale} ${offset.x} ${offset.y})`)}
 
 function _permuteLines(words, numlines) {
   if(numlines === 1) return [[words.join(' ')]]
@@ -60,21 +58,18 @@ function _splitInto(numlines, words) {
 
   // check how long shortest the line is, 
   // if too long, add a line
-  if(choice.min > 16) return _splitInto(numlines+1, words)
+  if(choice.min > 24) return _splitInto(numlines+1, words)
   return choice.permutation }
 
 function _makeLines(width, height, text) {
-
-  let numlines = 2
-
-  let words = text.split(/\s/),
-      ratio = width / height
-  if(words.length === 0) return []
-  if(words.length === 1) return words
-  if(ratio >= 2) return [words.join(' ')]
-  else return _splitInto(2, words)
-
-}
+  let numlines  = 2,
+      words     = text.split(/\s/),
+      ratio     = width / height
+  if(words.length === 0)  return []
+  if(words.length === 1)  return words
+  if(ratio >= 2)          return [words.join(' ')]
+  if(text.length < 24)    return [words.join(' ')]
+  else return _splitInto(2, words)}
 
 function _transform(ε, {offset, scale}) {
   offset = offset || {x: 0, y: 0}
@@ -90,7 +85,6 @@ function _layoutLine(line, index, glyphs) {
               σ.x += γ.μ.width * scale
               return σ }, {x: 0, y: NORMAL, glyphs: []})}
 
-
 function _layout(svg, g, text, glyphs) {
   let ωw          = window.innerWidth,
       ωh          = window.innerHeight,
@@ -100,11 +94,9 @@ function _layout(svg, g, text, glyphs) {
       maxW        = _(glyphlines).map(gl => gl.x).max(),
       scale       = ωw/maxW * 0.92
 
-      _.each(glyphlines, line => {
-        // add each of the glyph's lines to the dom (the glyph-group)
-        _.each(line.glyphs, glyph => g._groups[0][0].appendChild(glyph)) })
-
-  
+  // add each of the glyph's lines to the dom (the glyph-group)
+  _.each(glyphlines, line => 
+    _.each(line.glyphs, glyph => g._groups[0][0].appendChild(glyph)))
 
   // find the largest top-offset of the last glyphline
   let maxTop = _(_.last(glyphlines).glyphs)
@@ -115,20 +107,17 @@ function _layout(svg, g, text, glyphs) {
                   return top})
                 .sortBy(v => v) 
                 .last()
+
   // adjust the glyph-group scale and offset
   _transform(g.node(), {scale, offset: {x: 0, y: maxTop*scale}})
-
 
   // defer to let the dom elements settle in
   // then adjust the svg frame dimensions
   _.defer(() => {
     let height = (g.node().getBBox().height + maxTop)  * scale
-      svg.attr('viewBox', `0 0 ${ωw} ${height}`)
-      svg.attr('width', `${ωw}`)
-      svg.attr('height', `${height}`)
-  })
-  
-}
+    svg.attr('viewBox', `0 0 ${ωw} ${height}`)
+    svg.attr('width', `${ωw}`)
+    svg.attr('height', `${height}`)})}
 
 function _makeSvg(parent) {
   let svg = select(parent)
@@ -143,14 +132,10 @@ function _makeSvg(parent) {
   return {svg, g} }
 
 function init(text, parent) {
-  // console.log('window.Worker', window.Worker)
-
-  let glyphs      = _.map(text, _randomGlyph),
-      {svg, g}    = _makeSvg(parent)
+  let glyphs    = _.map(text, _randomGlyph),
+      {svg, g}  = _makeSvg(parent)
   _layout(svg, g, text, glyphs)
-  util.addEvent(window, 'resize', 
-    _.debounce(() => _layout(svg, g, text, glyphs), 150))
-
+  util.addEvent(window, 'resize', _.debounce(() => _layout(svg, g, text, glyphs), 150))
   return svg.node() }
 
 export default { init: init}
