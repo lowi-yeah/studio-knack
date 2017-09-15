@@ -21,6 +21,11 @@ function clearElement(element) {
   while (element.hasChildNodes()) element.removeChild(element.lastChild)
 }
 
+function scrollTop() {
+  let doc = document.documentElement
+      // left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+  return (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0) }
+
 function guid() {
   let s4 = () =>  Math.floor((1 + Math.random()) * 0x10000)
                     .toString(16)
@@ -31,5 +36,6 @@ export default {
   addEvent:       addEvent,
   startAnimation: startAnimation,
   clearElement:   clearElement,
-  guid:           guid
+  guid:           guid,
+  scrollTop:      scrollTop
 }
