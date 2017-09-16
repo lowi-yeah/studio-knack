@@ -7,7 +7,9 @@ import {scaleLinear}  from 'd3-scale'
 import isMobile       from 'ismobilejs'
 import anime          from 'animejs'
 import tinycolor      from 'tinycolor2'
+import skrollr        from 'skrollr'
 import ςaption        from './captions'
+
 
 // make imagesLoaded available for InfiniteScroll
 InfiniteScroll.imagesLoaded = imagesLoaded
@@ -119,8 +121,8 @@ function _randomizePadding(item) {
       width     = element.offsetWidth,
       paddings  = ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'],
       padding   = _.reduce(paddings, (r,d) => {
-                    r[d] = '16px'
-                    // r[d] = _.round(_.random(width * 0.024, width * 0.16)) + 'px'
+                    // r[d] = '16px'
+                    r[d] = _.round(_.random(width * 0.024, width * 0.16)) + 'px'
                     // r[d] = '0px'
                     return r }, {})
   _.each(padding, (v, k) => element.style[k] = v ) }
@@ -149,12 +151,31 @@ function _initFilters(isotope, menu) {
   // filter once upon init
   _filter() } 
 
-function _initializeItems(items, isotope) {
+function _initializeItems(items) {
   _.each(items, item => {
-    _resizeItem(item)
+    // _resizeItem(item)
     _randomizePadding(item)
-    ςaption.init(item)
+    // ςaption.init(item)
   })}
+
+function _initParallax(skroll) {
+  console.log('init parallax')
+  let items = document.querySelectorAll('.grid-item'),
+      baseOffset = document.querySelector(selector).offsetTop
+
+  _.each(items, item => {
+    
+    if(item.getAttribute('data-parallax')) return
+
+    let o = item.offsetTop - item.clientHeight,
+        e = item.offsetTop + window.innerHeight
+      item.setAttribute(`data-${o}`, `transform:translate(0,${_.random(0, window.innerHeight)}px);`)
+      item.setAttribute(`data-${e}`, `transform:translate(0,0px);`)
+      item.setAttribute('data-parallax', true)
+  })
+
+  skroll.refresh()
+}
 
 
 export default function initGrid(menu) {
@@ -174,15 +195,15 @@ export default function initGrid(menu) {
       items     = _.map(isotope.items, item =>  item.element)
 
     _initializeItems(items)
-    // isotope.on( 'layoutComplete', ( isotopeItems ) => 
-    //   _initializeCaptions(_.map(isotopeItems, item =>  item.element)))
     isotope.layout()
-
-
     // upon append, initialize the new grid items. then re-layout
     infScroll.on( 'append', (response, path, items) => {
       _initializeItems(items, isotope)
       isotope.layout()})
+
+    let skroll = skrollr.init()
+
+    isotope.on( 'layoutComplete', _.debounce(() => _initParallax(skroll), 240))
 
     _addEvent(window, 'resize', 
       _.debounce(() => 

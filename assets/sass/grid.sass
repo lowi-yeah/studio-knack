@@ -64,11 +64,25 @@
 
 .grid-item 
   // color: $black
-  width: 33.333% 
+  width: 25% 
   display: flex
+  padding: 6rem 0
 
   +mobile 
     width: 100% 
+
+  +tablet
+    width: 50% 
+  
+  +desktop
+    width: 33.33%
+  
+  +widescreen
+    width: 25%
+  
+  +fullhd
+    width: 25%
+
   
   &[size="2"] 
     width: 66.666% 
@@ -84,53 +98,10 @@
       &:hover
         +pb('lines-45-b', 36px, $white, $red, 1, 'none')
 
-  // &[category="Architektur"] 
-  //   .box
-  //     +pb('lines-45-a', 4px, $white, $black, 1, 'none')
-  //     &:hover
-  //       +pb('lines-45-a', 24px, $white, $black, 1, 'none')
-
-
-  // &[category="Other"] 
-  //   .box
-  //     +pb('lines-45-b', 25px, $white, $black, 1, 'none')
-  //     &:hover
-  //       +pb('lines-45-b', 100px, $white, $black, 1, 'none')
-
-  // &[category="Studio"] 
-  //   .box
-  //     +pb('lines-b', 25px, $white, $black, 1, 'none')
-  //     &:hover
-  //       +pb('lines-b', 100px, $white, $black, 1, 'none')
-
-
-  // &[category="Marke im Raum"] 
-  //   .box
-  //     +pb('lines-a', 12px, $white, $black, 1, 'none')
-  //     &:hover
-  //       +pb('lines-a', 24px, $white, $black, 1, 'none')
-  
-  // &[category="Kommunikationsdesign"] 
-  //   .box
-  //     +pb('lines-c', 48px, $white, $black, 1, 'none')
-  //     &:hover
-  //       +pb('lines-c', 64px, $white, $black, 1, 'none')
-
-  // &[category="Produktdesign"] 
-  //   @keyframes animProduct
-  //     from 
-  //       background-position: 0 0
-  //     to 
-  //       background-position: 8px 8px
-
-  //   .box
-  //     background-color: #ffffff
-  //     background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cg%20fill%3D%27%23000000%27%20fill-opacity%3D%271%27%3E%3Cpath%20d%3D%27M0%200h4v4H0V0zm4%204h4v4H4V4z%27/%3E%3C/g%3E%3C/svg%3E")
-  //     &:hover
-  //       animation: animProduct 1s linear infinite
-
   .box
     box-shadow: none
+    flex: 1 1 auto
+
     &:hover 
       box-shadow: none
       
@@ -148,6 +119,6 @@
         position: absolute
         height: 100%
         width: 100%
-        box-shadow: inset 0px 0px 8px 0px $grey
+        +z-depth-6dp-inset()
 
 
