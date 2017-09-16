@@ -119,8 +119,8 @@ function _randomizePadding(item) {
       width     = element.offsetWidth,
       paddings  = ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'],
       padding   = _.reduce(paddings, (r,d) => {
-                    r[d] = '16px'
-                    // r[d] = _.round(_.random(width * 0.024, width * 0.16)) + 'px'
+                    // r[d] = '16px'
+                    r[d] = _.round(_.random(width * 0.024, width * 0.16)) + 'px'
                     // r[d] = '0px'
                     return r }, {})
   _.each(padding, (v, k) => element.style[k] = v ) }
@@ -151,7 +151,7 @@ function _initFilters(isotope, menu) {
 
 function _initializeItems(items, isotope) {
   _.each(items, item => {
-    _resizeItem(item)
+    // _resizeItem(item)
     _randomizePadding(item)
     ςaption.init(item)
   })}
