@@ -257,7 +257,7 @@ function _hideCaption(ηc, height) {
 function _showBackground(ηβ) {
   let options = { translateX: '0px', 
                   translateY: '0px',
-                  autoplay:   true}
+                  autoplay:   false}
   return _animate(ηβ, options) }
 
 function _hideBackground(ηβ, height) {
@@ -283,7 +283,7 @@ function init(item) {
         cHeight   = ηCaption.clientHeight,
         bgΔ       = anime({ targets: '.nil', duration: 1}),   // make some dummy animations
         cΔ        = anime({ targets: '.nil', duration: 1}),   // just to get them initialized
-        ηβ, ηc
+        ηβ, ηc, δID
 
     util.addEvent(image, 'mouseenter', () => {
       ηβ  = _makeBackground(ηFrame, cHeight + PADDING_TOP)   // create a background DOM node
@@ -293,10 +293,18 @@ function init(item) {
       ηFrame.appendChild(ηc)
       bgΔ = _showBackground(ηβ) 
 
+      // delay the caption for a spell to debounce vert quick enter->leave movements
+      δID = _.delay(() => bgΔ.play(), 400)
+
       // when showing, we wait for the background to finish before showing the caption
       bgΔ.finished.then(() => cΔ.play()) })
 
     util.addEvent(image, 'mouseleave', () => {
+
+      if(!bgΔ.began) {
+        clearTimeout(δID)
+        return }
+
       bgΔ.pause()
       cΔ  = _hideCaption(ηc, cHeight)
       bgΔ = _hideBackground(ηβ, cHeight + PADDING_TOP)

@@ -3,7 +3,7 @@
   top: 1rem
 
 #toc.button 
-  $size: 64px
+  $size: 48px
   width: $size
   height: $size
   z-index: 102
@@ -13,9 +13,13 @@
   right: 1rem
   border: none
   // border: 1px solid $red
-  box-shadow: none
   background: $white
   border-radius: $size/2
+
+  +z-depth-transition()
+  +z-depth-2dp()
+
+
   
   #iconset
     margin-top: 0
@@ -24,15 +28,16 @@
     height: 100%
 
   &:hover
-    background: $black
-    path
-      fill: $white
+    // background: $black
+    +z-depth-focus()
+    // path
+      // fill: $white
 
 
-+touch
-  #toc.button 
-    bottom: 1rem
-    top: unset
+// +touch
+//   #toc.button 
+//     bottom: 1rem
+//     top: unset
       
 nav#sidebar
   height: 100vh
