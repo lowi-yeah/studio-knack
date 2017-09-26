@@ -1,0 +1,86 @@
+//   __ _ _ _
+//  / _(_) | |_ ___ _ _
+// |  _| | |  _/ -_) '_|
+// |_| |_|_|\__\___|_|
+
+#filter-wrap
+  position: fixed
+  top: 5rem
+  right: 1rem
+  z-index: 102
+  display: flex
+  align-items: center
+
+  transition: transform 0.3s
+  transform: translateX(100vw) 
+  // padding-left: 1rem
+
+
+  #filter.button
+    border: 2px solid $blue
+    $size: 48px
+    width: $size
+    height: $size
+    padding: 0
+    background: $white
+    border-radius: $size/2
+    border: none
+    // margin-right: 1rem
+
+    // flex: 1 0 auto
+  
+    +z-depth-transition()
+    +z-depth-2dp()
+
+    &:hover
+      +z-depth-focus()
+
+  .field
+    padding: 1rem 1.5rem
+    background: $white
+    transform: translateX(1.25rem)
+    // flex: 1 0 auto
+    +z-depth-4dp()
+
+  label.filter.checkbox
+    flex: 0 0 auto
+    font-weight: 700
+    font-variant: small-caps
+    font-size: $size-3
+    display: flex
+    align-items: center
+    color: $black
+
+    margin-left: 1.5rem
+    &:first-child
+      margin-left: 0
+
+    input[type=checkbox]
+      margin-right: 0.25rem
+
+    @supports (zoom:2) 
+      input[type=checkbox]
+        zoom: 2
+
+    @supports not (zoom:2) 
+      input[type=checkbox]
+        transform: scale(2)
+        margin: 15px
+      // transform: scale(1.5)
+      // height: 1.25rem
+
+    .check-wrap
+      width: 2rem
+      // font-size: $size-3
+
+    .text-wrap
+      // color: $blue
+      // font-size: $size-3
+
+    
+
+// +touch
+//   #filters
+//     top: 0.5rem
+//    right: 1rem
+    

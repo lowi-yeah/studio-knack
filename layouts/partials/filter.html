@@ -1,0 +1,38 @@
+
+<!-- <div id="filters">
+  <p> Filter </p>
+  {{ range .Site.Data.settings.filters  }}
+    <label class="filter checkbox">
+      <span class="c-wrap">
+        <input type="checkbox" filter="{{.}}" checked=true>
+      </span>
+      {{.}}
+    </label>
+  {{ end }}
+</div> -->
+
+<div id="filter-wrap">
+  
+  <button id="filter" class="button">
+    <span class="icon">
+      <i class="material icon is-large">filter_list</i>
+    </span>
+  </button>
+
+  <div class="field is-grouped">
+    {{ range .Site.Data.settings.filters  }}
+      <!-- <p class="control">
+        <a class="button is-warning">
+          {{.}}
+        </a>
+      </p> -->
+      <label class="filter checkbox">
+        <input type="checkbox" filter="{{.}}" checked=true>
+        <span class="text-wrap">
+          {{.}}
+        </span>
+      </label>
+    {{ end }}
+  </div>
+
+</div>

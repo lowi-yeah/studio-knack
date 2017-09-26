@@ -24,7 +24,6 @@ export default {
     hΣ.clamp(true)
     ƒ() 
 
-    console.log('hero', hero)
     util.addEvent(window, 'scroll', ƒ)
 
     // body...

@@ -6,6 +6,7 @@ import initDetail from './init-detail'
 import transition from './transition'
 import hero       from './hero'
 import bam        from './bam'
+import filter     from './filter'
 import boring     from './boring'
 
 // import initHover  from './init-hover'
@@ -15,8 +16,9 @@ import boring     from './boring'
 
 menu.init()
 about.init()
-initGrid(menu)
-initDetail()
+// initGrid(menu)
+// initDetail()
+filter.init()
 transition.init()
 
 boring.boringHero()

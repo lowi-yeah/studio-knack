@@ -1,24 +1,13 @@
 {{ partial "header.html" . }}
 
-<div id="debug-canvas"></div>
-<!-- <div id="debug"></div> -->
+<!-- <div id="debug-canvas"></div> -->
+<!-- <div id="debug">
+  <h1>DEBUG</h1>
+</div> -->
 
 {{ partial "hero.html" . }}
 
 {{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
-   
-<div id="filters">
-  <!-- <p> Filter </p> -->
-  {{ range .Site.Data.settings.filters  }}
-    <label class="filter checkbox">
-      <span class="c-wrap">
-        <input type="checkbox" filter="{{.}}" checked=true>
-      </span>
-      {{.}}
-    </label>
-  {{ end }}
-</div>
-
 
 <div class="main grid">
   {{ range $paginator.Pages }}
@@ -53,5 +42,7 @@
     <a class="button" href="{{ .Paginator.Next.URL }}">next</a>
   </div>  
 {{ end }}
+
+{{ partial "filter.html" . }}
 
 {{ partial "footer.html" . }}
