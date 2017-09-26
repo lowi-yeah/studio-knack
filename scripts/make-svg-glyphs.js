@@ -19,29 +19,29 @@ function write(path, content) {
     console.log('svg saved!')})}
 
 function _makePath(ƒ) {
-  return  '    <g ' +
-            (ƒ.base ? ('base="' + ƒ.base + '" ') : '') + 
-            'font="'    + ƒ.name + '" ' + 
-            'char="'    + ƒ.char + '" ' + 
-            'width="'   + ƒ.metrics.advanceWidth + '" ' + 
-            'height="'  + ƒ.metrics.advanceHeight + '" '+ 
-            'left="'    + ƒ.metrics.leftBearing + '" '+ 
-            'top="'     + ƒ.metrics.topBearing + '" >'+ 
-            '\n      <path d="' + ƒ.d + '" />\n'+ 
-          '    </g>'}
+  return  '<g ' +
+          (ƒ.base ? ('base="' + ƒ.base + '" ') : '') + 
+          'font="'    + ƒ.name + '" ' + 
+          'char="'    + ƒ.char + '" ' + 
+          'width="'   + ƒ.metrics.advanceWidth + '" ' + 
+          'height="'  + ƒ.metrics.advanceHeight + '" '+ 
+          'left="'    + ƒ.metrics.leftBearing + '" '+ 
+          'top="'     + ƒ.metrics.topBearing + '" >'+ 
+          '<path d="' + ƒ.d + '" />'+ 
+          '</g>'}
 
 
 function _makeChar(x) {
-  let head  = '  <g id="glyph-' + x.char + '" >',
+  let head  = '  <g id="glyph-' + x.char.charCodeAt(0) + '" >',
       foot  = '  </g>',
-      paths = x.glyphs.join('\n')
-  return head + '\n' + paths + '\n' + foot }
+      paths = x.glyphs.join('')
+  return head + paths  + foot }
 
 function _makeSvg(fontGlyphs) {
   let head  = '<svg id="glyphs" width="100%" height="100%" viewBox="0 0 512 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >',
       foot  = '</svg>',
-      chars = _.map(fontGlyphs, _makeChar).join('\n')
-  return head + '\n' + chars + '\n' + foot }
+      chars = _.map(fontGlyphs, _makeChar).join('')
+  return head +  chars  + foot }
 
 function getGlyphForFonts(char, fonts) { 
   let glyphs  = _.map(fonts, font => {
@@ -69,11 +69,11 @@ function read(dir) {
 
 let fontsPaths  = read('./resources/fonts').filter(p => p.match(/.*[(otf)|(ttf)]$/)),
     fonts       = _.map(fontsPaths, f => fontkit.openSync(f)),
-    chars       = 'STUDIOKNAC',
+    chars       = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz :-—!?',
     fontGlyphs  = _.map(chars, c => getGlyphForFonts(c, fonts)),
     svg         = _makeSvg(fontGlyphs)
 
-// console.log('fonts', fonts)
+console.log('making text', chars)
 
 write('./layouts/partials/glyphs.svg', svg)
 
