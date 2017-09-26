@@ -1,3 +1,11 @@
+@mixin gradient($deg: 0, $from: $red, $to: $yellow) {
+  background-repeat: repeat-x;
+  background-image: -webkit-linear-gradient($deg, $from, $to); // Safari 5.1-6, Chrome 10+
+  background-image: -o-linear-gradient($deg, $from, $to); // Opera 12
+  background-image: linear-gradient($deg, $from, $to); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+}
+
+
 @function text-stroke($size: 2, $color: #fff, $correction: 0) {
   $radius: $size - $correction;
   $stroke: ();

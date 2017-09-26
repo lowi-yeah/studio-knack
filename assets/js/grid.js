@@ -143,6 +143,7 @@ function _initFilters(isotope, menu) {
         filterFn  = function(item) {
                       let category  = item.getAttribute('category'),
                           index     = _.find(values, { name: category })
+                      console.log('category', category)
                       return !_.isNil(index)}
     isotope.arrange({ filter: filterFn })
     menu.close() }
@@ -177,8 +178,7 @@ function _initParallax(skroll) {
   skroll.refresh()
 }
 
-
-export default function initGrid(menu) {
+function init(menu) {
   let base = document.querySelector(selector);
   if (!base) return
 
@@ -191,21 +191,28 @@ export default function initGrid(menu) {
                                               outlayer: isotope,
                                               status:   '.page-load-status',
                                               hideNav:  '#next'}),
-      filters   = _initFilters(isotope, menu),
-      items     = _.map(isotope.items, item =>  item.element)
+      items     = _.map(isotope.items, item =>  item.element),
+      filters   = _initFilters(isotope, menu)
 
-    _initializeItems(items)
-    isotope.layout()
+    // _initializeItems(items)
+    // isotope.layout()
+
     // upon append, initialize the new grid items. then re-layout
-    infScroll.on( 'append', (response, path, items) => {
-      _initializeItems(items, isotope)
-      isotope.layout()})
+    // infScroll.on( 'append', (response, path, items) => {
+    //   _initializeItems(items, isotope)
+    //   isotope.layout()})
 
-    let skroll = skrollr.init()
+    // let skroll = skrollr.init()
+    // isotope.on( 'layoutComplete', _.debounce(() => _initParallax(skroll), 240))
 
-    isotope.on( 'layoutComplete', _.debounce(() => _initParallax(skroll), 240))
+    // _addEvent(window, 'resize', 
+    //   _.debounce(() => 
+    //     _initializeItems(document.querySelectorAll('.grid-item'), isotope), 150)) 
 
-    _addEvent(window, 'resize', 
-      _.debounce(() => 
-        _initializeItems(document.querySelectorAll('.grid-item'), isotope), 150))
   }
+
+function filter() {
+  console.log('filter grid')
+}
+
+export default { init: init, filter: filter}

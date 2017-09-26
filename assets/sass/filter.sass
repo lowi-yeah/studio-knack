@@ -37,10 +37,34 @@
 
   .field
     padding: 1rem 1.5rem
-    background: $white
     transform: translateX(1.25rem)
-    // flex: 1 0 auto
     +z-depth-4dp()
+
+    mix-blend-mode: multiply
+    +gradient($deg: 23deg, $from: $cyan, $to: rgba($white, 0))
+
+    &:before
+      +gradient($deg: 42deg, $from: rgba($magenta, 0.64), $to: rgba($white, 0))
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      content: ""
+
+    &:after
+      +gradient($deg: 81deg, $from: rgba($white, 0), $to: rgba($yellow, 0.42))
+      pointer-events: none
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      content: ""
+
+    
+
+    
 
   label.filter.checkbox
     flex: 0 0 auto

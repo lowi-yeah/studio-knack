@@ -1,7 +1,7 @@
 import '../sass/index.sass'
 import menu       from './menu'
 import about      from './about'
-import initGrid   from './init-grid'
+import grid       from './grid'
 import initDetail from './init-detail'
 import transition from './transition'
 import hero       from './hero'
@@ -16,7 +16,7 @@ import boring     from './boring'
 
 menu.init()
 about.init()
-// initGrid(menu)
+grid.init(menu)
 // initDetail()
 filter.init()
 transition.init()

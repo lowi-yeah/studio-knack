@@ -4,14 +4,6 @@ import util   from './util'
 let ƒWrap, ƒLabels, ƒButton,
     isVisible = false
 
-
-function _click(e) {
-  e.preventDefault()
-  let ι = this.querySelector('input[type=checkbox]')
-  console.log('click', ι)
-  ι.checked = !ι.checked
-}
-
 function _hideFilterBar() {
   let ww = ƒWrap.clientWidth,
       bw = ƒButton.clientWidth
@@ -26,21 +18,16 @@ function _toggleFilterBar() {
 
 function _initButton(){
   util.addEvent(ƒButton, 'click', _toggleFilterBar) // attach event handler
-  _.defer(_hideFilterBar)}                          // hide the filter bar upon startup
+  // _.defer(_hideFilterBar)                          // hide the filter bar upon startup
+  _.defer(_showFilterBar)
+}
 
 function init() { 
   ƒWrap   = document.getElementById('filter-wrap')
-  ƒLabels = document.querySelectorAll('label.filter')
+  ƒLabels = document.querySelectorAll('.text-wrap')
   ƒButton = document.getElementById('filter')
   if (!ƒWrap) return
+  _initButton() } // initialize the filter button
 
-  _initButton()  
-
-  // console.log('init filter') 
-  // console.log('ƒWrap', ƒWrap) 
-  // console.log('ƒLabels', ƒLabels) 
-
-  _.each(ƒLabels, (ƒl) => util.addEvent(ƒl, 'click', _click))
-}
 
 export default { init: init }
