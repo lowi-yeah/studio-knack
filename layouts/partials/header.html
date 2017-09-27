@@ -13,12 +13,10 @@
     {{ else }}
       {{ .Site.Data.settings.seoMetaTags | safeHTML }}
     {{ end }}
-
+  </head>
+  <body>        
     <div id="glyphs-frame">
       {{ partial "glyphs.svg" . }}
     </div>
 
-    {{ partial "transition-css.html" . }}
-    {{ partial "sidebar.html" . }}
-  </head>
-  <body>        
+    {{ partial "menu.html" . }}

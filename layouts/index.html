@@ -1,7 +1,5 @@
 {{ partial "header.html" . }}
-
 {{ partial "hero.html" . }}
-
 {{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
 
 <div class="main grid">
@@ -23,8 +21,6 @@
     </section>
   {{ end }}
 </div>
-
-
 
 <div class="page-load-status">
   <p class="infinite-scroll-request"></p>

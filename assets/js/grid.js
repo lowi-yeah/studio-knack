@@ -143,7 +143,6 @@ function _initFilters(isotope, menu) {
         filterFn  = function(item) {
                       let category  = item.getAttribute('category'),
                           index     = _.find(values, { name: category })
-                      console.log('category', category)
                       return !_.isNil(index)}
     isotope.arrange({ filter: filterFn })
     menu.close() }

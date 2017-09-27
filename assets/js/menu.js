@@ -3,13 +3,15 @@ import voronoi      from './voronoi'
 
 let sidebar
 
-function _openSidebar(morpheus) {
+function _showSidebar(morpheus) {
   morpheus.to('close')
-  sidebar.classList.add('visible')}
+  voronoi.show()
+}
 
-function _closeSidebar(morpheus) {
+function _hideSidebar(morpheus) {
   morpheus.to('burger')
-  sidebar.classList.remove('visible')}
+  voronoi.hide()
+}
 
 function _initBack() {
   if (!document.querySelector('#logo')) return
@@ -19,8 +21,8 @@ function _initBack() {
       morpheus    = new SVGMorpheus('#logo', tocOptions)
 
   document.getElementById('logo').onclick = () => {
-    if( morpheus._curIconId === 'burger') _openSidebar(morpheus)
-    if( morpheus._curIconId === 'close' ) _closeSidebar(morpheus) }
+    if( morpheus._curIconId === 'burger') _showSidebar(morpheus)
+    if( morpheus._curIconId === 'close' ) _hideSidebar(morpheus) }
 
   document.getElementById('logo').onmouseenter = () => morpheus.to('wide')
   document.getElementById('logo').onmouseleave = () => morpheus.to('narrow')
@@ -33,9 +35,8 @@ function _initToc() {
                       rotation: 'none' },
       morpheus    = new SVGMorpheus('#iconset', tocOptions)
   document.getElementById('toc').onclick = () => {
-    if( morpheus._curIconId === 'burger') _openSidebar(morpheus)
-    if( morpheus._curIconId === 'close' ) _closeSidebar(morpheus) }
-
+    if( morpheus._curIconId === 'burger') _showSidebar(morpheus)
+    if( morpheus._curIconId === 'close' ) _hideSidebar(morpheus) }
   return morpheus
 }
 
@@ -50,16 +51,13 @@ function init() {
   _initBack()
   
   let morpheus  = _initToc()
-  this.open     = _.partial(_openSidebar, morpheus)
-  this.close    = _.partial(_closeSidebar, morpheus)
-  _.defer(() => {
-    _openSidebar(morpheus)})
-
-  voronoi.init('s-voronoi')
-
+  this.open     = _.partial(_showSidebar, morpheus)
+  this.close    = _.partial(_hideSidebar, morpheus)
   
+  voronoi.init('s-voronoi')
+  // _.defer(() => {_showSidebar(morpheus)}) 
 }
 
 
-export default {init}
+export default { init }
 
