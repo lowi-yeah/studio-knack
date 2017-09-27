@@ -18,8 +18,8 @@ function _toggleFilterBar() {
 
 function _initButton(){
   util.addEvent(ƒButton, 'click', _toggleFilterBar) // attach event handler
-  // _.defer(_hideFilterBar)                          // hide the filter bar upon startup
-  _.defer(_showFilterBar)
+  _.defer(_hideFilterBar)                          // hide the filter bar upon startup
+  // _.defer(_showFilterBar)
 }
 
 function init() { 

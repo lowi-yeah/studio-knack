@@ -1,12 +1,15 @@
-import SVGMorpheus from './lib/svg-morpheus'
+import SVGMorpheus  from './lib/svg-morpheus'
+import voronoi      from './voronoi'
+
+let sidebar
 
 function _openSidebar(morpheus) {
   morpheus.to('close')
-  document.getElementById('sidebar').classList.add('visible')}
+  sidebar.classList.add('visible')}
 
 function _closeSidebar(morpheus) {
   morpheus.to('burger')
-  document.getElementById('sidebar').classList.remove('visible')}
+  sidebar.classList.remove('visible')}
 
 function _initBack() {
   if (!document.querySelector('#logo')) return
@@ -41,10 +44,20 @@ function _initToc() {
   // if (!ς) return }
 
 function init() {
+  sidebar = document.getElementById('sidebar')
+  if(!sidebar) return 
+
   _initBack()
-  let morpheus = _initToc()
-  this.open = _.partial(_openSidebar, morpheus)
-  this.close = _.partial(_closeSidebar, morpheus)
+  
+  let morpheus  = _initToc()
+  this.open     = _.partial(_openSidebar, morpheus)
+  this.close    = _.partial(_closeSidebar, morpheus)
+  _.defer(() => {
+    _openSidebar(morpheus)})
+
+  voronoi.init('s-voronoi')
+
+  
 }
 
 

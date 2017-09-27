@@ -6,7 +6,7 @@
   $size: 48px
   width: $size
   height: $size
-  z-index: 102
+  z-index: 302
   padding: 0
   position: fixed
   top: 1rem
@@ -43,12 +43,13 @@ nav#sidebar
   height: 100vh
   width: 100vw
   
-  transform: translateX(100%)
+  transform: translateX(101%)
   transition: transform 0.3s
-  +pb('lines-45-b', 16px, $white, $black, 1, 'none')
+  
+  // +pb('lines-45-b', 16px, $white, $black, 1, 'none')
 
   position: fixed !important
-  z-index: 100 !important
+  z-index: 300 !important
   top: 0
   right: 0
   box-shadow: -2px 0 $black
@@ -66,8 +67,6 @@ nav#sidebar
     display: flex
     align-items: center;
     flex-direction: column;
-
-
     &.contact
       ul
         display: flex;
@@ -111,6 +110,19 @@ nav#sidebar
       .media-content
         +text-stroke($size: 4, $color: $black)      
         color: $white
+
+  svg#s-voronoi
+    position: absolute
+    left: 0
+    top: 0
+    width: 100%
+    height: 100%
+    background: rgba($yellow, 0.4)
+
+    .polygons
+      path
+        fill: $yellow
+        stroke: rgba($grey  , 0.62)
 
 +mobile
   nav#sidebar
