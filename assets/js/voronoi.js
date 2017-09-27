@@ -25,61 +25,6 @@ function _makePoints(dimensions) {
             .map(() => [_.random(dimensions.x), _.random(dimensions.y)])
             .value() }
 
-function _makeShadowz(defs) {
-  return  _(numPoints)
-            .range()
-            .map( ι => {
-              let ƒ = defs.append('filter')
-                        .attr('id',     `f-${ι}`)
-                        .attr('x',      '-50%')
-                        .attr('y',      '-50%')
-                        .attr('width',  '200%')
-                        .attr('height', '200%')
-              
-              ƒ.append('feFlood').attr('fill-color', ςolor)
-
-              ƒ.append('feComposite')
-                .attr('in2', 'SourceAlpha')
-                .attr('operator', 'out')
-
-              ƒ.append('feGaussianBlur')
-                .attr('stdDeviation', 4 + (ι * 0.62))
-
-              ƒ.append('feOffset')
-                .attr('dx', '0')
-                .attr('dy', '0')
-                .attr('result', 'offsetblur')
-
-              ƒ.append('feFlood')
-                .attr('flood-color', ςolor)
-                .attr('result', 'color')
-
-              ƒ.append('feComposite')
-                .attr('in2', 'offsetblur')
-                .attr('operator', 'in')
-
-              ƒ.append('feComposite')
-                .attr('in2', 'SourceAlpha')
-                .attr('operator', 'in')
-
-              let μ = ƒ.append('feMerge')
-
-              μ.append('feMergeNode').attr('in', 'SourceGraphic')
-              μ.append('feMergeNode')
-              return ƒ })
-            .value() }
-
-// <feGaussianBlur in="alpha-channel-of-feDropShadow-in"
-//     stdDeviation="stdDeviation-of-feDropShadow"/>
-// <feOffset dx="dx-of-feDropShadow" dy="dy-of-feDropShadow"
-//     result="offsetblur"/>
-// <feFlood flood-color="flood-color-of-feDropShadow"
-//     flood-opacity="flood-opacity-of-feDropShadow"/>
-// <feComposite in2="offsetblur" operator="in"/>
-// <feMerge>
-//   <feMergeNode/>
-//   <feMergeNode in="in-of-feDropShadow"/>
-// </feMerge>
 function _makeShadows(defs) {
   return  _(numPoints)
             .range()
