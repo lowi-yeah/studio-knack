@@ -5,7 +5,7 @@ let d3ν = require('d3-voronoi')
 let ςolor   = '#4a4a4a',
     ςolors  = ['#ffffff', '#ffffff', '#feeefb', '#fffdf2', '#d8eeed']
 
-let id = 's-voronoi',
+let id = 'vornoi-pattern',
     numPoints, svg, defs, g, voronoi, points, dataJoin, polygon, animation, ζAnimation
   
 function _makeAnimation() {
@@ -80,7 +80,8 @@ function _dimensions() { return { x: svg.node().clientWidth, y: svg.node().clien
 
 function _enableShadows() {
   // polygon.style('filter', (δ, ι) => `url(#f-${ι})`)
-  ζAnimation.play()
+  // ζAnimation.play()
+  ζAnimation.seek(ζAnimation.duration)
 }
 
 function _disableShadows() {
@@ -100,7 +101,18 @@ function _decolorize() {
 function show() {
   if(animation.currentTime === animation.duration) return
   animation.reversed = false
-  animation.play() }
+  animation.play() 
+
+  return new Promise(resolve => {
+    animation.update = function(anim) {
+      if(animation.progress === 100) {
+        animation.update = undefined
+        resolve()
+      }
+    }
+    // setTimeout(resolve, 1000)
+  })
+}
 
 function hide() {
   if(animation.currentTime === 0) return
@@ -108,10 +120,10 @@ function hide() {
   animation.play() }
 
 function init() {
-  numPoints = _.random(12, 24)
+  numPoints = _.random(16, 32)
   svg       = select(`#${id}`)
   g         = select(`#${id} > .cells`)
-  defs      = svg.append('defs')
+  defs      = select(`#${id} > defs`)
   voronoi   = d3ν.voronoi().extent([[-1, -1], [_dimensions().x + 1, _dimensions().y + 1]])
   points    = _makePoints(_dimensions())
 
@@ -135,13 +147,11 @@ function init() {
   _makeAnimation() 
 
   // _enableShadows()
+  _disableShadows()
   // _colorize()
   _decolorize()
-  animation.seek(animation.duration)
+  animation.seek(0)
   // animation.play()
-
-  _.delay(_enableShadows, 2000)
-  // _.delay(, 1000)
 }
 
 

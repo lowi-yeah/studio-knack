@@ -6,7 +6,7 @@
   $size: 48px
   width: $size
   height: $size
-  z-index: 302
+  z-index: 305
   padding: 0
   position: fixed
   top: 1rem
@@ -39,49 +39,83 @@
 //     bottom: 1rem
 //     top: unset
       
-#sidebar
+#menu
   height: 100vh
   width: 100vw
   pointer-events: none
-  
+  z-index: 304
 
-  position: fixed !important
-  z-index: 300 !important
+  position: fixed
   top: 0
   right: 0
 
-  display: flex
   flex-direction: column
   align-content: center
-
-  &.visible
-    transform: translateX(0) 
 
   .section 
     padding: 1rem
     flex: 1 0 auto
-    display: flex
-    align-items: center;
-    flex-direction: column;
-    &.contact
+    pointer-events: all
+
+    svg > rect.gradient-box
+      mix-blend-mode: multiply
+
+    &.navigation
+      padding: 0
+      width: 100%
+      height: 100%
+      background: transparent
       ul
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-
+        display: flex
+        flex-direction: column
         li
-          margin-bottom: 1rem
+          flex: 0 1 auto
+          a
+            padding-left: 1.5rem
+            font-size: 1rem
+            font-weight: 900
+            display: inline-block
+
+            &#home-link
+              padding-top: 1.5rem
+          
+
+    
+    &.contact
+      padding: 0
+      position: absolute
+      bottom: 0
+      left: 0
+      width: 100%
+      +z-depth-2dp-flipped()
+      overflow: hidden 
+      background: $black
+      
+
+      align-self: flex-end
+
+      ul
+        padding: 3rem 0 0 0
+        display: flex
+        flex-direction: column
+        align-items: flex-start
+
+        li > a
+          font-size: 1rem
+          font-weight: 900
+          color: $white
+          +z-depth-4dp-inset()
 
 
 
-  a.title
-    font-weight: 700
-    font-variant: small-caps
-    +text-stroke($size: 4)
+  // a.title
+  //   font-weight: 700
+  //   font-variant: small-caps
+  //   +text-stroke($size: 4)
 
-    &:hover
-      +text-stroke($size: 4, $color: $black)      
-      color: $white
+  //   &:hover
+  //     +text-stroke($size: 4, $color: $black)      
+  //     color: $white
 
   a.media
     flex: 0 1 auto
@@ -92,12 +126,10 @@
     .media-left
       display: inline-block
       .icon 
-        background: $white
-        border-radius: 50%
+        background: transparent
     .media-content
       display: inline-block
       margin-left: 0.5rem
-      +text-stroke($size: 4)
 
     &:hover
       .icon 
@@ -106,11 +138,3 @@
       .media-content
         +text-stroke($size: 4, $color: $black)      
         color: $white
-
-+mobile
-  nav#sidebar
-    height: 100vh
-    width: 100vw
-    transform: translateX(0%) translateY(100%)
-    &.visible
-      transform: translateY(0) 

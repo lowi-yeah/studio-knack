@@ -13,20 +13,19 @@ import voronoi    from './voronoi'
 import logo       from './logo'
 
 function ready(fn) {
-  if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
-    fn();
-  } else {
-    document.addEventListener('DOMContentLoaded', fn);
-  }
+  if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') fn()
+  else document.addEventListener('DOMContentLoaded', fn)
 }
 
 function init() {
-  console.log('init')
-  logo.begin()
+  console.log('ready!')
+  logo.begin().then(() => { voronoi.init()
+                            menu.init() })
+  transition.init()
+  
 
 
 // logo.init()
-// voronoi.init()
 // menu.init()
 // about.init()
 // grid.init(menu)

@@ -16,8 +16,7 @@ function _gradients() {
             gradientTransform:  `rotate(${ω})`, 
             duration:           δ,
             loop:               true,
-            easing:             'linear' })})
-}
+            easing:             'linear' })})}
 
 function _getRatio() {
   let ww = window.innerWidth,
@@ -41,7 +40,7 @@ function resize() {
       σx = ww * .095 / r,
       σy = ((wh - (kh * r)) / 2) / r
 
-  knackText.style.transform = `scale(${ς}) translate(${σx}px, ${σy}px)` 
+  knackText.style.transform   = `scale(${ς}) translate(${σx}px, ${σy}px)` 
   knackΣhadow.style.transform = `scale(${ς}) translate(${σx}px, ${σy}px)` 
   knackGradients.forEach(knack => knack.style.transform = `scale(${ς}) translate(${σx}px, ${σy}px)` )
 
@@ -65,25 +64,25 @@ function init() {
 }
 
 function begin() {
-  console.log('begin')
-  knackBase       = document.querySelector('#knack-base')
-  knackText       = document.querySelector('#knack-text')
-  knackΣhadow     = document.querySelector('#knack-shadow')
-  knackGradients  = document.querySelectorAll('g.knack')
-
-  // <g id="knack-text" clip-path="url(#knack-clip)">
-  //   <rect transform="translate(20)" x="0" y="0" width="100%" height="100%" fill="#ffff00"/>
-  // </g>
-
-  let ratio           = _getRatio(),
-      rect            = document.querySelector('#knack-text > rect'),
-      animationParams = { targets:    rect,
-                          transform: `translate(${0})`,
-                          duration:   800 + Math.random() * 1200,
-                          delay:      800,
-                          easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)]
-                        }
-  anime(animationParams) 
+  return new Promise( (resolve, reject) => {
+    knackBase       = document.querySelector('#knack-base')
+    knackText       = document.querySelector('#knack-text')
+    knackΣhadow     = document.querySelector('#knack-shadow')
+    knackGradients  = document.querySelectorAll('g.knack')
+  
+    let ratio           = _getRatio(),
+        rect            = document.querySelector('#knack-text > rect'),
+        animationParams = { targets:    rect,
+                            transform: `translate(${0})`,
+                            // duration:   800 + Math.random() * 1200,
+                            // delay:      800,
+                            duration:   200,
+                            delay:      200,
+                            easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
+                            complete:   resolve
+                          }
+    anime(animationParams) 
+  })
 }
 
 export default {init, begin}

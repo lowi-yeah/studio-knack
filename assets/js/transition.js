@@ -1,4 +1,5 @@
-import anime from 'animejs'
+import anime  from 'animejs'
+// import util   from './util'
 
 let TRANSITION_DURATION = 1000,
     EASINGS = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
@@ -10,17 +11,80 @@ function _href(e) {
   if(location) return location
   else return _href(e.parentElement)}
 
-function _transitionTo(doneFn){
-  let τ = document.getElementById('transition'),
-      δ = _.sample(['left', 'top']),
-      ε = _.sample(EASINGS),
-      ω = { targets: '#transition',
-            top: 0,
-            left: 0,
-            easing:   ε,
-            duration: TRANSITION_DURATION },
-      α  = anime(ω) 
-  α.complete = () => doneFn() }
+function _home(doneFn) {
+  console.log('going home…')
+  setTimeout(doneFn, 800)
+}
+
+function _about(doneFn){
+  // let τ = document.getElementById('transition'),
+  //     δ = _.sample(['left', 'top']),
+  //     ε = _.sample(EASINGS),
+  //     ω = { targets: '#transition',
+  //           top: 0,
+  //           left: 0,
+  //           easing:   ε,
+  //           duration: TRANSITION_DURATION },
+  //     α  = anime(ω) 
+  // setTimeout(doneFn, 1000)
+
+
+  let home  = document.getElementById('home-link'),
+      about = document.getElementById('about-link'),
+      τ     = anime.timeline(),
+      ω     = about.getBoundingClientRect().top - 35
+
+  console.log('τ', τ)
+
+  // ————————————————————————————————
+  anime({ targets: '#about-link',
+          fontSize: 32,
+          easing:   _.sample(EASINGS),
+          duration: 420 })
+
+  // ————————————————————————————————
+  anime({ targets: '#about-link',
+          fontSize: 32,
+          easing:   _.sample(EASINGS),
+          duration: 420 })
+
+  // ————————————————————————————————
+  τ.add({ targets: '#about-link',
+          translateX: 116,
+          easing:   _.sample(EASINGS),
+          delay:    _.random(120, 240),
+          duration: _.random(240, 420) })
+
+  τ.add({ targets: '#about-link',
+          translateX: 116,
+          translateY: -ω,
+          easing:   _.sample(EASINGS),
+          duration: _.random(240, 420) })
+
+  τ.add({ targets: '#menu',
+          translateX: -window.innerWidth,
+          easing:   _.sample(EASINGS),
+          delay: _.random(240, 420),
+          duration: _.random(240, 420) })
+
+  setTimeout(doneFn, τ.duration)
+
+
+  // ————————————————————————————————
+  anime({ targets: '#contact',
+          translateX: 0,
+          translateY: window.innerHeight,
+          duration:   _.random(420, 640),
+          delay:      _.random(120, 240),
+          easing:     _.sample(EASINGS) }) 
+
+   // ————————————————————————————————
+  anime({ targets: '#toc',
+          scale: 0,
+          duration:   _.random(420, 640),
+          delay:      _.random(120, 240),
+          easing:     _.sample(EASINGS) }) 
+}
 
 function _initBackButton() {
   let β = document.getElementById('back')
@@ -37,6 +101,7 @@ function _initBackButton() {
 
 
 function init() {
+
   // global function for navigating a step back
   // used on single pages to navigate back to the home screen
   window.goBack = function() {
@@ -49,20 +114,13 @@ function init() {
   
     if(location) {
       e.preventDefault()
-      _transitionTo(() => {window.location = location})
+      console.log('location', location)
+
+      if( location === '/about') _about(() => window.location = location)
+      if( location === '/') _home(() => window.location = location)
+      // _transitionTo()
     }}
 
-  // here we go…
-  let τ = document.getElementById('transition'),
-      δ = _.sample(['left', 'top']),
-      ρ = _.sample(['-102%', '102%']),
-      ε = _.sample(EASINGS),
-      ω = { targets: '#transition',
-            easing:   ε,
-            duration: TRANSITION_DURATION },
-      Ϟ = ω[δ] = ρ,
-      α  = anime(ω) 
-  α.complete = () => _initBackButton()
 }
 
 export default { init: init }

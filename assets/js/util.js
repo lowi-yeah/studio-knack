@@ -32,10 +32,16 @@ function guid() {
                     .substring(1)
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() }
 
+function fontSize(ε) {
+  let style = window.getComputedStyle(ε, null).getPropertyValue('font-size')
+  return parseFloat(style)
+}
+
 export default {
-  addEvent:       addEvent,
-  startAnimation: startAnimation,
-  clearElement:   clearElement,
-  guid:           guid,
-  scrollTop:      scrollTop
+  addEvent,
+  startAnimation,
+  clearElement,
+  guid,
+  scrollTop,
+  fontSize
 }
