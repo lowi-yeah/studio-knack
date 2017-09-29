@@ -1,6 +1,26 @@
 {{ partial "header.html" . }}
 {{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
 
+<div class="main grid">
+  {{ range $paginator.Pages }}
+    <section 
+      class="grid-item section"
+      {{ with .Title }} data-caption="{{ . }}" {{ end }} 
+      {{ with .Params.emphasis }} emphasis="{{ . }}" {{ end }}
+      {{ with .Params.category }} category="{{ . }}" {{ end }} >
+      <a class="box" href="{{ .Permalink }}">
+        <div class="content">
+          <div class="image">
+            <img src="{{ (index .Params.images 0).pallete }}">
+            <!-- {{ (index .Params.images 0) }} -->
+            <div class="shadow"></div>
+          </div>            
+        </div>  
+      </a>
+    </section>
+  {{ end }}
+</div>
+
 <div class="page-load-status">
   <p class="infinite-scroll-request"></p>
 </div>

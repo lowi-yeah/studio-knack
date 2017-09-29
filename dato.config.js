@@ -155,6 +155,7 @@ module.exports = (dato, root, i18n) => {
                       let frontmatter = { title:        entry.title,
                                           images:       _.map(entry.gallery, image => 
                                                             { return { url:     image.url({ w: 800, auto: 'compress' }),
+                                                                       info:    image.url({ fm: 'json' }),
                                                                        pallete: image.url({ w: 800, palette: 'json', colors: '2' }) }}),
                                           date:         entry.date,
                                           category:     entry.category,

@@ -22,13 +22,12 @@ function init() {
   logo.begin().then(() => { voronoi.init()
                             menu.init() })
   transition.init()
-  
+  grid.init()
 
 
 // logo.init()
 // menu.init()
 // about.init()
-// grid.init(menu)
 // initDetail()
 // filter.init()
 // transition.init()

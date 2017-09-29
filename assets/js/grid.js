@@ -177,7 +177,7 @@ function _initParallax(skroll) {
   skroll.refresh()
 }
 
-function init(menu) {
+function init() {
   let base = document.querySelector(selector);
   if (!base) return
 
@@ -190,8 +190,8 @@ function init(menu) {
                                               outlayer: isotope,
                                               status:   '.page-load-status',
                                               hideNav:  '#next'}),
-      items     = _.map(isotope.items, item =>  item.element),
-      filters   = _initFilters(isotope, menu)
+      items     = _.map(isotope.items, item =>  item.element)
+      // filters   = _initFilters(isotope, menu)
 
     // _initializeItems(items)
     // isotope.layout()
@@ -201,8 +201,8 @@ function init(menu) {
     //   _initializeItems(items, isotope)
     //   isotope.layout()})
 
-    // let skroll = skrollr.init()
-    // isotope.on( 'layoutComplete', _.debounce(() => _initParallax(skroll), 240))
+    let skroll = skrollr.init()
+    isotope.on( 'layoutComplete', _.debounce(() => _initParallax(skroll), 240))
 
     // _addEvent(window, 'resize', 
     //   _.debounce(() => 
