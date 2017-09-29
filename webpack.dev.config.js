@@ -1,8 +1,11 @@
-const webpack = require('webpack');
+const webpack           = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const extractSass       = new ExtractTextPlugin('all.css')
 
 module.exports = {
   entry: {
-    all: __dirname + '/assets/js/index.js',
+    all:  __dirname + '/assets/js/index.js',
+    dawn: __dirname + '/assets/js/dawn.js'
   },
   resolve: {
     root: __dirname + '/assets/js',
@@ -16,8 +19,10 @@ module.exports = {
   },
   module: {
     loaders: [
+      // { test: /.*\.sass$/,
+      //   loaders: ['style', 'css', 'sass', 'import-glob'] },
       { test: /.*\.sass$/,
-        loaders: ['style', 'css', 'sass', 'import-glob'] },
+        loader: extractSass.extract(['css', 'sass', 'import-glob'])},
       
       { test: /\.js$/,
         exclude: /(node_modules)/,
@@ -32,6 +37,7 @@ module.exports = {
     ]
   },
   plugins: [
+    extractSass,
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
@@ -41,8 +47,7 @@ module.exports = {
   devServer: {
     port:     3000,
     inline:   true,
-    stats:    'minimal',
-    headers:  { 'Access-Control-Allow-Origin': '*' }
+    stats:    'minimal'
   },
 };
 

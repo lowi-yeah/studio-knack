@@ -54,7 +54,6 @@ function init() {
   this.open     = _.partial(_showSidebar, morpheus)
   this.close    = _.partial(_hideSidebar, morpheus)
   
-  voronoi.init('s-voronoi')
   // _.defer(() => {_showSidebar(morpheus)}) 
 }
 

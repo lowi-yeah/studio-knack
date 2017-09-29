@@ -1,4 +1,5 @@
 import '../sass/index.sass'
+
 import menu       from './menu'
 import about      from './about'
 import grid       from './grid'
@@ -8,21 +9,36 @@ import hero       from './hero'
 import bam        from './bam'
 import filter     from './filter'
 import boring     from './boring'
+import voronoi    from './voronoi'
+import logo       from './logo'
 
-// import initHover  from './init-hover'
+function ready(fn) {
+  if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
+
+function init() {
+  console.log('init')
+  logo.begin()
 
 
-
-
-menu.init()
-about.init()
-grid.init(menu)
+// logo.init()
+// voronoi.init()
+// menu.init()
+// about.init()
+// grid.init(menu)
 // initDetail()
-filter.init()
-transition.init()
-
-boring.boringHero()
-
+// filter.init()
+// transition.init()
+// boring.boringHero()
 // hero.init()
 // bam.init()
 // initHover()
+
+}
+
+ready(setTimeout(init, 100))
+

@@ -1,0 +1,68 @@
+<!-- to be further filled via JS -->
+<svg id="studio-knack">
+  <defs>
+    {{ range $key, $val := (slice "#feeefb" "#fffdf2" "#d8eeed") }}
+      <linearGradient id="gradient-{{ $key }}" 
+                      class="text-gradient" 
+                      x1="0%" y1="0%" x2="24%" y2="0" 
+                      gradientTransform="rotate(0)">
+        <stop offset="0%" style="stop-color:#ffffff;"/>
+        <stop offset="100%" style="stop-color:{{ $val }};"/>
+      </linearGradient>
+    {{ end }}
+
+    <filter id="innerShadow"
+            x="-50%"
+            y="-50%" 
+            width="200%"
+            height="200%" >
+      <feFlood fill-color = "#000000" />
+      <feComposite in2 = "SourceAlpha" operator = "out" />
+      <feGaussianBlur in2 = "SourceAlpha" stdDeviation="0.62" />
+      <!-- <feOffset dx="0.62" dy="0.62" result="offsetblur" /> -->
+      <feOffset dx="0" dy="0" result="offsetblur" />
+      <feFlood flood-color="#AAAAAA" result="color" />
+      <feComposite in2="offsetblur" operator="in" />
+      <feMerge>
+        <!-- <feMergeNode in= "SourceGraphic" /> -->
+        <feMergeNode />
+      </feMerge>
+    </filter>
+
+    <clipPath id="knack-clip" x="0" y="0" width="100%" height="100%" >
+      {{ partial "knack.svg" . }}
+    </clipPath>
+
+    <clipPath id="black-clip">
+      <rect x="0" y="0" width="50%" height="100%"  />
+    </clipPath>
+
+    <symbol id="knack-sym">
+      {{ partial "knack.svg" . }}
+    </symbol>
+
+  </defs>
+  
+  {{ range (slice 0 1 2) }}
+    <g class="knack">
+      <rect x="0" y="0" width="100%" height="100%" fill="url(#gradient-{{ . }})" clip-path="url(#knack-clip)"/>
+    </g>
+  {{ end }}
+
+  <g id="knack-base" opacity="0" fill="#ffffff">
+    <use href="#knack-sym"/>
+  </g>
+
+  <g id="knack-shadow" filter="url(#innerShadow)" clip-path="url(#knack-clip)" opacity="0.24" >
+    <use href="#knack-sym"/>
+  </g>
+
+  <g id="knack-text" clip-path="url(#knack-clip)">
+    <rect x="0" y="0" width="100%" height="100%" fill="#000000"/>
+  </g>
+
+
+
+  <rect id="curtain" x="0" y="0" width="100%" height="100%" fill="#ffffff" />
+
+</svg>
