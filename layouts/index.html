@@ -1,56 +1,16 @@
 {{ partial "header.html" . }}
-
-<div id="debug-canvas"></div>
-<!-- <div id="debug"></div> -->
-
-{{ partial "hero.html" . }}
-
 {{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
-   
-<div id="filters">
-  <!-- <p> Filter </p> -->
-  {{ range .Site.Data.settings.filters  }}
-    <label class="filter checkbox">
-      <span class="c-wrap">
-        <input type="checkbox" filter="{{.}}" checked=true>
-      </span>
-      {{.}}
-    </label>
-  {{ end }}
-</div>
-
-<div class="main grid">
-  {{ range $paginator.Pages }}
-    <section 
-      class="grid-item section"
-      {{ with .Title }} data-caption="{{ . }}" {{ end }} 
-      {{ with .Params.emphasis }} emphasis="{{ . }}" {{ end }}
-      {{ with .Params.category }} category="{{ . }}" {{ end }} >
-      <a class="box" href="{{ .Permalink }}">
-        <div class="content">
-          <div class="image">
-            <img src="{{ (index .Params.images 0).url }}">
-            <div class="shadow"></div>
-            <link class="pallete" href="{{ (index .Params.images 0).pallete }}">
-          </div>            
-        </div>  
-      </a>
-    </section>
-  {{ end }}
-</div>
-
-
 
 <div class="page-load-status">
   <p class="infinite-scroll-request"></p>
 </div>
-
-{{ partial "overlays.html" . }}
 
 {{ if .Paginator.HasNext }} 
   <div id="next" class="container is-fluid">
     <a class="button" href="{{ .Paginator.Next.URL }}">next</a>
   </div>  
 {{ end }}
+
+{{ partial "filter.html" . }}
 
 {{ partial "footer.html" . }}

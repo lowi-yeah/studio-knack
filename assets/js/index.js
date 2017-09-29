@@ -1,22 +1,43 @@
 import '../sass/index.sass'
+
 import menu       from './menu'
 import about      from './about'
-import initGrid   from './init-grid'
+import grid       from './grid'
 import initDetail from './init-detail'
 import transition from './transition'
 import hero       from './hero'
 import bam        from './bam'
+import filter     from './filter'
+import boring     from './boring'
+import voronoi    from './voronoi'
+import logo       from './logo'
 
-// import initHover  from './init-hover'
+function ready(fn) {
+  if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') fn()
+  else document.addEventListener('DOMContentLoaded', fn)
+}
+
+function init() {
+  console.log('ready!')
+  logo.begin().then(() => { voronoi.init()
+                            menu.init() })
+  transition.init()
+  
 
 
-
-
-menu.init()
-about.init()
-initGrid(menu)
-initDetail()
-transition.init()
+// logo.init()
+// menu.init()
+// about.init()
+// grid.init(menu)
+// initDetail()
+// filter.init()
+// transition.init()
+// boring.boringHero()
 // hero.init()
-bam.init()
+// bam.init()
 // initHover()
+
+}
+
+ready(setTimeout(init, 100))
+
