@@ -134,8 +134,6 @@ function init() {
   _initBack()
   _initNavigation()
   _initContact()
-
-  console.log('init menu', contact)
   
   let morpheus  = _initToc()
   this.open     = _.partial(_showMenu, morpheus)

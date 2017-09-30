@@ -63,6 +63,14 @@ function init() {
   setTimeout(resize, 0) 
 }
 
+function _cleanup() {
+  knackBase.remove()
+  knackΣhadow.remove()
+  _.each(knackGradients, g => g.remove())
+
+  knackText.remove()
+}
+
 function begin() {
   return new Promise( (resolve, reject) => {
     knackBase       = document.querySelector('#knack-base')
@@ -79,7 +87,8 @@ function begin() {
                             duration:   200,
                             delay:      200,
                             easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
-                            complete:   resolve
+                            complete:   () => { _cleanup()
+                                                resolve() }
                           }
     anime(animationParams) 
   })

@@ -2,7 +2,9 @@ import '../sass/index.sass'
 
 import menu       from './menu'
 import about      from './about'
-import grid       from './grid'
+// import grid       from './grid'
+import content    from './content'
+import brikkery   from './brikkery'
 import initDetail from './init-detail'
 import transition from './transition'
 import hero       from './hero'
@@ -22,7 +24,8 @@ function init() {
   logo.begin().then(() => { voronoi.init()
                             menu.init() })
   transition.init()
-  grid.init()
+  content.init()
+  // brikkery.init()
 
 
 // logo.init()

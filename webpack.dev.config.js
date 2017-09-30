@@ -4,9 +4,9 @@ const extractSass       = new ExtractTextPlugin('all.css')
 
 module.exports = {
   entry: {
-    all:  __dirname + '/assets/js/index.js',
-    dawn: __dirname + '/assets/js/dawn.js'
-  },
+    all:          __dirname + '/assets/js/index.js',
+    dawn:         __dirname + '/assets/js/dawn.js' },
+    
   resolve: {
     root: __dirname + '/assets/js',
     alias: {
@@ -49,5 +49,11 @@ module.exports = {
     inline:   true,
     stats:    'minimal'
   },
+  worker: {
+    output: {
+      filename: "hash.worker.js",
+      chunkFilename: "[id].hash.worker.js"
+    }
+  }
 };
 

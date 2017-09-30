@@ -1,0 +1,45 @@
+{{ $paginator := .Paginate (where .Data.Pages "Type" "entry") }}
+
+<div id="grid-wrap">
+<div id="grid" class="main grid">
+  {{ range $paginator.Pages }}
+
+    {{ $image := index .Params.images 0 }}
+
+    <section 
+      class="grid-item section"
+      {{ with .Params.id }}       id="{{ . }}"   {{ end }} 
+      {{ with .Title }}           data-caption="{{ . }}"        {{ end }} 
+      {{ with .Params.emphasis }} emphasis="{{ . }}"            {{ end }}
+      {{ with .Params.category }} category="{{ . }}"            {{ end }} 
+      {{ with $image.url }}       data-image-url="{{ . }}"      {{ end }} 
+      {{ with $image.pallete }}   data-image-pallete="{{ . }}"  {{ end }} 
+      {{ with $image.info }}      data-image-info="{{ . }}"     {{ end }} >
+
+      <div class="content">
+            
+        <div class="image" style="background-image: url({{ $image.tiny }})"></div>       
+        <!-- <div class="title">
+          <a href="{{ .Permalink }}">
+            {{ .Params.title }}
+          </a>
+        </div> -->
+        <!-- <div class="image">
+          <img src="{{ (index .Params.images 0).tiny }}">
+          <div class="shadow"></div>
+        </div>             -->
+      </div>  
+    </section>
+  {{ end }}
+</div>
+</div>
+
+<div class="page-load-status">
+  <p class="infinite-scroll-request"></p>
+</div>
+
+{{ if .Paginator.HasNext }} 
+  <div id="next" class="container is-fluid">
+    <a class="button" href="{{ .Paginator.Next.URL }}">next</a>
+  </div>  
+{{ end }}

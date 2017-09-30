@@ -37,11 +37,31 @@ function fontSize(ε) {
   return parseFloat(style)
 }
 
+
+function getDevice(width) {
+  let breakpoints = { 480:  'mobile',
+                      769:  'tablet',
+                      1000: 'desktop',
+                      1192: 'widescreen'},
+      device      = _.find(breakpoints, (_, k) => width < parseInt(k) )
+  return device || 'fullhd' }
+
+// function isTouchDevice() { 
+//   console.log('isMobile', isMobile)
+//   return isMobile.phone || isMobile.seven_inch || isMobile.tablet }
+
+// hleper function to detect whether or not the browser is touchy
+function isTouchDevice() {
+  return 'ontouchstart' in window // works on most browsers 
+      || navigator.maxTouchPoints } // works on IE10/11 and Surface
+
 export default {
   addEvent,
   startAnimation,
   clearElement,
   guid,
   scrollTop,
-  fontSize
+  fontSize,
+  isTouchDevice,
+  getDevice
 }

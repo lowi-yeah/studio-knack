@@ -156,8 +156,10 @@ module.exports = (dato, root, i18n) => {
                                           images:       _.map(entry.gallery, image => 
                                                             { return { url:     image.url({ w: 800, auto: 'compress' }),
                                                                        info:    image.url({ fm: 'json' }),
+                                                                       tiny:    image.url({ w: 2 }),
                                                                        pallete: image.url({ w: 800, palette: 'json', colors: '2' }) }}),
                                           date:         entry.date,
+                                          id:           'knc-' + index,
                                           category:     entry.category,
                                           location:     entry.location,
                                           latlng:       entry.latlng,

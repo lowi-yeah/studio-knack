@@ -57,69 +57,164 @@
       animation: loading 2s linear infinite
 
 
-
-
-
 // Encode/Decode urls:
 // http://www.utilities-online.info/urlencode/
+=columns($count: 12)
+  $col: "auto "
+  $cols: ""
+  @for $i from 0 to $count 
+    $cols: $cols + $col;
+  grid-template-columns: unquote("#{$cols}")
 
-.grid-item 
-  // color: $black
-  width: 25% 
-  display: flex
-  padding: 6rem 0
+#grid-wrap
+  // padding-left: 3rem
+  // padding-right: 3rem
+#grid
+  // background: $yellow
+  width: 100%
+  height: 100%
+  
+  // display: flex
+  // flex-direction: column
 
-  +mobile 
-    width: 100% 
+  display: grid
+  grid-auto-rows: 1rem
+  +columns(24)
 
-  +tablet
-    width: 50% 
+  $gap: 0
+  grid-column-gap: $gap
+  grid-row-gap: $gap
   
-  +desktop
-    width: 33.33%
+  // justify-content: space-around
+  // justify-content: space-evenly
+  justify-content: stretch
+  // justify-items: start  
+  grid-auto-flow: row
   
-  +widescreen
-    width: 25%
-  
-  +fullhd
-    width: 25%
 
-  
-  &[size="2"] 
-    width: 66.666% 
+  .grid-item 
+    align-self: stretch
+    justify-self: stretch
+
+    grid-row: span 1
+    grid-column: span 2
+    border: 1px solid $cyan
+
     +mobile 
-      width: 100%
+      grid-column: span 12
 
-  &[size="3"] 
-    width: 100%
+    +tablet
+      grid-column: span 4
+    
+    +desktop
+      grid-column: span 4
+    
+    +widescreen
+      grid-column: span 4
+    
+    +fullhd
+      grid-column: span 3
 
-  &[emphasis] 
-    .box
-      +pb('lines-45-b', 8px, $white, $red, 1, 'none')
-      &:hover
-        +pb('lines-45-b', 36px, $white, $red, 1, 'none')
+    // grid-row: 1 / span 2
 
-  .box
-    box-shadow: none
-    flex: 1 1 auto
+    background: transparent
+    padding: 9rem 1.5rem
+    display: flex
 
-    &:hover 
-      box-shadow: none
-      
-    &:after 
-      transition: background-size .32s linear
+    // &:after
+    //   content: ""
+    //   pointer-events: none
+    //   position: absolute
+    //   top: 0
+    //   left: 0
+    //   width: 100%
+    //   height: 100%
+    //   +z-depth-6dp-inset()
+    //   z-index: 2
 
-    .image
-      width: 100%
+    & > .content
+      flex: 1 0 auto
+      border: 1px solid $red
       position: relative
-      img
-        height: 100%
-      .shadow
-        pointer-events: none
-        top: 0
+
+
+
+      .image
         position: absolute
-        height: 100%
+        top: 0
+        left: 0
         width: 100%
-        +z-depth-6dp-inset()
+        height: 100%
+        background-size: cover
+        background-repeat: no-repeat
+        background-position: center center
+        z-index: 1
+        // +z-depth-6dp-inset()
+  
+      .title
+        color: $black
+        font-weight: 700
+        position: absolute
+        top: -3rem
+        z-index: 2
+
+
+
+  
+  // display: flex
+  // padding: 0
+
+  // +mobile 
+  //   width: 100% 
+
+  // +tablet
+  //   width: 50% 
+  
+  // +desktop
+  //   width: 33.33%
+  
+  // +widescreen
+  //   width: 25%
+  
+  // +fullhd
+  //   width: 25%
+
+  
+  // &[size="2"] 
+  //   width: 66.666% 
+  //   +mobile 
+  //     width: 100%
+
+  // &[size="3"] 
+  //   width: 100%
+
+  // &[emphasis] 
+  //   .box
+  //     +pb('lines-45-b', 8px, $white, $red, 1, 'none')
+  //     &:hover
+  //       +pb('lines-45-b', 36px, $white, $red, 1, 'none')
+
+  // .box
+  //   box-shadow: none
+  //   flex: 1 1 auto
+
+  //   &:hover 
+  //     box-shadow: none
+      
+  //   &:after 
+  //     transition: background-size .32s linear
+
+  //   .image
+  //     width: 100%
+  //     position: relative
+  //     img
+  //       height: 100%
+  //     .shadow
+  //       pointer-events: none
+  //       top: 0
+  //       position: absolute
+  //       height: 100%
+  //       width: 100%
+  //       +z-depth-6dp-inset()
 
 
