@@ -183,7 +183,6 @@ function _itemz(item, siblings, overlapFn, deltaFn) {
       if(δ > 0) ρ = _.concat(ρ, {δ, ϑ}) }
     return ρ }, []) }
 
-
 function _itemsAbove(item) {
   let siblings  = _siblings(item, -_numCols(), 0),
       overlapFn = (ε, εϑ) => (εϑ.x0 <= ε.x0 && εϑ.x1 >= ε.x0) || (εϑ.x0 <= ε.x1 && εϑ.x1 >= ε.x1),
@@ -197,17 +196,16 @@ function _itemsLeft(item) {
   return _itemz(item, siblings, overlapFn, deltaFn) }
 
 function _itemsBelow(item) {
-   let siblings  = _siblings(item, -_numCols(), _numCols()),
+  let siblings  = _siblings(item, -_numCols(), _numCols()),
       overlapFn = (ε, εϑ) => (εϑ.x0 <= ε.x0 && εϑ.x1 >= ε.x0) || (εϑ.x0 <= ε.x1 && εϑ.x1 >= ε.x1),
       deltaFn   = (ε, εϑ) => (εϑ.y0 - ε.y1)
   return _itemz(item, siblings, overlapFn, deltaFn) }
 
 function _itemsRight(item) {
-   let siblings  = _siblings(item, -_numCols(), _numCols()),
+  let siblings  = _siblings(item, -_numCols(), _numCols()),
       overlapFn = (ε, εϑ) => (εϑ.y0 <= ε.y0 && εϑ.y1 >= ε.y0) || (εϑ.y0 <= ε.y1 && εϑ.y1 >= ε.y1),
       deltaFn   = (ε, εϑ) => (εϑ.x0 - ε.x1)
   return _itemz(item, siblings, overlapFn, deltaFn) }
-
 
 function _itemAbove(item) {
   let a = _itemsAbove(item)
@@ -229,35 +227,75 @@ function _itemLeft(item) {
 // with the directional padding of the items around it
 function _whitespace(item) {
   let β         = item.getBoundingClientRect(),
-      itemAbove = _itemAbove(item),
+      ε         = _extent(item),
+      itemAbove = _itemAbove(item),                         // the items to the sides
       itemRight = _itemRight(item),
       itemBelow = _itemBelow(item),
       itemLeft  = _itemLeft(item),
-      top       = parseInt(item.style.paddingTop),
-      right     = parseInt(item.style.paddingRight),
+      δx        = parseInt(item.getAttribute('data-x')),    // the item's transform: translate
+      δy        = parseInt(item.getAttribute('data-y')),
+      top       = parseInt(item.style.paddingTop),          // the initial values
+      right     = parseInt(item.style.paddingRight),        // initialized to the respective padding-values
       bottom    = parseInt(item.style.paddingBottom),
       left      = parseInt(item.style.paddingLeft),
-      βl, βr
+      γh        = document.getElementById('grid').clientHeight, // the height of the grid container
+      εχ // helper
 
+      
+
+  console.log('_whitespace', _id(item))
+
+  // console.log('\t itemAbove', itemAbove)
+  // console.log('\t itemRight', itemRight)
+  // console.log('\t itemBelow', itemBelow)
+  // console.log('\t itemLeft', itemLeft)
+  
+  // console.log('\t top', top)
+  // console.log('\t right', right)
+  // console.log('\t bottom', bottom)
+  // console.log('\t left', left)
+
+  // console.log('--')
+  // console.log('\t δx', δx)
+  // console.log('\t δy', δy)
+
+
+  // console.log('_translation')
+  // console.log('\t top', top)
+  // console.log('\t right', right)
+  // console.log('\t bottom', bottom)
+  // console.log('\t left', left)
+  
+  // first of all, consider the translation
+  
   if(itemAbove) {
-    top += parseInt(itemAbove.δ)
+    εχ = _extent(itemAbove.ϑ)
+    top += ε.y0 - εχ.y1
     top += parseInt(itemAbove.ϑ.style.paddingBottom) }
+  // no else
+  // why?
+  // cause I said so…!
+  // actually… we don't push text upwards and so we could ignore the whole above-shebang
 
   if(itemBelow) {
-    bottom  += parseInt(itemBelow.δ)
-    bottom  += parseInt(itemBelow.ϑ.style.paddingTop) }
+    εχ = _extent(itemBelow.ϑ)
+    bottom += εχ.y0 - ε.y1
+    bottom  += parseInt(itemBelow.ϑ.style.paddingTop) } 
+  else bottom += (γh - (β.y + β.height))
 
-  right += window.innerWidth - (β.x + β.width)
-  if(itemRight) {
-    βr = itemRight.ϑ.getBoundingClientRect()
-    right -= βr.x
-    right += parseInt(itemRight.ϑ.style.paddingLeft) }
-
-  left += β.x
   if(itemLeft) {
-    βl    = itemLeft.ϑ.getBoundingClientRect()
-    left -= (βl.x + βl.width)
-    left += parseInt(itemLeft.ϑ.style.paddingLeft) }
+    εχ = _extent(itemLeft.ϑ)
+    left += ε.x0 - εχ.x1
+    left += parseInt(itemLeft.ϑ.style.paddingRight) }
+  else left += ε.x0
+
+
+  if(itemRight) {
+    εχ = _extent(itemRight.ϑ)
+    right += εχ.x0 - ε.x1
+    right += parseInt(itemRight.ϑ.style.paddingLeft) }
+  else
+    right += (window.innerWidth - ε.x1)
 
   return {top, left, bottom, right} }
 
@@ -307,7 +345,10 @@ function _adjustText(item) {
       left, top, ratio,
       ηƒ, ηx 
 
+  console.log('item', _id(item))
+  // console.log('σ', σ)
   console.log('μ', μ)
+  console.log('————————————————————')
 
   switch(μ.key) {
 
@@ -372,10 +413,10 @@ function _layout() {
             // console.log('\t\t', _ids(itemsBelow))
             // console.log('—————')
 
-            // if(itemsAbove.length > 0) item.setAttribute('data-above', JSON.stringify(_ids(itemsAbove)))
-            // if(itemsRight.length > 0) item.setAttribute('data-right', JSON.stringify(_ids(itemsRight)))
-            // if(itemsBelow.length > 0) item.setAttribute('data-below', JSON.stringify(_ids(itemsBelow)))
-            // if(itemsLeft.length  > 0) item.setAttribute('data-left',  JSON.stringify(_ids(itemsLeft))) 
+            if(itemsAbove.length > 0) item.setAttribute('data-above', JSON.stringify(_ids(itemsAbove)))
+            if(itemsRight.length > 0) item.setAttribute('data-right', JSON.stringify(_ids(itemsRight)))
+            if(itemsBelow.length > 0) item.setAttribute('data-below', JSON.stringify(_ids(itemsBelow)))
+            if(itemsLeft.length  > 0) item.setAttribute('data-left',  JSON.stringify(_ids(itemsLeft))) 
 
             if(itemsAbove.length > 0) item.above  = itemsAbove
             if(itemsRight.length > 0) item.right  = itemsRight
@@ -401,7 +442,8 @@ function _layout() {
             let β  = ι.getBoundingClientRect(),
                 μ  = _.random(χ - (β.x + β.width)),
                 δx = _.max([0, μ]),
-                δy = _.random(-64, 64)
+                // δy = _.random(-64, 64)
+                δy = 0
 
             // set arrtibutes
             ι.setAttribute('data-x', δx)
