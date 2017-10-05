@@ -125,16 +125,18 @@
     
     .media-left
       display: inline-block
+      pointer-events: none
       .icon 
         background: transparent
     .media-content
       display: inline-block
       margin-left: 0.5rem
+      pointer-events: none
 
-    &:hover
-      .icon 
-        background: $black
-        color: $white
-      .media-content
-        +text-stroke($size: 4, $color: $black)      
-        color: $white
+    // &:hover
+    //   .icon 
+    //     background: $black
+    //     color: $white
+    //   .media-content
+    //     +text-stroke($size: 4, $color: $black)      
+    //     color: $white

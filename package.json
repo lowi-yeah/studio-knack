@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build:hugo": "NODE_ENV=production hugo --config config.prod.toml",
+    "build:hugo": "NODE_ENV=production hugo --config config.prod.toml --verbose",
     "build:assets": "NODE_ENV=production webpack -p --config webpack.prod.config.js",
     "build:datocms": "dato dump",
     "build": "npm run build:datocms && npm run build:hugo && npm run build:assets",
@@ -19,6 +19,7 @@
     "aos": "^2.2.0",
     "bricks.js": "^1.8.0",
     "bulma": "^0.5.1",
+    "d3-random": "^1.1.0",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",
     "d3-voronoi": "^1.1.2",

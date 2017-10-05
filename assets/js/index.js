@@ -21,10 +21,21 @@ function ready(fn) {
 
 function init() {
   console.log('ready!')
+  
+  let begin = performance.now()
+
   logo.begin().then(() => { voronoi.init()
                             menu.init() })
-  transition.init()
+  
   content.init()
+    .then( () => {
+      console.log('layout complete.', `Took ${ Math.round(performance.now() - begin) }ms`) 
+
+      setTimeout(transition.init, 810)
+      
+    })
+
+
   // brikkery.init()
 
 

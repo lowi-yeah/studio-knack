@@ -1,7 +1,8 @@
-import {randomNormal} from 'd3-random'
-import {scaleLinear}  from 'd3-scale'
-import anime          from 'animejs'
-import util           from './util'
+import {randomNormal}   from 'd3-random'
+import {scaleLinear, 
+        scaleQuantize}  from 'd3-scale'
+import anime            from 'animejs'
+import util             from './util'
 
 let ImageWorker   = require('worker-loader!./workers/image-worker.js'), 
     LayoutWorker  = require('worker-loader!./workers/layout-worker.js'), 
@@ -47,9 +48,11 @@ function _numCols() {
     case 'desktop':
       return 3
     case 'widescreen':
+      return 3
+    case 'fullhd':
       return 4
     default:
-      return 6
+      return 3
     }
 }
 
@@ -64,22 +67,49 @@ function _maxColSpan() {
     case 'mobile':
       return 24
     case 'tablet':
-      return 24
+      return 21
     case 'desktop':
       return 21
     case 'widescreen':
-      return 18
-    default:
       return 16
+    case 'fullhd':
+      return 12
     }
 }
 
 function _minRowSpan() {
-  return 21
+  let device = util.getDevice(window.innerWidth)
+  switch (device) {
+   case 'mobile':
+     return 28
+   case 'tablet':
+     return 28
+   case 'desktop':
+     return 28
+    case 'widescreen':
+      return 32
+    case 'fullhd':
+      return 28
+   }
 }
 
 function _maxRowSpan() {
-  return 28
+  return _minRowSpan()
+  // let device = util.getDevice(window.innerWidth)
+  // switch (device) {
+  //  // case 'mobile':
+  //  //   return 1
+  //  // case 'tablet':
+  //  //   return 2
+  //  // case 'desktop':
+  //  //   return 3
+  //   case 'widescreen':
+  //     return 24
+  //   case 'fullhd':
+  //     return 24
+  //   default:
+  //     return 16
+  //  }
 }
 
 function _layoutCells(items, {x, y, colFn, rowFn}) {
@@ -121,8 +151,6 @@ function _siblings(item, lower, upper) {
   else if(upper === undefined) return _siblings(item, 0, lower)
 
   let before = [], after = []
-
-  // console.log('_siblings', _id(item), lower, upper)
 
   // if the lower bound is negative get previous siblings
   if(lower < 0) {
@@ -207,20 +235,25 @@ function _itemsRight(item) {
       deltaFn   = (ε, εϑ) => (εϑ.x0 - ε.x1)
   return _itemz(item, siblings, overlapFn, deltaFn) }
 
+
 function _itemAbove(item) {
-  let a = _itemsAbove(item)
+  // let a = _itemsAbove(item)
+  let a = item.above
   return _(a).sortBy( ι => ι.δ ).first() }
 
 function _itemRight(item) {
-  let r = _itemsRight(item)
+  // let r = _itemsRight(item)
+  let r = item.right
   return _(r).sortBy( ι => ι.δ ).first() }
 
 function _itemBelow(item) {
-  let b = _itemsBelow(item)
+  // let b = _itemsBelow(item)
+  let b = item.below
   return _(b).sortBy( ι => ι.δ ).first() }
 
 function _itemLeft(item) {
-  let l = _itemsLeft(item)
+  // let l = _itemsLeft(item)
+  let l = item.left
   return _(l).sortBy( ι => ι.δ ).first() }
 
 // calculates the whitespace of an item by adding it's own padding
@@ -240,39 +273,13 @@ function _whitespace(item) {
       left      = parseInt(item.style.paddingLeft),
       γh        = document.getElementById('grid').clientHeight, // the height of the grid container
       εχ // helper
-
-      
-
-  console.log('_whitespace', _id(item))
-
-  // console.log('\t itemAbove', itemAbove)
-  // console.log('\t itemRight', itemRight)
-  // console.log('\t itemBelow', itemBelow)
-  // console.log('\t itemLeft', itemLeft)
-  
-  // console.log('\t top', top)
-  // console.log('\t right', right)
-  // console.log('\t bottom', bottom)
-  // console.log('\t left', left)
-
-  // console.log('--')
-  // console.log('\t δx', δx)
-  // console.log('\t δy', δy)
-
-
-  // console.log('_translation')
-  // console.log('\t top', top)
-  // console.log('\t right', right)
-  // console.log('\t bottom', bottom)
-  // console.log('\t left', left)
-  
-  // first of all, consider the translation
   
   if(itemAbove) {
     εχ = _extent(itemAbove.ϑ)
     top += ε.y0 - εχ.y1
     top += parseInt(itemAbove.ϑ.style.paddingBottom) }
-  // no else
+  // no else.
+  // [..]
   // why?
   // cause I said so…!
   // actually… we don't push text upwards and so we could ignore the whole above-shebang
@@ -281,14 +288,13 @@ function _whitespace(item) {
     εχ = _extent(itemBelow.ϑ)
     bottom += εχ.y0 - ε.y1
     bottom  += parseInt(itemBelow.ϑ.style.paddingTop) } 
-  else bottom += (γh - (β.y + β.height))
+  else bottom += (γh - (β.y + β.height) + 192)
 
   if(itemLeft) {
     εχ = _extent(itemLeft.ϑ)
     left += ε.x0 - εχ.x1
     left += parseInt(itemLeft.ϑ.style.paddingRight) }
   else left += ε.x0
-
 
   if(itemRight) {
     εχ = _extent(itemRight.ϑ)
@@ -299,89 +305,206 @@ function _whitespace(item) {
 
   return {top, left, bottom, right} }
 
-function _cleanupText(item) {
-  let τ   = item.querySelector('.text'),
-      ς   = τ.querySelector('span'),
-      β   = ς.getBoundingClientRect(),
-      f   = parseInt(τ.style.fontSize),
-      δl  = β.x - _.random(32, 21),
-      δr  = window.innerWidth - (β.x + β.width) - _.random(32, 21),
-      δx  = parseFloat(τ.getAttribute('data-x')) || 0,
-      δy  = parseFloat(τ.getAttribute('data-y')) || 0,
-      ηx
+function _doDomElementsOverlap(element0, element1) {
+  let ε0 = _extent(element0),                   // bounding boxes
+      ε1 = _extent(element1),
+      ωt = (ε1.y0 <= ε0.y0 && ε1.y1 >= ε0.y0),  // overlap flags
+      ωb = (ε1.y0 >= ε0.y0 && ε1.y0 <= ε0.y1),
+      ωl = (ε1.x0 <= ε0.x0 && ε1.x1 >= ε0.x0),
+      ωr = (ε1.x0 >= ε0.x0 && ε1.x0 <= ε0.x1)
 
-  if(δl < 0) {
-    ηx = δx - δl
-    τ.setAttribute('data-x', ηx)
-    τ.style.fontSize = `${ f * 0.81 }px`
-    τ.style.transform = `translateX(${ ηx }px) translateY(${ δy }px)` }
-
-  if(δr < 0) {
-    ηx = δx + δr
-    τ.setAttribute('data-x', ηx)
-    τ.style.width = `${ τ.clientWidth + δr }px`
-    τ.style.fontSize = `${ f * 0.81 }px`
-    τ.style.transform = `translateX(${ ηx }px) translateY(${ δy }px)` }
-
+  if ( ωl && (ωt || ωb) ) return ε0.x0 - ε1.x1
+  if ( ωr && (ωt || ωb) ) return ε0.x1 - ε1.x0 // maybe buggy?
+  else return 0
 }
 
+function _doItemsOverlap(itemRight, itemLeft) {
+  let ς0 = itemRight.querySelector('.text > span'), // text spans
+      ς1 = itemLeft.querySelector('.text > span'),
+      ζ1 = itemLeft.querySelector('.image')        // image span
+
+  let textsOverlap      = _doDomElementsOverlap(ς0, ς1),
+      textImageOverlap  = _doDomElementsOverlap(ς0, ζ1)
+
+  return (textsOverlap !== 0 || textImageOverlap !== 0)
+}
+
+let fontWeightΣ = scaleQuantize()
+                    .domain([1, 81])
+                    .range(['900', '800', '700', '400'])
+
+function _cleanupText(item) {
+  return new Promise( (resolve) => { 
+    _.defer(() => { 
+      let τ = item.querySelector('.text'),
+          ς = τ.querySelector('span'),
+    
+          τβ  = τ.getBoundingClientRect(),
+          ςβ  = ς.getBoundingClientRect(),
+    
+          f   = parseInt(τ.style.fontSize),
+          η   = ς.innerHTML.trim().length,
+          δx, δy, ϴ,
+          ιl, ιr, ιb, ω, ζ
+    
+      // check if there is ample space withing the .text element
+      if( τβ.width * 0.72  > ςβ.width) {
+        ϴ = τβ.width/ςβ.width
+        ϴ = _.random(ϴ * 0.618, ϴ, true)
+        τ.style.fontSize = `${ _.min([f * ϴ, 64]) }px` }
+    
+      // apply font weight based on text length
+      τ.style.fontWeight = `${ fontWeightΣ(η) }` 
+      
+      // check if the text overshoots the right window edge
+      if( ςβ.x + ςβ.width > (window.innerWidth - 21)) {
+        ς.style.transform       = `translateX(${ςβ.height/2}px) translateY(${-ςβ.width/2}px) rotate(90deg)`
+        ς.style.display         = 'inline-block'
+        ς.style.transformOrigin = 'left center'
+        }
+    
+      // check if the text overshoots the left window edge
+      // @obacht: the text may be right alligned
+      // if( τ.style.textAlign === 'right' && (ςβ.x0 - ςβ.width) < 21 ||
+      //     τ.style.textAlign !== 'right' && ςβ.x0 < 21 ) {
+      if(ςβ.x < 21) {
+        ς.style.transform       = `translateX(${-ςβ.height/2}px) translateY(${-ςβ.width/2}px) rotate(-90deg)`
+        ς.style.display         = 'inline-block'
+        ς.style.transformOrigin = 'right center'
+        ς.style.textAlign       = 'left'
+        }
+
+
+      // do the text overlap?
+      ιl = _itemLeft(item)
+      if(ιl) {
+        ω  = _doItemsOverlap(item, ιl.ϑ)
+        if(ω) {
+          ς.style.display = 'none'
+          ς.style.visibility = 'hidden'
+        }
+      }
+
+      ιr = _itemRight(item)
+      if(ιr) {
+        ζ = ιr.ϑ.querySelector('.image')          
+        ω  = _doDomElementsOverlap(ς, ζ)
+        if(ω) ς.style.opacity = '0.2'
+      }
+
+      ιb = _itemBelow(item)
+      if(ιb) {
+        ζ = ιb.ϑ.querySelector('.image')          
+        ω  = _doDomElementsOverlap(ς, ζ)
+        if(ω) ς.style.opacity = '0.2'
+      }
+
+
+      // console.log('item', item)
+      // console.log('left', item.left)
+      // console.log('right', item.right)
+
+
+
+
+      // if(δl < 0) {
+      //   ηx = δx - δl
+      //   τ.setAttribute('data-x', ηx)
+      //   τ.style.fontSize = `${ f * 0.81 }px`
+      //   τ.style.transform = `translateX(${ ηx }px) translateY(${ δy }px)` }
+    
+      // if(δr < 0) {
+      //   ηx = δx + δr
+      //   τ.setAttribute('data-x', ηx)
+      //   τ.style.width = `${ τ.clientWidth + δr }px`
+      //   τ.style.fontSize = `${ f * 0.81 }px`
+      //   τ.style.transform = `translateX(${ ηx }px) translateY(${ δy }px)` }
+      resolve() })})}
+
 function _adjustText(item) {
-  let ξ   = item.querySelector('.content'),
-      τ   = ξ.querySelector('.text'),
-      ς   = τ.querySelector('span'),
-      τw  = τ.clientWidth,
-      τh  = τ.clientHeight,
-      τƒ  = parseInt(τ.style.fontSize),
-      σ   = _whitespace(item),
-      // the side with the largest amount of whitespace [top, right, left, bottom]
-      μ   = _(σ)
-              .reduce((ρ, ς, ι) => { 
-                // texts as never above an item
-              if(ς > ρ.value && ι !== 'top') {
-                ρ.value = ς
-                ρ.key = ι }
-              return ρ }, { key: null, value: 0}),
-      β,
-      left, top, ratio,
-      ηƒ, ηx 
-
-  console.log('item', _id(item))
-  // console.log('σ', σ)
-  console.log('μ', μ)
-  console.log('————————————————————')
-
-  switch(μ.key) {
-
-    case 'right': 
-      // console.log('right')
-      break
-
-    case 'bottom': 
-      // ratio = μ.value / τh
-
-      // // set the new fontsize
-      // ηƒ = _.random(0.24, 0.38) * ratio * τƒ
-      // ηƒ = _.min([ηƒ, 64])
-      // ηƒ = _.max([ηƒ, 32])
-      // τ.style.fontSize  = `${ηƒ}px`
-
-      // // adjust the position
-      // top   = ξ.clientHeight + _.random(16, 48)
-
-      // // τ.setAttribute('data-x', δℓ)
-      // τ.setAttribute('data-y', top)
-      // τ.style.transform = `translateX(${ 0 }px) translateY(${ top }px)`
-
-      //debug
-      // item.style['background-color'] = `#ffff99`
-      break
-
-    case 'left': 
-      // console.log('left')
-      break
-    }
-
-
+  return new Promise( (resolve) => { 
+    _.defer(() => {
+      let ς = item.querySelector('.content'),
+          τ = item.querySelector('.text'),
+          s = τ.querySelector('span'),
+          ƒ = parseInt(τ.style.fontSize),
+          σ = _whitespace(item),
+          // the side with the largest amount of whitespace [top, right, left, bottom]
+          μ = _(σ)
+                .reduce((ρ, ς, ι) => { 
+                  // texts as never above an item
+                if(ς > ρ.value && ι !== 'top') {
+                  ρ.value = ς
+                  ρ.key = ι }
+                return ρ }, { key: null, value: 0}),
+          // ηƒ,             // new font size
+          δx, δy,         // offset
+          ει, ες, ετ, εs, // bounding boxez
+          ηw, ηh          // new width & height
+    
+    
+      switch(μ.key) {
+    
+        // top is being gnored
+         // case 'top': 
+         //  ες = _extent(ς)
+         //  ετ = _extent(τ)
+         //  δx = _.random(-σ.left)
+         //  δy = ες.y0 - ετ.y1
+         //  ηw = (ες.x1 + σ.right) - (ετ.x0 + δx) - 48
+         //  τ.style.width = `${ ηw }px`
+         //  τ.style.transform = `translateX(${ 32 + δx }px) translateY(${ δy }px)`
+         //  τ.style.color = '#A6C85D'
+         //  break
+    
+        case 'right': 
+          ει = _extent(item)
+          ες = _extent(ς)
+          ετ = _extent(τ)
+    
+          δx = (ες.x1 - ει.x0) + 21
+          δy = ες.y0 - ετ.y0 + _.random(21, (ες.y1 - ες.y0) * 0.618)
+          ηw = (ες.x1 + σ.right) - (ετ.x0 + δx)
+    
+          τ.setAttribute('data-text-pos', 'right')
+          τ.style.width = `${ ηw }px`
+          τ.style.transform = `translateX(${ δx }px) translateY(${ δy }px)`
+          break
+    
+        case 'bottom': 
+          ει = _extent(item)
+          ες = _extent(ς)
+          ετ = _extent(τ)
+          
+          δx = _.max([-σ.left + (ες.x0 - ει.x0), -128])
+          δy = ες.y1 - ετ.y0 + 21
+          ηw = (ες.x1 + σ.right) - (ετ.x0 + δx) - 64
+          ηw = _.min([ηw, window.innerWidth * 0.618])
+    
+          τ.setAttribute('data-text-pos', 'bottom')
+          τ.style.width = `${ ηw }px`
+          τ.style.transform = `translateX(${ 32 + δx }px) translateY(${ δy }px)`
+          break
+    
+        case 'left': 
+          ει = _extent(item)
+          ες = _extent(ς)
+          ετ = _extent(τ)
+          εs = _extent(s)
+    
+          δx = -(εs.x1 - εs.x0) + (ες.x0 - ει.x0) -21
+          δy = ες.y0 - ετ.y0 + _.random(21, (ες.y1 - ες.y0) * 0.618)
+          ηw = ετ.x0 - (ετ.x0 + δx)
+    
+          τ.setAttribute('data-text-pos', 'left')
+          τ.style.width = `${ ηw }px`
+          τ.style.transform = `translateX(${ δx }px) translateY(${ δy }px)`
+          τ.style.textAlign = 'right'
+          break
+        }
+        resolve()
+      })
+    })
 }
 
 function _id(item) { 
@@ -392,11 +515,8 @@ function _ids(items) {
   return _.map(items, ι => _id(ι.ϑ))}
 
 function _layout() {
-
-  let begin = performance.now(),
-      items = document.querySelectorAll('.grid-item')
-
-  _gridResize(items)
+  let items = document.querySelectorAll('.grid-item')
+  return _gridResize(items)
 
     // attach the geighbour data to each item
     .then( () => 
@@ -418,16 +538,16 @@ function _layout() {
             if(itemsBelow.length > 0) item.setAttribute('data-below', JSON.stringify(_ids(itemsBelow)))
             if(itemsLeft.length  > 0) item.setAttribute('data-left',  JSON.stringify(_ids(itemsLeft))) 
 
-            if(itemsAbove.length > 0) item.above  = itemsAbove
-            if(itemsRight.length > 0) item.right  = itemsRight
-            if(itemsBelow.length > 0) item.below  = itemsBelow
-            if(itemsLeft.length  > 0) item.left   = itemsLeft
+            item.above  = itemsAbove
+            item.right  = itemsRight
+            item.below  = itemsBelow
+            item.left   = itemsLeft
           }) )
 
     // split into lines
     .then( () => 
       _.reduce(items, (ρ, item) => {
-        if(!item.left) ρ.push([item])
+        if(item.left.length === 0) ρ.push([item])
         else _.last(ρ).push(item)
         return ρ }, []) )
 
@@ -442,8 +562,8 @@ function _layout() {
             let β  = ι.getBoundingClientRect(),
                 μ  = _.random(χ - (β.x + β.width)),
                 δx = _.max([0, μ]),
-                // δy = _.random(-64, 64)
-                δy = 0
+                δy = _.random(-120, 120)
+                // δy = 0
 
             // set arrtibutes
             ι.setAttribute('data-x', δx)
@@ -459,28 +579,39 @@ function _layout() {
         let β = item.getBoundingClientRect()
         item.style.paddingLeft    = `${_.random(21, β.width * 0.12)}px`
         item.style.paddingRight   = `${_.random(21, β.width * 0.12)}px`
-        item.style.paddingTop     = `${_.random(β.height *0.12, β.height * 0.38)}px`
-        item.style.paddingBottom  = `${_.random(β.height *0.12, β.height * 0.38)}px` }))
+        item.style.paddingTop     = `${_.random(β.height * 0.12, β.height * 0.42)}px`
+        item.style.paddingBottom  = `${_.random(β.height * 0.12, β.height * 0.42)}px` }))
 
     // resize the text
     .then( () =>  _.each(items, item => {
-      item.querySelector('.text').style.fontSize = '32px'
+      item.querySelector('.text').style.fontSize = '48px'
       item.querySelector('.text').style.width = `${item.clientWidth}px` }) )
 
     // layout the text
-    .then( () =>  _.each(items, item => _adjustText(item)))
+    .then( () =>  {
+      let promises = _.map(items, item => _adjustText(item))
+      return Promise.all(promises)})
 
     // clean up the text
-    // .then( () =>  _.each(items, item => _cleanupText(item)))
+    .then( () =>  {
+      let promises = _.map(items, item => _cleanupText(item))
+      return Promise.all(promises)})
     
-    .then( () => console.log('layout complete.', `Took ${ Math.round(performance.now() - begin) }ms`) )
+   
 }
 
 
 function init() {
   console.log('init content')
 
-  _layout()
+  let device = util.getDevice(window.innerWidth)
+      
+      
+  // console.log('device', device)
+  // _.defer(_loadImages)    
+
+  return _layout()
+   
 
   // _(120)
   //   .range()
@@ -510,7 +641,6 @@ function init() {
 
   // }; 
   
-  // _.defer(_loadImages)    
 
 }
 export default { init }
