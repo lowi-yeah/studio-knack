@@ -8,7 +8,13 @@
 
     <section 
       class="grid-item section"
-      {{ with .Params.id }}       id="{{ . }}"   {{ end }} >
+      {{ with .Params.id }}       id="{{ . }}"                  {{ end }} 
+      {{ with .Title }}           data-caption="{{ . }}"        {{ end }} 
+      {{ with .Params.emphasis }} emphasis="{{ . }}"            {{ end }}
+      {{ with .Params.category }} category="{{ . }}"            {{ end }} 
+      {{ with $image.url }}       data-image-url="{{ . }}"      {{ end }} 
+      {{ with $image.pallete }}   data-image-pallete="{{ . }}"  {{ end }} 
+      {{ with $image.info }}      data-image-info="{{ . }}"     {{ end }} >
 
       <div class="content">
             
@@ -21,7 +27,8 @@
       </div>  
       <div class="text">
           <!-- <a href="{{ .Permalink }}"> -->
-            <span>{{ .Params.title }}</span>
+            <!-- <span>{{ .Params.title }}</span> -->
+            <span>{{ .Params.tag }}</span>
             <!-- <span>{{ .Params.id }}</span> -->
           <!-- </a> -->
         </div>

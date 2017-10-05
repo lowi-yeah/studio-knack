@@ -55,6 +55,8 @@ function isTouchDevice() {
   return 'ontouchstart' in window // works on most browsers 
       || navigator.maxTouchPoints } // works on IE10/11 and Surface
 
+function pretty(s) { return JSON.stringify(s, null, 2) }
+
 export default {
   addEvent,
   startAnimation,
@@ -63,5 +65,6 @@ export default {
   scrollTop,
   fontSize,
   isTouchDevice,
-  getDevice
+  getDevice,
+  pretty
 }

@@ -1,44 +1,55 @@
 import request from '../lib/request'
 
-function b64EncodeUnicode(str) {
-    // first we use encodeURIComponent to get percent-encoded UTF-8,
-    // then we convert the percent encodings into raw bytes which
-    // can be fed into btoa.
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-        function toSolidBytes(match, p1) {
-            return String.fromCharCode('0x' + p1);
-    }));
-}
+function base64Encode(str) {
+        var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var out = "", i = 0, len = str.length, c1, c2, c3;
+        while (i < len) {
+            c1 = str.charCodeAt(i++) & 0xff;
+            if (i == len) {
+                out += CHARS.charAt(c1 >> 2);
+                out += CHARS.charAt((c1 & 0x3) << 4);
+                out += "==";
+                break;
+            }
+            c2 = str.charCodeAt(i++);
+            if (i == len) {
+                out += CHARS.charAt(c1 >> 2);
+                out += CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
+                out += CHARS.charAt((c2 & 0xF) << 2);
+                out += "=";
+                break;
+            }
+            c3 = str.charCodeAt(i++);
+            out += CHARS.charAt(c1 >> 2);
+            out += CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+            out += CHARS.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+            out += CHARS.charAt(c3 & 0x3F);
+        }
+        return out;
+    }
+
+function mimetype(url) {
+  // get the mimetype by
+  // …first removing the path
+  let μ = url.replace(/^https:\/\/www.datocms\-assets.com\/(\d+\/)*/, '')
+  // …and then removing the query parameters
+  μ  = μ.replace(/\?.*$/, '')
+  // …what is left is the filename
+  // …from which we get the filetype
+  μ  = μ.replace(/^[^\.]*\./, '')
+  return μ }
 
 //Listener for events of message type coming from main thread.
 self.addEventListener('message', function(e) {
 
   // let Δ = e.data
-  // console.log('image worker got message:', urls)
+  // console.log('image worker got message:', Δ)
 
   e.data.forEach( δ => {
-    console.log('δ', δ)
     request.image(δ.url).then( ι => {
-      self.postMessage({ ι: b64EncodeUnicode(ι), id: δ.id })
-    })
-  })
+      var encoded = base64Encode(ι),
+          μ       = mimetype(δ.url),
+          u       = `url(data:image/${μ};base64,${encoded})`
 
-
-  // console.log('this', this)
-  // console.log('request', request)
-  // console.log('self', self)
-  // //colorArray : is satatic array of hexa color.
-  // var colorArray = ["d0efb1","9dc3c2","4d7298"];
-  // //initializes the counter.
-  // var cp = e.data;
-  // //used to iterate the execution of instructions in each 1000 seconds.
-  // setInterval(function(){
-  //   //Send the message back to main thread.
-  //   self.postMessage(colorArray[cp]);
-  //   cp++;
-  //   if(cp == colorArray.length ){
-  //     cp = 0;
-  //   }
-  //  }, 1000);
-   
-}, false);
+      self.postMessage( { ι: u, id: δ.id })}) })
+}, false)

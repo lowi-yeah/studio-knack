@@ -1,39 +1,11 @@
 import {randomNormal}   from 'd3-random'
 import {scaleLinear, 
         scaleQuantize}  from 'd3-scale'
-import anime            from 'animejs'
+import parallax         from './parallax'
 import util             from './util'
-
-let ImageWorker   = require('worker-loader!./workers/image-worker.js'), 
-    LayoutWorker  = require('worker-loader!./workers/layout-worker.js'), 
-    ιWorker, ℓWorker
-
 
 const NUM_COLUMNS = 24
 const ȣ = randomNormal(0, 0.5)
-
-
-function _imageUrls() {
-  let items = document.querySelectorAll('.grid-item')
-  console.log('items', items)
-  return _.map(items, i => {
-    return {id:   i.getAttribute('id'),
-            url:  i.getAttribute('data-image-url')} }) }
-
-function _itemIds() {
-  let items = document.querySelectorAll('.grid-item')
-  return _.map(items, i => i.getAttribute('id')) }
-
-function _loadImages() {
-  console.log('_loadImages')
-  // ιWorker.postMessage(_imageUrls()) //send message to worker
-}
-
-function _stop() {
-  ιWorker.terminate() //Terminate the worker
-  ιWorker = null
-}
-
 
 // 24 columns
 // row height: 1.5rem
@@ -87,29 +59,26 @@ function _minRowSpan() {
    case 'desktop':
      return 28
     case 'widescreen':
-      return 32
+      return 16
     case 'fullhd':
       return 28
    }
 }
 
 function _maxRowSpan() {
-  return _minRowSpan()
-  // let device = util.getDevice(window.innerWidth)
-  // switch (device) {
-  //  // case 'mobile':
-  //  //   return 1
-  //  // case 'tablet':
-  //  //   return 2
-  //  // case 'desktop':
-  //  //   return 3
-  //   case 'widescreen':
-  //     return 24
-  //   case 'fullhd':
-  //     return 24
-  //   default:
-  //     return 16
-  //  }
+  let device = util.getDevice(window.innerWidth)
+  switch (device) {
+   case 'mobile':
+     return 32
+   case 'tablet':
+     return 32
+   case 'desktop':
+     return 32
+    case 'widescreen':
+      return 24
+    case 'fullhd':
+      return 32
+   }
 }
 
 function _layoutCells(items, {x, y, colFn, rowFn}) {
@@ -376,28 +345,34 @@ function _cleanupText(item) {
 
 
       // do the text overlap?
-      ιl = _itemLeft(item)
-      if(ιl) {
-        ω  = _doItemsOverlap(item, ιl.ϑ)
-        if(ω) {
-          ς.style.display = 'none'
-          ς.style.visibility = 'hidden'
-        }
-      }
+      // ιl = _itemLeft(item)
+      // if(ιl) {
+      //   ω  = _doItemsOverlap(item, ιl.ϑ)
+      //   if(ω) {
+      //     ς.style.display = 'none'
+      //     ς.style.visibility = 'hidden'
+      //   }
+      // }
 
-      ιr = _itemRight(item)
-      if(ιr) {
-        ζ = ιr.ϑ.querySelector('.image')          
-        ω  = _doDomElementsOverlap(ς, ζ)
-        if(ω) ς.style.opacity = '0.2'
-      }
+      // ιr = _itemRight(item)
+      // if(ιr) {
+      //   ζ = ιr.ϑ.querySelector('.image')          
+      //   ω  = _doDomElementsOverlap(ς, ζ)
+      //   if(ω) {
+      //     ς.style.display = 'none'
+      //     ς.style.visibility = 'hidden'
+      //   }
+      // }
 
-      ιb = _itemBelow(item)
-      if(ιb) {
-        ζ = ιb.ϑ.querySelector('.image')          
-        ω  = _doDomElementsOverlap(ς, ζ)
-        if(ω) ς.style.opacity = '0.2'
-      }
+      // ιb = _itemBelow(item)
+      // if(ιb) {
+      //   ζ = ιb.ϑ.querySelector('.image')          
+      //   ω  = _doDomElementsOverlap(ς, ζ)
+      //   if(ω) {
+      //     ς.style.display = 'none'
+      //     ς.style.visibility = 'hidden'
+      //   }
+      // }
 
 
       // console.log('item', item)
@@ -514,7 +489,7 @@ function _id(item) {
 function _ids(items) {
   return _.map(items, ι => _id(ι.ϑ))}
 
-function _layout() {
+function init() {
   let items = document.querySelectorAll('.grid-item')
   return _gridResize(items)
 
@@ -566,6 +541,8 @@ function _layout() {
                 // δy = 0
 
             // set arrtibutes
+            ι.δx = δx
+            ι.δy = δy
             ι.setAttribute('data-x', δx)
             ι.setAttribute('data-y', δy)
             ι.style.transform = `translateX(${ δx }px) translateY(${ δy }px)`
@@ -579,8 +556,12 @@ function _layout() {
         let β = item.getBoundingClientRect()
         item.style.paddingLeft    = `${_.random(21, β.width * 0.12)}px`
         item.style.paddingRight   = `${_.random(21, β.width * 0.12)}px`
-        item.style.paddingTop     = `${_.random(β.height * 0.12, β.height * 0.42)}px`
-        item.style.paddingBottom  = `${_.random(β.height * 0.12, β.height * 0.42)}px` }))
+        item.style.paddingTop     = `${_.random(β.height * 0.04, β.height * 0.12)}px`
+        item.style.paddingBottom  = `${_.random(β.height * 0.04, β.height * 0.12)}px` 
+        // item.style.paddingTop     = '0'
+        // item.style.paddingBottom  = '0' 
+
+      }))
 
     // resize the text
     .then( () =>  _.each(items, item => {
@@ -596,51 +577,12 @@ function _layout() {
     .then( () =>  {
       let promises = _.map(items, item => _cleanupText(item))
       return Promise.all(promises)})
+
+    .then( () =>  parallax.init(items))
+
+    
     
    
 }
 
-
-function init() {
-  console.log('init content')
-
-  let device = util.getDevice(window.innerWidth)
-      
-      
-  // console.log('device', device)
-  // _.defer(_loadImages)    
-
-  return _layout()
-   
-
-  // _(120)
-  //   .range()
-  //   .each( i => console.log(ȣ()))
-
-  // ιWorker = new ImageWorker()
-  
-  // console.log('ImageWorker', ImageWorker)
-  // console.log('ιWorker', ιWorker)
-
-  // ιWorker.onmessage = function (image) {
-  //   // console.log("eventt : " )
-  //   let { id, ι } = image.data,
-  //       item = document.getElementById(id),
-  //       img  = item.querySelector('img')
-
-
-
-  //   console.log('image arrived:', id, ι.substring(0, 24))
-  //   // console.log(ι)
-  //   console.log('item:', item)
-  //   console.log('img:', img)
-
-  //   // img.setAttribute('src', `data:image/jpg;base64,${ι}`)
-
-
-
-  // }; 
-  
-
-}
 export default { init }

@@ -1624,7 +1624,7 @@ error-ex@^1.2.0:
   dependencies:
     is-arrayish "^0.2.1"
 
-es5-ext@^0.10.7, es5-ext@~0.10.11, es5-ext@~0.10.2, es5-ext@~0.10.7:
+es5-ext@^0.10.7, es5-ext@~0.10.11, es5-ext@~0.10.2:
   version "0.10.12"
   resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.12.tgz#aa84641d4db76b62abba5e45fd805ecbab140047"
   dependencies:
@@ -1722,13 +1722,6 @@ ev-emitter@^1.0.0, ev-emitter@^1.1.0:
 ev-emitter@~1.0.0, ev-emitter@~1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/ev-emitter/-/ev-emitter-1.0.3.tgz#ee5ef74b6ed28d911b32ddcbfc97867f580937bc"
-
-event-emitter@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/event-emitter/-/event-emitter-0.3.4.tgz#8d63ddfb4cfe1fae3b32ca265c4c720222080bb5"
-  dependencies:
-    d "~0.1.1"
-    es5-ext "~0.10.7"
 
 eventemitter3@1.x.x:
   version "1.2.0"
@@ -4102,12 +4095,6 @@ schema-utils@^0.3.0:
   dependencies:
     ajv "^5.0.0"
 
-scroll-lazy:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/scroll-lazy/-/scroll-lazy-1.0.3.tgz#3601d3355bd2160e7452916ccc1e83f9b54c96b7"
-  dependencies:
-    event-emitter "^0.3.4"
-
 "semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5", semver@~5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
@@ -4178,10 +4165,6 @@ shallow-copy@~0.0.1:
 signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
-
-skrollr@^0.6.26:
-  version "0.6.26"
-  resolved "https://registry.yarnpkg.com/skrollr/-/skrollr-0.6.26.tgz#65d1aafcc69fc6d27e6cff0f086c25b31b20ab18"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -4718,6 +4701,10 @@ watchpack@^0.2.1:
     async "^0.9.0"
     chokidar "^1.0.0"
     graceful-fs "^4.1.2"
+
+waypoints@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/waypoints/-/waypoints-4.0.1.tgz#09979a0573810b29627cba4366a284a062ec69c8"
 
 webpack-core@^0.6.8, webpack-core@~0.6.9:
   version "0.6.9"

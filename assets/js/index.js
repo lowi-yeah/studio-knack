@@ -2,17 +2,19 @@ import '../sass/index.sass'
 
 import menu       from './menu'
 import about      from './about'
-// import grid       from './grid'
-import content    from './content'
-import brikkery   from './brikkery'
-import initDetail from './init-detail'
+import layout    from './layout'
+import images    from './images'
 import transition from './transition'
-import hero       from './hero'
-import bam        from './bam'
-import filter     from './filter'
-import boring     from './boring'
 import voronoi    from './voronoi'
 import logo       from './logo'
+import util       from './util'
+
+// // import grid       from './grid'
+// import initDetail from './init-detail'
+// import hero       from './hero'
+// import bam        from './bam'
+// import filter     from './filter'
+// import boring     from './boring'
 
 function ready(fn) {
   if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') fn()
@@ -21,19 +23,20 @@ function ready(fn) {
 
 function init() {
   console.log('ready!')
+  console.log('device',  util.getDevice(window.innerWidth))
   
   let begin = performance.now()
 
   logo.begin().then(() => { voronoi.init()
                             menu.init() })
-  
-  content.init()
-    .then( () => {
-      console.log('layout complete.', `Took ${ Math.round(performance.now() - begin) }ms`) 
 
+  layout.init()
+    .then( () => {
       setTimeout(transition.init, 810)
       
     })
+
+  images.init()
 
 
   // brikkery.init()

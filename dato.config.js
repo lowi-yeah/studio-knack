@@ -160,6 +160,7 @@ module.exports = (dato, root, i18n) => {
                                                                        pallete: image.url({ w: 800, palette: 'json', colors: '2' }) }}),
                                           date:         entry.date,
                                           id:           'knc-' + index,
+                                          tag:          entry.tag,
                                           category:     entry.category,
                                           location:     entry.location,
                                           latlng:       entry.latlng,
