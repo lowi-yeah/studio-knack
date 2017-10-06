@@ -39,14 +39,14 @@ module.exports = {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false },
-      comments: false,
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: { warnings: false },
+    //   comments: false,
+    // }) 
   ],
    worker: {
     output: {
-      filename: "hash.worker.js",
+      filename: "/hash.worker.js",
       chunkFilename: "[id].hash.worker.js"
     }
   }
