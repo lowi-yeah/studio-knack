@@ -1,0 +1,142 @@
+#back 
+  left: -120px
+  top: 1rem
+
+#toc.button 
+  $size: 48px
+  width: $size
+  height: $size
+  z-index: 305
+  padding: 0
+  position: fixed
+  top: 1rem
+  right: 1rem
+  border: none
+  // border: 1px solid $red
+  background: $white
+  border-radius: $size/2
+
+  +z-depth-transition()
+  +z-depth-2dp()
+
+
+  
+  #iconset
+    margin-top: 0
+    margin-left: 0
+    width: 100%
+    height: 100%
+
+  &:hover
+    // background: $black
+    +z-depth-focus()
+    // path
+      // fill: $white
+
+
+// +touch
+//   #toc.button 
+//     bottom: 1rem
+//     top: unset
+      
+#menu
+  height: 100vh
+  width: 100vw
+  pointer-events: none
+  z-index: 304
+
+  position: fixed
+  top: 0
+  right: 0
+
+  flex-direction: column
+  align-content: center
+
+  .section 
+    padding: 1rem
+    flex: 1 0 auto
+    pointer-events: all
+
+    svg > rect.gradient-box
+      mix-blend-mode: multiply
+
+    &.navigation
+      padding: 0
+      width: 100%
+      height: 100%
+      background: transparent
+      ul
+        display: flex
+        flex-direction: column
+        li
+          flex: 0 1 auto
+          a
+            padding-left: 1.5rem
+            font-size: 1rem
+            font-weight: 900
+            display: inline-block
+
+            &#home-link
+              padding-top: 1.5rem
+          
+
+    
+    &.contact
+      padding: 0
+      position: absolute
+      bottom: 0
+      left: 0
+      width: 100%
+      +z-depth-2dp-flipped()
+      overflow: hidden 
+      background: $black
+      
+
+      align-self: flex-end
+
+      ul
+        padding: 1.5rem 1.5rem 0.5rem 1.5rem
+        display: flex
+        flex-direction: column
+        align-items: flex-start
+
+        li > a
+          font-size: 1rem
+          font-weight: 900
+          color: $white
+          +z-depth-4dp-inset()
+
+
+
+  // a.title
+  //   font-weight: 700
+  //   font-variant: small-caps
+  //   +text-stroke($size: 4)
+
+  //   &:hover
+  //     +text-stroke($size: 4, $color: $black)      
+  //     color: $white
+
+  a.media
+    flex: 0 1 auto
+    margin-bottom: 1rem
+    display: flex;
+    align-items: center;
+    
+    .media-left
+      display: inline-block
+      pointer-events: none
+      .icon 
+        background: transparent
+    .media-content
+      display: inline-block
+      margin-left: 0.5rem
+      pointer-events: none
+
+    // &:hover
+    //   .icon 
+    //     background: $black
+    //     color: $white
+    //   .media-content
+    //     +text-stroke($size: 4, $color: $black)      
+    //     color: $white

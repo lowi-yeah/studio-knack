@@ -5,8 +5,10 @@ import util           from './util'
 
 export default {
   boringHero: () => {
-    let heroF = document.getElementById('hero-frame'),
-        hfh   = heroF.clientHeight,
+    let heroF = document.getElementById('hero-frame')
+    if(!heroF) return
+
+    let hfh   = heroF.clientHeight,
         hero  = document.getElementById('hero'),
         min   = 64/hero.clientHeight,
         δ     = [0, window.innerHeight],
@@ -24,7 +26,6 @@ export default {
     hΣ.clamp(true)
     ƒ() 
 
-    console.log('hero', hero)
     util.addEvent(window, 'scroll', ƒ)
 
     // body...

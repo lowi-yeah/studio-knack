@@ -1,10 +1,11 @@
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const extractSass = new ExtractTextPlugin('all.css');
+const webpack           = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const extractSass       = new ExtractTextPlugin('all.css')
 
 module.exports = {
   entry: {
     all: __dirname + '/assets/js/index.js',
+    dawn: __dirname + '/assets/js/dawn.js'
   },
   resolve: {
     root: __dirname + '/assets/js',

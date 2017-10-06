@@ -1,9 +1,14 @@
 html
   overflow-x: hidden
+  height: 100%
   // background: $grey
 
 body
-  // width: 100%
+  height: 100%
+  background: $white
+
+a:hover, a:active
+  color: $black
 
 #debug
   border: 1px solid $red
@@ -17,29 +22,27 @@ svg#logo
   path
     fill: $white
 
-.navigation 
-  position: fixed
-  top: 1rem
-  left: 1rem
-  display: flex
-  align-items: center
+// .navigation 
+//   position: fixed
+//   top: 1rem
+//   left: 1rem
+//   display: flex
+//   align-items: center
 
-  // display: none
-  // visibility: hidden
+//   // display: none
+//   // visibility: hidden
 
-  .button
-    flex: 0 0 auto
+//   .button
+//     flex: 0 0 auto
 
-  .title
-    flex: 0 1 auto
+//   .title
+//     flex: 0 1 auto
 
 .stroke 
   +text-stroke()
 
 .icon.is-large
   font-size: 2rem
-
-
 
 //           _   _    _
 //  __ _ _ _| |_(_)__| |___
@@ -67,43 +70,27 @@ article.single
   article.single > section
     width: 100vw
 
-//   __ _ _ _
-//  / _(_) | |_ ___ _ _
-// |  _| | |  _/ -_) '_|
-// |_| |_|_|\__\___|_|
-#filters
-  display: none
-  // display: flex
+
+//                           _
+// __ _____ _ _ ___ _ _  ___(_)
+// \ V / _ \ '_/ _ \ ' \/ _ \ |
+//  \_/\___/_| \___/_||_\___/_|
+
+svg#vornoi-pattern
+  z-index: 301
   position: fixed
-  top: 1rem
-  right: 6rem
-  align-items: center
-  z-index: 98
-  height: 64px
+  left: 0
+  top: 0
+  width: 100%
+  height: 100%
+  pointer-events: none
 
-  p
-    flex: 0 0 auto
-    margin-bottom: 0
+  .cells
+    path
+      pointer-events: reset
+      transform: scale(0)
+      stroke-width: 2px
 
-  label
-    flex: 0 0 auto
-    font-weight: 700
-    font-variant: small-caps
-    margin-left: 0.5rem
-    // +text-stroke($size: 4)
-    // display: block
 
-  .c-wrap
-    // padding-left: 0.81rem
-    // margin-right: 0.5rem
-    // background: $white
 
-  input[type="checkbox"]
-    width: 1.25rem
-    height: 1.25rem
 
-+touch
-  #filters
-    top: 0.5rem
-    right: 1rem
-    

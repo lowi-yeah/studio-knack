@@ -1,0 +1,85 @@
+<!-- to be further filled via JS -->
+<svg id="studio-knack">
+  <defs>
+
+    <!-- symbol -->
+    <symbol id="knack-sym">
+      {{ partial "knack.svg" . }}
+    </symbol>
+
+    <!-- glitch masks -->
+    <g id="glitch-mask-left" transform="translate(0, -2.5)">
+      <rect x="5%" y="45%" width="7%" height="5%"    fill="white" />
+      <rect x="60%" y="25%" width="7%" height="4%"   fill="white" />
+       <rect x="35%" y="75%" width="10%" height="4%" fill="white" />
+      <rect x="25%" y="50%" width="30%" height="2%"  fill="white" />
+    </g>
+    
+    <g id="glitch-mask-right" transform="translate(0, -2.5)">
+      <rect x="5%" y="35%" width="11%" height="2%"  fill="white" />
+      <rect x="60%" y="60%" width="20%" height="1%" fill="white" />
+      <rect x="80%" y="35%" width="20%" height="3%" fill="white" />
+    </g>
+    
+    <!-- glitch filter -->
+    <filter id="glitch-filter">
+
+      <!-- FLOODS -->
+      <feFlood flood-color="#00ffff" result="COLOR-left" />
+      <feFlood flood-color="#ffff00" result="COLOR-right" />
+      
+      <!-- MASKS -->
+      <feImage xlink:href="#glitch-mask-left" result="MASK-left-shift" />
+      <feImage xlink:href="#glitch-mask-right" result="MASK-right-shift" />
+      
+      
+      <!-- LEFT SHIFTED -->
+      <feComposite in="SourceGraphic" in2="MASK-left-shift" operator="in" result="LEFT_SHIFT_10" />
+      <feOffset id="blocks-0" dx="0" dy="0" in="LEFT_SHIFT_10" result="LEFT_SHIFT_20" />
+      
+      <!-- RIGHT SHIFTED -->
+      <feComposite in="SourceGraphic" in2="MASK-right-shift" operator="in" result="RIGHT_SHIFT_10" />
+      <!-- RIGHT SHIFT RESULT -->
+      <feOffset id="blocks-0" dx="0" dy="0" in="RIGHT_SHIFT_10" result="RIGHT_SHIFT_20" />
+
+      <!-- REMAINDER -->
+      
+      <feMorphology operator="erode" radius="1" in="MASK-left-shift" out="MASK-left-shift_10"/>
+      <feComposite in="SourceGraphic" in2="MASK-left-shift_10" operator="out" result="REMAINDER_10" />
+
+      <feMorphology operator="erode" radius="1" in="MASK-right-shift" out="MASK-right-shift_10"/>
+      <feComposite in="REMAINDER_10" in2="MASK-right-shift_10" operator="out" result="REMAINDER_20" />
+      
+      <feMerge result="RESULT_10">
+        <feMergeNode in="RIGHT_SHIFT_20" />                    
+        <feMergeNode in="LEFT_SHIFT_20" />
+        <feMergeNode in="REMAINDER_20" />
+      </feMerge>
+      
+      <!-- REMAINDER LEFT -->
+      <feComposite in="COLOR-left" in2="RESULT_10" operator="in" result="RESULT_LEFT_10" />
+      <feOffset id="left-shift" dx="0" dy="0" in="RESULT_LEFT_10" result="RESULT_LEFT_20" />
+      
+      <!-- REMAINDER RIGHT -->
+      <feComposite in="COLOR-right" in2="RESULT_10" operator="in" result="RESULT_RIGHT_10" />
+      <feOffset id="right-shift" dx="0" dy="0" in="RESULT_RIGHT_10" result="RESULT_RIGHT_20" />
+
+      <feBlend in="RESULT_10" in2="RESULT_RIGHT_20" mode="multiply" result="RESULT_20"/>
+      <feBlend in="RESULT_20" in2="RESULT_LEFT_20" mode="multiply"/>
+      
+    </filter>
+
+  </defs>
+  
+  <g id="x-scale" transform="scale(1, 1)">
+    <g id="y-scale" transform="scale(1, 1)">
+      <g id="knack-base" fill="#000000" filter="url(#glitch-filter)">
+        <use href="#knack-sym"/>
+      </g>
+    </g>
+  </g>
+
+
+  <rect id="curtain" x="0" y="0" width="100%" height="100%" fill="#ffffff" />
+
+</svg>

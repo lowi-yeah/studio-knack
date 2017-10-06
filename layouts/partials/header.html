@@ -4,21 +4,18 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    {{ if eq .Site.Params.env "production" }}
-      <link rel="stylesheet" href="/assets/all.css">
-    {{ end }}
     {{ .Site.Data.settings.faviconMetaTags | safeHTML }}
     {{ if isset .Params "seometatags" }}
       {{ .Params.seometatags | safeHTML }}
     {{ else }}
       {{ .Site.Data.settings.seoMetaTags | safeHTML }}
     {{ end }}
-
-    <div id="glyphs-frame">
-      {{ partial "glyphs.svg" . }}
-    </div>
-
-    {{ partial "transition-css.html" . }}
-    {{ partial "sidebar.html" . }}
+    {{ partial "initial-css.html" . }}
   </head>
   <body>        
+    {{ partial "studio-knack.svg" . }}
+    {{ partial "voronoi.svg" . }}
+    {{ partial "menu.html" . }}
+    <script src="/assets/dawn.js"></script>
+
+

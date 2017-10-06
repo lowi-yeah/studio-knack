@@ -1,26 +1,81 @@
-import '../sass/index.sass'
+  import '../sass/index.sass'
+
 import menu       from './menu'
 import about      from './about'
-import initGrid   from './init-grid'
-import initDetail from './init-detail'
+import layout     from './layout'
+import images     from './images'
 import transition from './transition'
-import hero       from './hero'
-import bam        from './bam'
-import boring     from './boring'
+import voronoi    from './voronoi'
+import logo       from './logo'
+import util       from './util'
+import anime      from 'animejs'
 
-// import initHover  from './init-hover'
+// // import grid       from './grid'
+// import initDetail from './init-detail'
+// import hero       from './hero'
+// import bam        from './bam'
+// import filter     from './filter'
+// import boring     from './boring'
+
+let EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
+
+function ready(fn) {
+  if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') fn()
+  else document.addEventListener('DOMContentLoaded', fn)
+}
+
+function init() {
+  console.log('ready!')
+  console.log('device',  util.getDevice(window.innerWidth))
+  
+  let begin = performance.now()
+
+  // logo.begin().then(() => { voronoi.init()
+  //                           menu.init() })
+  
+  images.init()
+
+  layout.init()
+    .then(logo.begin)
+    .then( () => {
+
+      anime({ targets:            '#grid-wrap', 
+              opacity:            [0, 1], 
+              duration:           420 + Math.random() * 640,
+              autoplay:           true,
+              easing:             _.sample(EASINGS) })
+
+      anime({ targets:            '#grid-wrap', 
+              translateY:         [window.innerHeight, 144], 
+              duration:           420 + Math.random() * 640,
+              autoplay:           true,
+              easing:             _.sample(EASINGS) })
+
+      // display the grid
+      // let gW =  document.getElementById('grid-wrap')
+      // gW.style.display = 'flex'
+      // gW.style.marginTop = '9rem'
+      
+
+
+      // setTimeout(transition.init, 810)
+    })
 
 
 
 
-menu.init()
-about.init()
-initGrid(menu)
-initDetail()
-transition.init()
-
-boring.boringHero()
-
+// logo.init()
+// menu.init()
+// about.init()
+// initDetail()
+// filter.init()
+// transition.init()
+// boring.boringHero()
 // hero.init()
 // bam.init()
 // initHover()
+
+}
+
+ready(setTimeout(init, 100))
+

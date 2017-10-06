@@ -1,5 +1,5 @@
 baseurl = "/"
-Paginate = 8
+Paginate = 124
 [params]
   env = "development"
 [[menu.main]]

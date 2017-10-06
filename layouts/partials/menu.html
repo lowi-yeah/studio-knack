@@ -1,0 +1,62 @@
+<button id="toc" class="button">
+  <span class="icon">
+    {{ partial "iconset" . }}
+  </span>
+</button>
+
+<nav id="menu">
+  <section class="navigation section">
+    <ul>
+      <li><a id="home-link" href="/"> 
+        <svg>
+          <use href="#knack-sym"/>
+        </svg>
+
+      </a></li>
+      <li><a id="about-link" href="/about"> who we are </a></li>
+      <li><a id="projects-link"> what we do </a></li>
+    </ul>
+    
+  </section>
+  
+  <section id="contact" class="contact section">
+    <!-- <svg x="0" y="0" width="100%" height="100%" style="position: absolute;">
+      {{ range (slice 0 1 2) }}
+        <rect class="gradient-box" x="0" y="0" width="100%" height="100%" fill="url(#gradient-{{ . }})"/>
+      {{ end }}
+    </svg> -->
+
+    <ul>
+      <li>
+        <a class="media" target="_blank" href="https://www.google.at/maps/place/Goethestra%C3%9Fe+20,+80336+M%C3%BCnchen,+Germany/@48.136739,11.5561777,17z/data=!4m5!3m4!1s0x479e75f87e0a3cdf:0x4e771d979d68e116!8m2!3d48.136739!4d11.5583664">
+         <!--  <span class="media-left">
+            <i class="material icon is-large">location_on</i>
+          </span> -->
+            Goethestraße 20, 80336 München
+        </a>
+      </li>
+      <li>
+        <a class="media"  href="tel:+498945216220">
+         <!--  <span class="media-left">
+            <i class="material icon is-large">phone</i>
+          </span> -->
+            +49 89 45216220
+        </a>
+      </li>
+      <li>
+        <a class="media" href="mailto:hallo@studio-knack.de">
+         <!--  <span class="media-left">
+            <i class="material icon is-large">mail</i>
+          </span> -->
+            hallo@studio-knack.de
+        </a>
+      </li>
+    </ul>
+  </section>
+
+ <!--  <section class="map">
+    {{ with .Site.Data.constants.coordinates }}
+      <iframe width="100%" height="420" src="http://maps.stamen.com/toner/embed#14/{{.latitude}}/{{.longitude}}"></iframe>  
+    {{ end }}
+  </section> -->
+</nav>
