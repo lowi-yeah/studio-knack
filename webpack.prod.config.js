@@ -4,14 +4,12 @@ const extractSass       = new ExtractTextPlugin('all.css')
 
 module.exports = {
   entry: {
-    all: __dirname + '/assets/js/index.js',
+    all:  __dirname + '/assets/js/index.js',
     dawn: __dirname + '/assets/js/dawn.js'
   },
   resolve: {
     root: __dirname + '/assets/js',
-    alias: {
-      'masonry': 'masonry-layout',
-      'isotope': 'isotope-layout' } },
+   
   output: {
     path: __dirname + '/public/assets',
     filename: '[name].js',
@@ -21,10 +19,12 @@ module.exports = {
     loaders: [
       { test: /.*\.sass$/,
         loader: extractSass.extract(['css', 'sass', 'import-glob'])},
+      
       { test: /\.js$/,
         exclude: /(node_modules)/,
         loader: 'babel-loader',
         query: { presets: ['es2015'] }},
+      
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,     loader: 'url-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]' },
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url-loader?limit=65000&mimetype=application/font-woff&name=assets/fonts/[name].[ext]' },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url-loader?limit=65000&mimetype=application/font-woff2&name=assets/fonts/[name].[ext]' },
