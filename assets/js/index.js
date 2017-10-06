@@ -51,14 +51,6 @@ function init() {
               autoplay:           true,
               easing:             _.sample(EASINGS) })
 
-      // display the grid
-      // let gW =  document.getElementById('grid-wrap')
-      // gW.style.display = 'flex'
-      // gW.style.marginTop = '9rem'
-      
-
-
-      // setTimeout(transition.init, 810)
     })
 
 

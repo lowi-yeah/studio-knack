@@ -23,8 +23,12 @@ function resize() {
       ς  = r * 0.81,
       σx = ww * .095 / r,
       σy = ((wh - (kh * r)) / 2) / r
+  knackBase.style.transform   = `scale(${ς}) translate(${σx}px, ${σy}px)` 
 
-  knackBase.style.transform   = `scale(${ς}) translate(${σx}px, ${σy}px)` }
+  let svg = document.getElementById('studio-knack')
+  svg.setAttribute('viewBox', `0 0 ${ww} ${wh}`)
+  // console.log('svg', svg)
+  }
 
 function startAnimation(fps, fn){
   let fpsInterval   = 1000 / fps, 
@@ -154,7 +158,7 @@ function _cleanup(τ) {
 }
 
 function _d() {
-  return 420 + Math.random() * 240
+  return 420 + Math.random() * 440
 }
 
 function _animate(ζ, c) {
@@ -165,38 +169,26 @@ function _animate(ζ, c) {
 function begin() {
   return new Promise( (resolve, reject) => {
     let sk = document.getElementById('studio-knack'),
-        x  = document.getElementById('x-scale'),
-        y  = document.getElementById('y-scale'),
+        ƒ  = document.getElementById('knack-frame'),
         τ  = document.getElementById('knack-base'),
         ϕ  = 48/τ.getBoundingClientRect().height,
-        ζ  = anime.timeline({autoplay: false
-        })
-    _cleanup(τ)
-                        
+        ζ  = anime( { targets:    sk,
+                      height:     [`${window.innerHeight}px`, '144px'],
+                      duration:   _d(),
+                      // offset:     200,
+                      easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
+                      complete:   resolve,
+                      autoplay: false}),
 
-    // ζ.add({ targets:    y,
-    //         transform: `scale(1 ${ϕ})`,
-    //         duration:   _d(),
-    //         easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)]})    
-    ζ.add({ targets:    y,
-            transform: `scale(${ϕ})`,
-            duration:   _d(),
-            // offset:     200,
-            easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)]}) 
+        ξ  = anime( { targets:    ƒ,
+                      translateY: '-24px',
+                      duration:   _d(),
+                      // offset:     200,
+                      easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
+                      // autoplay: false
+                    })
 
-    ζ.add({ targets:    x,
-            translateY: (i) => {
-              let β = i.getBoundingClientRect()
-              return  -β.top + 24},
-            duration:   _d(),
-            // offset:     200,
-            easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
-            complete:   resolve}) 
-
-    
-   _animate(ζ, document.getElementById('curtain'))
-
-  })
-}
+    // _cleanup(τ)
+   _animate(ζ, document.getElementById('curtain'))})}
 
 export default {init, begin}

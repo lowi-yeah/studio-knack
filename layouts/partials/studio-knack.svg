@@ -1,5 +1,5 @@
 <!-- to be further filled via JS -->
-<svg id="studio-knack">
+<svg id="studio-knack" width="100%" height="100%">
   <defs>
 
     <!-- symbol -->
@@ -70,12 +70,16 @@
     </filter>
 
   </defs>
+
+  <g id="knack-base" fill="#000000">
+        <!-- <use href="#knack-sym"/> -->
+        {{ partial "knack.svg" . }}
+      </g>
   
   <g id="x-scale" transform="scale(1, 1)">
     <g id="y-scale" transform="scale(1, 1)">
-      <g id="knack-base" fill="#000000" filter="url(#glitch-filter)">
-        <use href="#knack-sym"/>
-      </g>
+      <!-- <g id="knack-base" fill="#000000" filter="url(#glitch-filter)"> -->
+      
     </g>
   </g>
 

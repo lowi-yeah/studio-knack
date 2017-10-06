@@ -13,7 +13,12 @@
     {{ partial "initial-css.html" . }}
   </head>
   <body>        
-    {{ partial "studio-knack.svg" . }}
+    
+    <div id="knack-frame">
+      {{ partial "studio-knack.svg" . }}  
+    </div>
+    
+
     {{ partial "voronoi.svg" . }}
     {{ partial "menu.html" . }}
     <script src="/assets/dawn.js"></script>

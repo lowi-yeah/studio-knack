@@ -9,7 +9,9 @@ module.exports = {
     
   resolve: {
     root: __dirname + '/assets/js',
-   
+    alias: {
+      'masonry': 'masonry-layout',
+      'isotope': 'isotope-layout' } },
   output: {
     path: __dirname + '/public/assets',
     filename: '[name].js',
