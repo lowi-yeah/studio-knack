@@ -7,78 +7,100 @@ import util             from './util'
 const NUM_COLUMNS = 24
 const ȣ = randomNormal(0, 0.5)
 
-// 24 columns
-// row height: 1.5rem
+
+const ΔCONFIG = {
+    mobile:     { numCols: 1,
+                  minColSpan: 24,
+                  maxColSpan: 24,
+                  minRowSpan: 21,
+                  maxRowSpan: 28,
+                  minPaddingX: 0,
+                  maxPaddingX: 0,
+                  minPaddingY: 48,
+                  maxPaddingY: 144 },
+    tablet:     { numCols: 3,
+                  minColSpan: 21,
+                  maxColSpan: 24,
+                  minRowSpan: 16,
+                  maxRowSpan: 21,
+                  minPaddingX: 0,
+                  maxPaddingX: 0,
+                  minPaddingY: 48,
+                  maxPaddingY: 92 },
+    desktop:    { numCols: 3,
+                  minColSpan: 12,
+                  maxColSpan: 21,
+                  minRowSpan: 18,
+                  maxRowSpan: 28,
+                  minPaddingX: 24,
+                  maxPaddingX: 48,
+                  minPaddingY: 48,
+                  maxPaddingY: 144 },
+    widescreen: { numCols: 3,
+                  minColSpan: 21,
+                  maxColSpan: 24,
+                  minRowSpan: 16,
+                  maxRowSpan: 21,
+                  minPaddingX: 24,
+                  maxPaddingX: 92,
+                  minPaddingY: 48,
+                  maxPaddingY: 92 },
+    fullhd:     { numCols: 3,
+                  minColSpan: 8,
+                  maxColSpan: 14,
+                  minRowSpan: 24,
+                  maxRowSpan: 32,
+                  minPaddingX: 24,
+                  maxPaddingX: 92,
+                  minPaddingY: 96,
+                  maxPaddingY: 144 }}
+
+const SHADOWS = ['shadow-2', 'shadow-3', 'shadow-4', 'shadow-6', 'shadow-8', 'shadow-16']
+
+function _minPaddingX(){
+  let device = util.getDevice(window.innerWidth)
+  return ΔCONFIG[device].minPaddingX
+}
+
+function _maxPaddingX(){
+  let device = util.getDevice(window.innerWidth)
+  return ΔCONFIG[device].maxPaddingX
+}
+
+function _minPaddingY(){
+  let device = util.getDevice(window.innerWidth)
+  return ΔCONFIG[device].minPaddingY
+}
+
+function _maxPaddingY(){
+  let device = util.getDevice(window.innerWidth)
+  return ΔCONFIG[device].maxPaddingY
+}
+
 
 function _numCols() {
   let device = util.getDevice(window.innerWidth)
-  switch (device) {
-    case 'mobile':
-      return 1
-    case 'tablet':
-      return 2
-    case 'desktop':
-      return 3
-    case 'widescreen':
-      return 3
-    case 'fullhd':
-      return 4
-    default:
-      return 3
-    }
+  return ΔCONFIG[device].numCols
 }
 
 function _minColSpan() {
-  return 24/_numCols()
+  let device = util.getDevice(window.innerWidth)
+  return ΔCONFIG[device].minColSpan
 }
 
 function _maxColSpan() {
   let device = util.getDevice(window.innerWidth)
-  // return 24
-  switch (device) {
-    case 'mobile':
-      return 24
-    case 'tablet':
-      return 21
-    case 'desktop':
-      return 21
-    case 'widescreen':
-      return 16
-    case 'fullhd':
-      return 12
-    }
+  return ΔCONFIG[device].maxColSpan
 }
 
 function _minRowSpan() {
   let device = util.getDevice(window.innerWidth)
-  switch (device) {
-   case 'mobile':
-     return 28
-   case 'tablet':
-     return 28
-   case 'desktop':
-     return 28
-    case 'widescreen':
-      return 16
-    case 'fullhd':
-      return 28
-   }
+  return ΔCONFIG[device].minRowSpan
 }
 
 function _maxRowSpan() {
   let device = util.getDevice(window.innerWidth)
-  switch (device) {
-   case 'mobile':
-     return 32
-   case 'tablet':
-     return 32
-   case 'desktop':
-     return 32
-    case 'widescreen':
-      return 24
-    case 'fullhd':
-      return 32
-   }
+  return ΔCONFIG[device].maxRowSpan
 }
 
 function _layoutCells(items, {x, y, colFn, rowFn}) {
@@ -204,7 +226,6 @@ function _itemsRight(item) {
       deltaFn   = (ε, εϑ) => (εϑ.x0 - ε.x1)
   return _itemz(item, siblings, overlapFn, deltaFn) }
 
-
 function _itemAbove(item) {
   // let a = _itemsAbove(item)
   let a = item.above
@@ -288,8 +309,8 @@ function _doDomElementsOverlap(element0, element1) {
 }
 
 function _doItemsOverlap(itemRight, itemLeft) {
-  let ς0 = itemRight.querySelector('.text > span'), // text spans
-      ς1 = itemLeft.querySelector('.text > span'),
+  let ς0 = itemRight.querySelector('.text span'), // text spans
+      ς1 = itemLeft.querySelector('.text span'),
       ζ1 = itemLeft.querySelector('.image')        // image span
 
   let textsOverlap      = _doDomElementsOverlap(ς0, ς1),
@@ -345,14 +366,14 @@ function _cleanupText(item) {
 
 
       // do the text overlap?
-      // ιl = _itemLeft(item)
-      // if(ιl) {
-      //   ω  = _doItemsOverlap(item, ιl.ϑ)
-      //   if(ω) {
-      //     ς.style.display = 'none'
-      //     ς.style.visibility = 'hidden'
-      //   }
-      // }
+      ιl = _itemLeft(item)
+      if(ιl) {
+        ω  = _doItemsOverlap(item, ιl.ϑ)
+        if(ω) {
+          ς.style.display = 'none'
+          ς.style.visibility = 'hidden'
+        }
+      }
 
       // ιr = _itemRight(item)
       // if(ιr) {
@@ -407,7 +428,12 @@ function _adjustText(item) {
           // the side with the largest amount of whitespace [top, right, left, bottom]
           μ = _(σ)
                 .reduce((ρ, ς, ι) => { 
-                  // texts as never above an item
+                if(util.getDevice(window.innerWidth) === 'mobile') {
+                  ρ.value = σ['bottom']
+                  ρ.key = 'bottom'
+                }
+
+                // texts as never above an item
                 if(ς > ρ.value && ι !== 'top') {
                   ρ.value = ς
                   ρ.key = ι }
@@ -416,11 +442,10 @@ function _adjustText(item) {
           δx, δy,         // offset
           ει, ες, ετ, εs, // bounding boxez
           ηw, ηh          // new width & height
-    
-    
+      
       switch(μ.key) {
     
-        // top is being gnored
+        // top is being ignored
          // case 'top': 
          //  ες = _extent(ς)
          //  ετ = _extent(τ)
@@ -459,6 +484,12 @@ function _adjustText(item) {
           τ.setAttribute('data-text-pos', 'bottom')
           τ.style.width = `${ ηw }px`
           τ.style.transform = `translateX(${ 32 + δx }px) translateY(${ δy }px)`
+
+
+          // add the height of the text to the height of the grid item
+          // item.style.height = `(ει.y1 - ει.y0) + (ετ.y1 - ετ.y0)px`
+    
+
           break
     
         case 'left': 
@@ -554,14 +585,16 @@ function init() {
     .then( () =>  
       _.each(items, item => {
         let β = item.getBoundingClientRect()
-        item.style.paddingLeft    = `${_.random(21, β.width * 0.12)}px`
-        item.style.paddingRight   = `${_.random(21, β.width * 0.12)}px`
-        item.style.paddingTop     = `${_.random(β.height * 0.04, β.height * 0.12)}px`
-        item.style.paddingBottom  = `${_.random(β.height * 0.04, β.height * 0.12)}px` 
-        // item.style.paddingTop     = '0'
-        // item.style.paddingBottom  = '0' 
-
+        item.style.paddingLeft    = `${_.random(_minPaddingX(), _maxPaddingX())}px`
+        item.style.paddingRight   = `${_.random(_minPaddingX(), _maxPaddingX())}px`
+        item.style.paddingTop     = `${_.random(_minPaddingY(), _maxPaddingY())}px`
+        item.style.paddingBottom  = `${_.random(_minPaddingY(), _maxPaddingY())}px` 
       }))
+
+    // set image shadow
+    .then( () =>  _.each(items, item => {
+      item.querySelector('.image').setAttribute(_.sample(SHADOWS), 1)}) )
+
 
     // resize the text
     .then( () =>  _.each(items, item => {
