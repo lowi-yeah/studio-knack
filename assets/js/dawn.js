@@ -30,4 +30,4 @@ function _openCurtain() {
 console.log('dawn')
 logo.init().then(_openCurtain)
 
-window.scrollTo(0, 0)
+// window.scrollTo(0, 0)

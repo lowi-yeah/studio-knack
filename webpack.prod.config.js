@@ -43,6 +43,12 @@ module.exports = {
       compress: { warnings: false },
       comments: false,
     }),
-  ]
+  ],
+   worker: {
+    output: {
+      filename: "hash.worker.js",
+      chunkFilename: "[id].hash.worker.js"
+    }
+  }
 };
 
