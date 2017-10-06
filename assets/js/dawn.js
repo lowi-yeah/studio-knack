@@ -16,7 +16,6 @@ let DIRECTIONS  = { top: 0, left: 1, bottom: 2, right: 3 },
     EASINGS     = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
 
 function _openCurtain() {
-  console.log('_openCurtain')
   let curtain         = document.getElementById('curtain'),
       direction       = Math.floor(Math.random() * 4),
       offset          = Math.random() < 0.5 ? window.innerWidth : -window.innerWidth,
@@ -24,9 +23,11 @@ function _openCurtain() {
                           transform: `translate(${offset})`,
                           duration: 800 + Math.random() * 1200,
                           delay:    400,
-                          easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)]}
+                          easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
+                          complete: () => curtain.setAttribute('data-lifted', 1)}
   anime(animationParams) }
 
 console.log('dawn')
-logo.init()
-  .then(_openCurtain)
+logo.init().then(_openCurtain)
+
+window.scrollTo(0, 0)

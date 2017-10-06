@@ -47,11 +47,11 @@ const ΔCONFIG = {
                   maxPaddingY: 92 },
     fullhd:     { numCols: 5,
                   minColSpan: 8,
-                  maxColSpan: 14,
+                  maxColSpan: 10,
                   minRowSpan: 24,
                   maxRowSpan: 32,
-                  minPaddingX: 24,
-                  maxPaddingX: 92,
+                  minPaddingX: 16,
+                  maxPaddingX: 48,
                   minPaddingY: 96,
                   maxPaddingY: 144 }}
 

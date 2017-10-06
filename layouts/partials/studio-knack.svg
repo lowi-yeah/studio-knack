@@ -71,8 +71,12 @@
 
   </defs>
   
-  <g id="knack-base" fill="#ff00ff" filter="url(#glitch-filter)">
-    <use href="#knack-sym"/>
+  <g id="x-scale" transform="scale(1, 1)">
+    <g id="y-scale" transform="scale(1, 1)">
+      <g id="knack-base" fill="#000000" filter="url(#glitch-filter)">
+        <use href="#knack-sym"/>
+      </g>
+    </g>
   </g>
 
 
