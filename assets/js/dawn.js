@@ -1,5 +1,5 @@
-import anime from 'animejs'
-import logo from './logo'
+import anime          from 'animejs'
+import logo           from './logo'
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -16,6 +16,7 @@ let DIRECTIONS  = { top: 0, left: 1, bottom: 2, right: 3 },
     EASINGS     = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
 
 function _openCurtain() {
+  console.log('_openCurtain')
   let curtain         = document.getElementById('curtain'),
       direction       = Math.floor(Math.random() * 4),
       offset          = Math.random() < 0.5 ? window.innerWidth : -window.innerWidth,
@@ -28,4 +29,4 @@ function _openCurtain() {
 
 console.log('dawn')
 logo.init()
-_openCurtain()
+  .then(_openCurtain)

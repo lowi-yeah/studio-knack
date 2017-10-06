@@ -27,19 +27,16 @@ function init() {
   
   let begin = performance.now()
 
-  logo.begin().then(() => { voronoi.init()
-                            menu.init() })
+  // logo.begin().then(() => { voronoi.init()
+  //                           menu.init() })
 
   layout.init()
-    .then( () => {
-      setTimeout(transition.init, 810)
-      
-    })
+    // .then( () => {
+      // setTimeout(transition.init, 810)
+    // })
 
-  images.init()
+  // images.init()
 
-
-  // brikkery.init()
 
 
 // logo.init()
