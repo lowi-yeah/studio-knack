@@ -10,13 +10,6 @@ import logo       from './logo'
 import util       from './util'
 import anime      from 'animejs'
 
-// // import grid       from './grid'
-// import initDetail from './init-detail'
-// import hero       from './hero'
-// import bam        from './bam'
-// import filter     from './filter'
-// import boring     from './boring'
-
 let EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 
 function ready(fn) {
@@ -29,7 +22,6 @@ function init() {
   console.log('device',  util.getDevice(window.innerWidth))
   
   let begin = performance.now()
-
   // logo.begin().then(() => { voronoi.init()
   //                           menu.init() })
   
