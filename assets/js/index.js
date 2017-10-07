@@ -25,7 +25,7 @@ function init() {
   // logo.begin().then(() => { voronoi.init()
   //                           menu.init() })
   
-  // images.init()
+  images.init()
 
   layout.init()
     .then(logo.begin)
