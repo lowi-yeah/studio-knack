@@ -568,7 +568,7 @@ function init() {
             let β  = ι.getBoundingClientRect(),
                 μ  = _.random(χ - (β.x + β.width)),
                 δx = _.max([0, μ]),
-                δy = _.random(-120, 120)
+                δy = _.random(0, 240)
                 // δy = 0
 
             // set arrtibutes

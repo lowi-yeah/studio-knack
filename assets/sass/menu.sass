@@ -1,142 +1,217 @@
-#back 
-  left: -120px
-  top: 1rem
+#logo 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none
+  z-index: 100
+  // background: #FF6B67;
+  // clip-path: circle(60px at center);
+  // clip-path: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 42.1'><a><path d='M4.3 14h5.6c.2 1.1.7 1.6 1.6 1.6s1.6-.5 1.6-1.4c0-.7-.5-1.2-1.9-1.6-.1 0-.4-.1-.9-.3-.5 0-1-.2-1.3-.3-1-.3-1.9-.7-2.7-1.3-1.2-.9-1.8-2.1-1.8-3.5 0-3.1 2.8-5.3 6.9-5.3 3.8 0 5.9 1.6 6.5 5h-5.1c0-.9-.5-1.5-1.4-1.5-.7 0-1.3.5-1.3 1.2 0 .9.7 1.4 2.7 1.7 2.2.4 3 .7 4.1 1.5 1.3.8 2 2.2 2 3.8 0 3.3-2.8 5.5-7.2 5.5-2.5 0-4.4-.6-5.8-2-.9-.9-1.3-1.5-1.6-3.1zM19 2.3h13.1v4.2h-4v12.3H23V6.6h-4V2.3zM34.1 2.3h5.1v10.4c0 1.5.9 2.4 2.6 2.4 1.8 0 2.7-1 2.7-3.2V2.3h5v10c0 2.3-.3 3.4-1 4.5-1.2 1.6-3.6 2.5-6.7 2.5-4.9 0-7.7-2-7.7-5.8V2.3zM52.2 2.3h7.9c2.1 0 3.7.5 5 1.6 1.9 1.5 3 4 3 6.7 0 3-1.5 5.8-3.7 7.1-1.5.9-2.2 1.1-5 1.1h-7.2V2.3zm5 4v8.5h.8c2.9 0 4.7-1.6 4.7-4.3 0-2.7-1.6-4.3-4.5-4.3-.3.1-.6.1-1 .1zM70.5 2.3h5.1v16.5h-5.1V2.3zM87.1 1.8c5.1 0 8.6 3.5 8.6 8.6 0 3.6-1.4 6.1-3.8 7.6-1.5.8-3.1 1.2-4.8 1.2-3.6 0-6.6-1.7-7.9-4.4-.5-1.3-.9-2.7-.9-4.4 0-2.7.7-4.6 2.5-6.2 1.6-1.7 3.6-2.4 6.3-2.4zm.1 13.4c1.3-.1 2.4-.7 2.7-1.7.2-.6.3-1.6.3-3 0-2.4-.1-2.7-.5-3.5-.5-.8-1.5-1.3-2.6-1.3-1.6 0-2.7.8-3.1 2-.2.7-.3 1.5-.3 2.5 0 2.3.1 3.1.5 3.7.5.7 1.6 1.2 2.7 1.2.1.1.2.1.3.1zM4.3 39.9h5.1v-7.1l5.2 7.1h6.1l-7.1-9.1 6.1-7.3h-5.8l-4.5 5.7v-5.7H4.3M22.7 39.9h5v-8.7l5.7 8.7h5V23.4h-5v8.7l-5.7-8.7h-5M53.3 23.5h-7.6L40.5 40h5.3l.8-2.7h5.8l.8 2.7h5.3l-5.2-16.5zM47.6 34l1.9-6.7 1.9 6.7h-3.8zM68.3 22.9c-5.6 0-9 3.3-9 8.6 0 5.4 3.6 8.8 9.1 8.8 2.7 0 5-.8 6.4-2.4 1-1.1 1.4-1.8 1.8-3.8H71c-.3 1.5-1.4 2.2-2.9 2.2-.9 0-1.6-.3-2.3-.7-.8-.6-1-1.3-1-3.7v-1.6c0-2.2 1.2-3.4 3.2-3.4 1.6 0 2.6.7 3 2.3h5.5c-.4-4-3.5-6.3-8.2-6.3M79.3 39.9h5.1v-7.1l5.2 7.1h6.1l-7.1-9.1 6.1-7.3h-5.8l-4.5 5.7v-5.7h-5.1'/></a></svg>");
 
-#toc.button 
-  $size: 48px
-  width: $size
-  height: $size
-  z-index: 305
-  padding: 0
-  position: fixed
-  top: 1rem
-  right: 1rem
+  // &:before
+  //   content: ""
+  //   width: 100%
+  //   height: 100%
+  //   position: absolute
+  //   left: 0
+  //   top: 0
+  //   background: $white
+
+  // &:after
+  // content: ""
+  // width: 100%
+  // height: 100%
+  // position: absolute
+  // left: 0
+  // top: 0
+  // background-image:     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 42.1'><a><path d='M4.3 14h5.6c.2 1.1.7 1.6 1.6 1.6s1.6-.5 1.6-1.4c0-.7-.5-1.2-1.9-1.6-.1 0-.4-.1-.9-.3-.5 0-1-.2-1.3-.3-1-.3-1.9-.7-2.7-1.3-1.2-.9-1.8-2.1-1.8-3.5 0-3.1 2.8-5.3 6.9-5.3 3.8 0 5.9 1.6 6.5 5h-5.1c0-.9-.5-1.5-1.4-1.5-.7 0-1.3.5-1.3 1.2 0 .9.7 1.4 2.7 1.7 2.2.4 3 .7 4.1 1.5 1.3.8 2 2.2 2 3.8 0 3.3-2.8 5.5-7.2 5.5-2.5 0-4.4-.6-5.8-2-.9-.9-1.3-1.5-1.6-3.1zM19 2.3h13.1v4.2h-4v12.3H23V6.6h-4V2.3zM34.1 2.3h5.1v10.4c0 1.5.9 2.4 2.6 2.4 1.8 0 2.7-1 2.7-3.2V2.3h5v10c0 2.3-.3 3.4-1 4.5-1.2 1.6-3.6 2.5-6.7 2.5-4.9 0-7.7-2-7.7-5.8V2.3zM52.2 2.3h7.9c2.1 0 3.7.5 5 1.6 1.9 1.5 3 4 3 6.7 0 3-1.5 5.8-3.7 7.1-1.5.9-2.2 1.1-5 1.1h-7.2V2.3zm5 4v8.5h.8c2.9 0 4.7-1.6 4.7-4.3 0-2.7-1.6-4.3-4.5-4.3-.3.1-.6.1-1 .1zM70.5 2.3h5.1v16.5h-5.1V2.3zM87.1 1.8c5.1 0 8.6 3.5 8.6 8.6 0 3.6-1.4 6.1-3.8 7.6-1.5.8-3.1 1.2-4.8 1.2-3.6 0-6.6-1.7-7.9-4.4-.5-1.3-.9-2.7-.9-4.4 0-2.7.7-4.6 2.5-6.2 1.6-1.7 3.6-2.4 6.3-2.4zm.1 13.4c1.3-.1 2.4-.7 2.7-1.7.2-.6.3-1.6.3-3 0-2.4-.1-2.7-.5-3.5-.5-.8-1.5-1.3-2.6-1.3-1.6 0-2.7.8-3.1 2-.2.7-.3 1.5-.3 2.5 0 2.3.1 3.1.5 3.7.5.7 1.6 1.2 2.7 1.2.1.1.2.1.3.1zM4.3 39.9h5.1v-7.1l5.2 7.1h6.1l-7.1-9.1 6.1-7.3h-5.8l-4.5 5.7v-5.7H4.3M22.7 39.9h5v-8.7l5.7 8.7h5V23.4h-5v8.7l-5.7-8.7h-5M53.3 23.5h-7.6L40.5 40h5.3l.8-2.7h5.8l.8 2.7h5.3l-5.2-16.5zM47.6 34l1.9-6.7 1.9 6.7h-3.8zM68.3 22.9c-5.6 0-9 3.3-9 8.6 0 5.4 3.6 8.8 9.1 8.8 2.7 0 5-.8 6.4-2.4 1-1.1 1.4-1.8 1.8-3.8H71c-.3 1.5-1.4 2.2-2.9 2.2-.9 0-1.6-.3-2.3-.7-.8-.6-1-1.3-1-3.7v-1.6c0-2.2 1.2-3.4 3.2-3.4 1.6 0 2.6.7 3 2.3h5.5c-.4-4-3.5-6.3-8.2-6.3M79.3 39.9h5.1v-7.1l5.2 7.1h6.1l-7.1-9.1 6.1-7.3h-5.8l-4.5 5.7v-5.7h-5.1'/></a></svg>");
+  background-image:     url('../img/knack.svg');
+  background-repeat:    no-repeat
+  background-size:      contain
+  background-position:  left center
+  // mix-blend-mode: difference
+
+#home-btn
+  pointer-events: all
+  display: flex
+  // the logo ratio os 100/42 = 2.380952381
+  $height: 4.5rem
+  $width: 2.380952381 * $height
+  width: $width
+  height: $height
   border: none
-  // border: 1px solid $red
-  background: $white
-  border-radius: $size/2
+  background: transparent
 
-  +z-depth-transition()
-  +z-depth-2dp()
+  &:hover
+    background: #ffff00
+    mix-blend-mode: multiply
+    cursor: pointer 
+
+#menu
+  display: flex
+  width: 100%
+  background: transparent
+  flex-direction: column
+  z-index: 18
+  position: fixed
+  top: 0
+  left: 0
+  
+  .bg 
+    position: relative
+    align-self: center
+    height: 4.5rem
+    width: 8rem
+    flex: 0 0 auto 
+    background: #ffff00
+    transform: translateY(-98px)
+    cursor: pointer
+
+
+    &:hover
+      background: #ff0000
+
+// #back 
+//   left: -120px
+//   top: 1rem
+
+// #toc.button 
+//   $size: 48px
+//   width: $size
+//   height: $size
+//   z-index: 305
+//   padding: 0
+//   position: fixed
+//   top: 1rem
+//   right: 1rem
+//   border: none
+//   // border: 1px solid $red
+//   background: $white
+//   border-radius: $size/2
+
+//   +z-depth-transition()
+//   +z-depth-2dp()
 
 
   
-  #iconset
-    margin-top: 0
-    margin-left: 0
-    width: 100%
-    height: 100%
+//   #iconset
+//     margin-top: 0
+//     margin-left: 0
+//     width: 100%
+//     height: 100%
 
-  &:hover
-    // background: $black
-    +z-depth-focus()
-    // path
-      // fill: $white
+//   &:hover
+//     // background: $black
+//     +z-depth-focus()
+//     // path
+//       // fill: $white
 
 
-// +touch
-//   #toc.button 
-//     bottom: 1rem
-//     top: unset
+// // +touch
+// //   #toc.button 
+// //     bottom: 1rem
+// //     top: unset
       
-#menu
-  height: 100vh
-  width: 100vw
-  pointer-events: none
-  z-index: 304
+// #menu
+//   height: 100vh
+//   width: 100vw
+//   pointer-events: none
+//   z-index: 304
 
-  position: fixed
-  top: 0
-  right: 0
+//   position: fixed
+//   top: 0
+//   right: 0
 
-  flex-direction: column
-  align-content: center
+//   flex-direction: column
+//   align-content: center
 
-  .section 
-    padding: 1rem
-    flex: 1 0 auto
-    pointer-events: all
+//   .section 
+//     padding: 1rem
+//     flex: 1 0 auto
+//     pointer-events: all
 
-    svg > rect.gradient-box
-      mix-blend-mode: multiply
+//     svg > rect.gradient-box
+//       mix-blend-mode: multiply
 
-    &.navigation
-      padding: 0
-      width: 100%
-      height: 100%
-      background: transparent
-      ul
-        display: flex
-        flex-direction: column
-        li
-          flex: 0 1 auto
-          a
-            padding-left: 1.5rem
-            font-size: 1rem
-            font-weight: 900
-            display: inline-block
+//     &.navigation
+//       padding: 0
+//       width: 100%
+//       height: 100%
+//       background: transparent
+//       ul
+//         display: flex
+//         flex-direction: column
+//         li
+//           flex: 0 1 auto
+//           a
+//             padding-left: 1.5rem
+//             font-size: 1rem
+//             font-weight: 900
+//             display: inline-block
 
-            &#home-link
-              padding-top: 1.5rem
+//             &#home-link
+//               padding-top: 1.5rem
           
 
     
-    &.contact
-      padding: 0
-      position: absolute
-      bottom: 0
-      left: 0
-      width: 100%
-      +z-depth-2dp-flipped()
-      overflow: hidden 
-      background: $black
+//     &.contact
+//       padding: 0
+//       position: absolute
+//       bottom: 0
+//       left: 0
+//       width: 100%
+//       +z-depth-2dp-flipped()
+//       overflow: hidden 
+//       background: $black
       
 
-      align-self: flex-end
+//       align-self: flex-end
 
-      ul
-        padding: 1.5rem 1.5rem 0.5rem 1.5rem
-        display: flex
-        flex-direction: column
-        align-items: flex-start
+//       ul
+//         padding: 1.5rem 1.5rem 0.5rem 1.5rem
+//         display: flex
+//         flex-direction: column
+//         align-items: flex-start
 
-        li > a
-          font-size: 1rem
-          font-weight: 900
-          color: $white
-          +z-depth-4dp-inset()
+//         li > a
+//           font-size: 1rem
+//           font-weight: 900
+//           color: $white
+//           +z-depth-4dp-inset()
 
 
 
-  // a.title
-  //   font-weight: 700
-  //   font-variant: small-caps
-  //   +text-stroke($size: 4)
+//   // a.title
+//   //   font-weight: 700
+//   //   font-variant: small-caps
+//   //   +text-stroke($size: 4)
 
-  //   &:hover
-  //     +text-stroke($size: 4, $color: $black)      
-  //     color: $white
+//   //   &:hover
+//   //     +text-stroke($size: 4, $color: $black)      
+//   //     color: $white
 
-  a.media
-    flex: 0 1 auto
-    margin-bottom: 1rem
-    display: flex;
-    align-items: center;
+//   a.media
+//     flex: 0 1 auto
+//     margin-bottom: 1rem
+//     display: flex;
+//     align-items: center;
     
-    .media-left
-      display: inline-block
-      pointer-events: none
-      .icon 
-        background: transparent
-    .media-content
-      display: inline-block
-      margin-left: 0.5rem
-      pointer-events: none
+//     .media-left
+//       display: inline-block
+//       pointer-events: none
+//       .icon 
+//         background: transparent
+//     .media-content
+//       display: inline-block
+//       margin-left: 0.5rem
+//       pointer-events: none
 
-    // &:hover
-    //   .icon 
-    //     background: $black
-    //     color: $white
-    //   .media-content
-    //     +text-stroke($size: 4, $color: $black)      
-    //     color: $white
+//     // &:hover
+//     //   .icon 
+//     //     background: $black
+//     //     color: $white
+//     //   .media-content
+//     //     +text-stroke($size: 4, $color: $black)      
+//     //     color: $white

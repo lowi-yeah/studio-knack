@@ -67,8 +67,10 @@
   grid-template-columns: unquote("#{$cols}")
 
 #grid-wrap
+  pointer-events: none
   // padding-left: 3rem
   // padding-right: 3rem
+
 #grid
   // background: $yellow
   width: 100%
@@ -158,6 +160,7 @@
       flex: 1 0 auto
       z-index: 1
       margin: 0
+
       // border: 1px solid $red
 
 
@@ -171,6 +174,7 @@
         background-size: cover
         background-repeat: no-repeat
         background-position: center center
+        pointer-events: all
         
         &[shadow-2]
           +z-depth-2dp
@@ -200,6 +204,7 @@
       top: 0
       // top: -3rem
       z-index: 2
+      pointer-events: all
       // background-color: $cyan
 
       & > span 

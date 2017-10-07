@@ -1,4 +1,4 @@
-  import '../sass/index.sass'
+import '../sass/index.sass'
 
 import menu       from './menu'
 import about      from './about'
@@ -33,11 +33,14 @@ function init() {
   // logo.begin().then(() => { voronoi.init()
   //                           menu.init() })
   
-  images.init()
+  // images.init()
 
   layout.init()
     .then(logo.begin)
+    // .then(menu.init)
     .then( () => {
+
+      menu.init()
 
       anime({ targets:            '#grid-wrap', 
               opacity:            [0, 1], 
@@ -50,7 +53,6 @@ function init() {
               duration:           420 + Math.random() * 640,
               autoplay:           true,
               easing:             _.sample(EASINGS) })
-
     })
 
 
