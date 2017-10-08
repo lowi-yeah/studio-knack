@@ -1,4 +1,5 @@
 import {randomNormal}   from 'd3-random'
+import anime            from 'animejs'
 import {scaleLinear, 
         scaleQuantize}  from 'd3-scale'
 import parallax         from './parallax'
@@ -6,7 +7,7 @@ import util             from './util'
 
 const NUM_COLUMNS = 24
 const ȣ = randomNormal(0, 0.5)
-
+const EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 
 const ΔCONFIG = {
     mobile:     { numCols: 1,
@@ -108,11 +109,18 @@ function _layoutCells(items, {x, y, colFn, rowFn}) {
   // split into head and tail, 
   // random interval between 1 and the max number of columns η
   let item  = _.head(items),
-      δ     = {x: colFn(), y: rowFn()}
-  item.style['grid-column'] = `span ${δ.x}`
-  item.style['grid-row']    = `span ${δ.y}`
-  item.setAttribute('data-column', `${δ.x}`)
-  item.setAttribute('data-row',    `${δ.y}`)
+      δ     = {x: colFn(), y: rowFn()},
+      ν     = parseInt(item.getAttribute('data-visible')) === 1
+
+  if(ν) {
+    item.style.display = 'flex'
+    item.style['grid-column'] = `span ${δ.x}`
+    item.style['grid-row']    = `span ${δ.y}`
+    item.setAttribute('data-column', `${δ.x}`)
+    item.setAttribute('data-row',    `${δ.y}`) } 
+  else item.style.display = 'none'
+
+
   _layoutCells(_.tail(items), {x, y, colFn, rowFn}) }
 
 function _gridResize(items) {
@@ -305,8 +313,7 @@ function _doDomElementsOverlap(element0, element1) {
 
   if ( ωl && (ωt || ωb) ) return ε0.x0 - ε1.x1
   if ( ωr && (ωt || ωb) ) return ε0.x1 - ε1.x0 // maybe buggy?
-  else return 0
-}
+  else return 0 }
 
 function _doItemsOverlap(itemRight, itemLeft) {
   let ς0 = itemRight.querySelector('.text span'), // text spans
@@ -520,9 +527,47 @@ function _id(item) {
 function _ids(items) {
   return _.map(items, ι => _id(ι.ϑ))}
 
+function _clear() {
+  return new Promise( (resolve, reject) => {
+    var grid = document.getElementById('grid')
+    while (grid.firstChild) grid.removeChild(grid.firstChild)
+    resolve() }) }
+
 function init() {
+  // make the grid visible
+  let ƒ = document.getElementById('grid-wrap')
+  // ƒ.style.transform = `translateX(${window.innerWidth}px)`
+  ƒ.style.display  = 'flex'
+
+}
+
+function _hideGrid() {
+  return new Promise( resolve => {
+    let ƒ = document.getElementById('grid-wrap')
+    anime({ targets:  ƒ, 
+            opacity:  0,
+            duration: 240 + Math.random() * 320,
+            easing:   _.sample(EASINGS),
+            complete: resolve})}
+
+    )}
+
+function _showGrid() {
+  return new Promise( resolve => {
+    let ƒ = document.getElementById('grid-wrap')
+    // ƒ.style.transform =  `translateX(${window.innerWidth})`
+    // ƒ.style.opacity   =  1
+    anime({ targets:  '#grid-wrap', 
+            opacity: 1, 
+            duration: 240 + Math.random() * 320,
+            easing:   _.sample(EASINGS),
+            complete: resolve})})}
+
+function update() {
   let items = document.querySelectorAll('.grid-item')
-  return _gridResize(items)
+
+  return _hideGrid()
+    .then( () => _gridResize(items))
 
     // attach the geighbour data to each item
     .then( () => 
@@ -613,9 +658,15 @@ function init() {
 
     .then( () =>  parallax.init(items))
 
+    .then( () =>  {
+        let ƒ = _.first(items),
+            x = parseFloat(ƒ.getAttribute('data-x'))
+        ƒ.setAttribute('data-y', 0)
+        ƒ.style.transform   = `translateX(${ x }px) translateY(${ 0 }px)`
+        ƒ.style.paddingTop  = 0 })
     
-    
+    .then( _showGrid )
    
 }
 
-export default { init }
+export default { init, update }

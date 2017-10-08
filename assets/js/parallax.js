@@ -18,7 +18,7 @@ function init(items) {
                                       ζ   = item.querySelector('.content'),
                                       τ   = item.querySelector('.text-frame'),
                                       ϕζ  = ʀ(),
-                                      ϕτ  = _.random(0.38 * ϕζ, 0.618 * ϕζ),
+                                      ϕτ  = _.random(-0.38 * ϕζ, 0.38 * ϕζ),
                                       αζ  = anime({ targets:    ζ,
                                                     translateY: [ϕζ, -ϕζ],
                                                     duration:   δ,

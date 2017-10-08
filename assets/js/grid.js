@@ -129,27 +129,27 @@ function _randomizePadding(item) {
 
 
 
-function _initFilters(isotope, menu) {
-  let base    = document.querySelector(selector),
-      inputs  = document.querySelectorAll('.filter input[type="checkbox"]')
+// function _initFilters(isotope, menu) {
+//   let base    = document.querySelector(selector),
+//       inputs  = document.querySelectorAll('.filter input[type="checkbox"]')
 
-  function _filter() {
-    let values    = _(inputs)
-                      .map(checkbox => {
-                        let name = checkbox.getAttribute('filter')
-                        return {name: name, checked: checkbox.checked}})
-                      .filter(({checked}) => checked)
-                      .value(),
-        filterFn  = function(item) {
-                      let category  = item.getAttribute('category'),
-                          index     = _.find(values, { name: category })
-                      return !_.isNil(index)}
-    isotope.arrange({ filter: filterFn })
-    menu.close() }
+//   function _filter() {
+//     let values    = _(inputs)
+//                       .map(checkbox => {
+//                         let name = checkbox.getAttribute('filter')
+//                         return {name: name, checked: checkbox.checked}})
+//                       .filter(({checked}) => checked)
+//                       .value(),
+//         filterFn  = function(item) {
+//                       let category  = item.getAttribute('category'),
+//                           index     = _.find(values, { name: category })
+//                       return !_.isNil(index)}
+//     isotope.arrange({ filter: filterFn })
+//     menu.close() }
     
-  _.each(inputs, ι => { ι.onchange = _filter }) // attach onChange handler to each checkbox
-  // filter once upon init
-  _filter() } 
+//   _.each(inputs, ι => { ι.onchange = _filter }) // attach onChange handler to each checkbox
+//   // filter once upon init
+//   _filter() } 
 
 function _initializeItems(items) {
   _.each(items, item => {

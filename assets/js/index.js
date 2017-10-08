@@ -1,13 +1,11 @@
 import '../sass/index.sass'
 
 import menu       from './menu'
-import about      from './about'
 import layout     from './layout'
 import images     from './images'
-import transition from './transition'
-import voronoi    from './voronoi'
 import logo       from './logo'
 import util       from './util'
+import gradient   from './gradient'
 import anime      from 'animejs'
 
 let EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
@@ -20,35 +18,15 @@ function ready(fn) {
 function init() {
   console.log('ready!')
   console.log('device',  util.getDevice(window.innerWidth))
-  
-  let begin = performance.now()
+  // let begin = performance.now()
   // logo.begin().then(() => { voronoi.init()
   //                           menu.init() })
-  
   images.init()
-
   layout.init()
-    .then(logo.begin)
-    // .then(menu.init)
-    .then( () => {
-
-      menu.init()
-
-      anime({ targets:            '#grid-wrap', 
-              opacity:            [0, 1], 
-              duration:           420 + Math.random() * 640,
-              autoplay:           true,
-              easing:             _.sample(EASINGS) })
-
-      anime({ targets:            '#grid-wrap', 
-              translateY:         [window.innerHeight, 144], 
-              duration:           420 + Math.random() * 640,
-              autoplay:           true,
-              easing:             _.sample(EASINGS) })
-    })
-
-
-
+  gradient.init()
+  logo.begin()
+    .then( menu.init )
+    .then( layout.update )
 
 // logo.init()
 // menu.init()

@@ -32,185 +32,139 @@
   background-position:  left center
   // mix-blend-mode: difference
 
-#home-btn
-  pointer-events: all
+$height: 4.5rem
+
+#toc 
   display: flex
-  // the logo ratio os 100/42 = 2.380952381
-  $height: 4.5rem
-  $width: 2.380952381 * $height
-  width: $width
+  width: $height
   height: $height
   border: none
-  background: transparent
+  position: fixed
+  right: 0
+  top: 0
+  z-index: 99
+  svg
+    flex: 1 0 auto
 
-  &:hover
-    background: #ffff00
-    mix-blend-mode: multiply
-    cursor: pointer 
+#home-btn
+  // the logo ratio os 100/42 = 2.380952381
+  width: 2.380952381 * $height
+  height: $height
+  border: none
+  display: flex
+  align-content: center
+  align-items: center
+  margin: 0
+  padding: 0
+  background: transparent
+  pointer-events: all
+
+  // mix-blend-mode: multiply
+  flex: 0 1 auto
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+#search-btn
+  position: relative
+  display: flex
+  align-content: center
+  flex-direction: column
+
 
 #menu
-  display: flex
-  width: 100%
   background: transparent
-  flex-direction: column
-  z-index: 18
   position: fixed
-  top: 0
-  left: 0
-  
-  .bg 
-    position: relative
-    align-self: center
-    height: 4.5rem
-    width: 8rem
-    flex: 0 0 auto 
-    background: #ffff00
-    transform: translateY(-98px)
-    cursor: pointer
+  top: 1rem
+  right: 0
+  z-index: 99
+  flex-direction: column
+  align-items: flex-end
+  pointer-events: none
 
+  .entry
+    flex: 0 1 auto
+    display: flex
+    align-items: flex-start
+    margin-bottom: 1rem
+
+    .item
+      flex: 0 0 auto
+      background: $red
+
+  button
+    width: $height
+    height: $height
+    border: none
+    display: flex
+    align-content: center
+    align-items: center
+    margin: 0
+    padding: 0
+    // background: $whit  e
+    pointer-events: all
+
+    // mix-blend-mode: multiply
+    flex: 0 0 auto
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover
-      background: #ff0000
+      background: #00ffff
+      cursor: pointer 
 
-// #back 
-//   left: -120px
-//   top: 1rem
+    i
+      flex: 0 1 auto
+      position: relative
+      font-size: 3rem 
 
-// #toc.button 
-//   $size: 48px
-//   width: $size
-//   height: $size
-//   z-index: 305
-//   padding: 0
-//   position: fixed
-//   top: 1rem
-//   right: 1rem
-//   border: none
-//   // border: 1px solid $red
-//   background: $white
-//   border-radius: $size/2
+  #filter-btn
+    // transform: translate( 8px, -8px)
+    background: #ffff00
+    +z-depth-4dp()
+    +z-depth-transition()
 
-//   +z-depth-transition()
-//   +z-depth-2dp()
+    &:hover, &:focus, &:active
+      +z-depth-focus()
+
+  #filters
+    // .select
+    //   margin-left: 1rem
+    //   margin-right: 1rem
+    //   align-self: center
+    .field
+      background: transparent
+      display: flex
+      flex-direction: column
+
+      .button
+        pointer-events: all
+        width: 100%
+        flex: 1 0 auto
+        margin-bottom: 1rem
+        
+        font-size: 2rem
+        font-weight: 900
+        
+        padding: 0 1rem
+        +z-depth-4dp()
+        +z-depth-transition()
+        
+        &:hover, &:focus, &:active
+          +z-depth-focus()
+
+  #search
+    background: #ffff00
+    .input
+      margin-left: 1rem
+      margin-right: 1rem
+      align-self: center
+
+
 
 
   
-//   #iconset
-//     margin-top: 0
-//     margin-left: 0
-//     width: 100%
-//     height: 100%
-
-//   &:hover
-//     // background: $black
-//     +z-depth-focus()
-//     // path
-//       // fill: $white
-
-
-// // +touch
-// //   #toc.button 
-// //     bottom: 1rem
-// //     top: unset
-      
-// #menu
-//   height: 100vh
-//   width: 100vw
-//   pointer-events: none
-//   z-index: 304
-
-//   position: fixed
-//   top: 0
-//   right: 0
-
-//   flex-direction: column
-//   align-content: center
-
-//   .section 
-//     padding: 1rem
-//     flex: 1 0 auto
-//     pointer-events: all
-
-//     svg > rect.gradient-box
-//       mix-blend-mode: multiply
-
-//     &.navigation
-//       padding: 0
-//       width: 100%
-//       height: 100%
-//       background: transparent
-//       ul
-//         display: flex
-//         flex-direction: column
-//         li
-//           flex: 0 1 auto
-//           a
-//             padding-left: 1.5rem
-//             font-size: 1rem
-//             font-weight: 900
-//             display: inline-block
-
-//             &#home-link
-//               padding-top: 1.5rem
-          
-
-    
-//     &.contact
-//       padding: 0
-//       position: absolute
-//       bottom: 0
-//       left: 0
-//       width: 100%
-//       +z-depth-2dp-flipped()
-//       overflow: hidden 
-//       background: $black
-      
-
-//       align-self: flex-end
-
-//       ul
-//         padding: 1.5rem 1.5rem 0.5rem 1.5rem
-//         display: flex
-//         flex-direction: column
-//         align-items: flex-start
-
-//         li > a
-//           font-size: 1rem
-//           font-weight: 900
-//           color: $white
-//           +z-depth-4dp-inset()
-
-
-
-//   // a.title
-//   //   font-weight: 700
-//   //   font-variant: small-caps
-//   //   +text-stroke($size: 4)
-
-//   //   &:hover
-//   //     +text-stroke($size: 4, $color: $black)      
-//   //     color: $white
-
-//   a.media
-//     flex: 0 1 auto
-//     margin-bottom: 1rem
-//     display: flex;
-//     align-items: center;
-    
-//     .media-left
-//       display: inline-block
-//       pointer-events: none
-//       .icon 
-//         background: transparent
-//     .media-content
-//       display: inline-block
-//       margin-left: 0.5rem
-//       pointer-events: none
-
-//     // &:hover
-//     //   .icon 
-//     //     background: $black
-//     //     color: $white
-//     //   .media-content
-//     //     +text-stroke($size: 4, $color: $black)      
-//     //     color: $white
