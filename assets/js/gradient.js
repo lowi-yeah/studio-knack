@@ -1,40 +1,47 @@
-import anime  from 'animejs'
-import util   from './util'
+import anime          from 'animejs'
+import {scaleLinear}  from 'd3-scale'
+import noise          from './noise'
+import util           from './util'
 
-function _update(ς) {
-  ς.setAttribute('offset', `${_.random(100)}%`)
-}
+ let  ηΣ  = scaleLinear()
+              .domain([-1, 1])
+              .range([0, 100]),
+      Δ   = [ { x1: '0%', y1: '0%',   x2: '100%', y2: '0%'},
+              { x1: '0%', y1: '0%',   x2: '0%',   y2: '100%'}]
 
-function _allOrNothing() {
-  // console.log('_allOrNothing', _.sample([true, false]))
-  if(_.sample([true, false])) return '100%'
-  else return '0%'
-}
+function _update(ς, ι) {
+  return () => {
+    let τ = performance.now() / 81000,
+        ϕ = ηΣ(noise.simplex2(ι, τ))
+    ς.setAttribute('offset', `${ϕ}%`) }}
 
-function _animateStop(ς) {
+function _direction() {
+  return _.sample(Δ)}
+
+function _animateStop(ς, ι) {
   // ς.setAttribute('offset', `${_.random(100)}%`)
-  util.startAnimation(10, _update(ς))
+  util.startAnimation(24, _update(ς, ι))
 }
 
 function init() {
   let γ = document.getElementById('gradient'),
       ℓ = γ.querySelectorAll('linearGradient'),
-      ς = γ.querySelectorAll('stop.animated')
+      ς = γ.querySelectorAll('stop.animated'),
+      δ = _direction()
 
   γ.setAttribute('width', `${window.innerWidth}px`)
   γ.setAttribute('heigt', `${window.innerHeight}px` )
   γ.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}` )
 
+  noise.seed(Math.random())
   _.each(ℓ, ι => {
-    ι.setAttribute('x1', '0%')
-    ι.setAttribute('y1', '0%')
-    ι.setAttribute('x2', _allOrNothing())
-    ι.setAttribute('y2', _allOrNothing())
-  })
+    ι.setAttribute('x1', δ.x1)
+    ι.setAttribute('y1', δ.y1)
+    ι.setAttribute('x2', δ.x2)
+    ι.setAttribute('y2', δ.y2) })
 
-  // _.each(ς, _animateStop)
-  _.each(ς, _update)
-  
+  _.each(ς, _animateStop)
+  // _.each(ς, _update)
 }
 
 export default {init}

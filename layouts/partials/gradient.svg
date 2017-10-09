@@ -61,8 +61,8 @@
     <rect x="10" y="10" width="500" height="500" filter="url(#bloom)" fill="url(#cyan)"    style="mix-blend-mode:multiply;"/>
     <rect x="10" y="10" width="500" height="500" filter="url(#bloom)" fill="url(#magenta)" style="mix-blend-mode:multiply;"/> -->
 
-    <g filter="url(#bloom)" >
-    <!-- <g> -->
+    <!-- <g filter="url(#bloom)" > -->
+    <g>
      <!--  <circle fill="url(#magenta)" cx="0"   cy="0"   r="640"/>
       <circle fill="url(#yellow)"  cx="200" cy="0"   r="640"/>
       <circle fill="url(#cyan)"    cx="0"   cy="480" r="640"/> -->
