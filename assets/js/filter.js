@@ -14,7 +14,7 @@ function filter(category) {
 
   _.each(filtered,  ι => ι.setAttribute('data-visible', 0))
   _.each(remaining, ι => ι.setAttribute('data-visible', 1))
-  // _.each(items, ι => ι.setAttribute('data-visible', 1))
+  
   layout.update() 
 }
 

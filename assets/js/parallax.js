@@ -9,7 +9,8 @@ const EASINGS = ['linear', 'easeInOutCubic', 'easeInOutSine']
 function _scroll(ƒs) { _.each(ƒs, ƒ => ƒ(window.scrollY)) }
 
 function init(items) {
-  let ʀ   = randomNormal(window.innerHeight * .38, 0.75),
+  let ʀζ   = randomNormal(window.innerHeight * .38, 0.75),
+      ʀτ   = randomNormal(64, 0.75),
       ƒs  = _.map(items, item => {let δ   = 100,
                                       μ   = (item.clientHeight + window.innerHeight),
                                       σ   = scaleLinear()
@@ -17,8 +18,9 @@ function init(items) {
                                               .range( [0, 0.5 * δ, δ]),
                                       ζ   = item.querySelector('.content'),
                                       τ   = item.querySelector('.text-frame'),
-                                      ϕζ  = ʀ(),
-                                      ϕτ  = _.random(-0.38 * ϕζ, 0.38 * ϕζ),
+                                      ϕζ  = ʀζ(),
+                                      ϕτ  = ʀτ(),
+
                                       αζ  = anime({ targets:    ζ,
                                                     translateY: [ϕζ, -ϕζ],
                                                     duration:   δ,
@@ -39,7 +41,8 @@ function init(items) {
                                         // < 0 when the item's top edge has crossed the window's bottom edge
                                         δin   = (offset + window.innerHeight) - y0  
                                     αζ.seek(σ(δin))
-                                    ατ.seek(σ(δin)) }})
+                                    // ατ.seek(σ(δin)) 
+                                  }})
 
   util.addEvent(window, 'scroll', () => _scroll(ƒs))
   _.defer(() => _scroll(ƒs))

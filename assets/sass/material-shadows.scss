@@ -202,3 +202,20 @@
               inset 0 0 38px  3px rgba(0, 0, 0, .12),
               inset 0 0 15px -7px rgba(0, 0, 0, .4);
 }
+
+//  _           _
+// | |_ _____ _| |_
+// |  _/ -_) \ /  _|
+//  \__\___/_\_\\__|
+@mixin z-depth-2dp-text() {
+  text-shadow:  0 0 2px  rgba(0, 0, 0, .14),
+                0 0 5px rgba(0, 0, 0, .12),
+                0 0 1px  rgba(0, 0, 0, .4);
+}
+
+@mixin z-depth-4dp-text() {
+  text-shadow:  0 0 5px  rgba(0, 0, 0, .14),
+                0 0 10px rgba(0, 0, 0, .12),
+                0 0 4px  rgba(0, 0, 0, .4);
+}
+

@@ -10,11 +10,6 @@ import anime      from 'animejs'
 
 let EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 
-function ready(fn) {
-  if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') fn()
-  else document.addEventListener('DOMContentLoaded', fn)
-}
-
 function init() {
   console.log('ready!')
   console.log('device',  util.getDevice(window.innerWidth))
@@ -41,5 +36,6 @@ function init() {
 
 }
 
-ready(setTimeout(init, 100))
+document.addEventListener('DOMContentLoaded', init)
+// ready(setTimeout(init, 100))
 

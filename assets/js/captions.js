@@ -26,8 +26,8 @@ function _getFontSize(element) {
 
 function _setFontSize(element, size) { element.style.fontSize = size + 'px'}
 
-function _loadPallete(item) {
-  let url = item.querySelector('.pallete').getAttribute('href')
+function _loadpalette(item) {
+  let url = item.querySelector('.palette').getAttribute('href')
   return new Promise((resolve, reject) => {
     var request = new XMLHttpRequest()
     request.open('GET', url, true)

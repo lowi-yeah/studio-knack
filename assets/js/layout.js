@@ -149,37 +149,81 @@ function _siblings(item, lower, upper) {
   if(lower === undefined && upper === undefined) return _siblings(item, 0, 1)
   else if(upper === undefined) return _siblings(item, 0, lower)
 
-  let before = [], after = []
+  let before = [], 
+      after = []
 
   // if the lower bound is negative get previous siblings
   if(lower < 0) {
-    before = _(Math.abs(lower))
-              .range()
-              .reduce( (ρ, ι) => {
+    let ι = item,
+        visible,
+        η = -1 * lower
 
-                if(!ρ.ι) return ρ
-                let φ = ρ.ι.previousElementSibling
+    while(η > 0) {
+      // if there is no ι: break 
+      if(!ι) break
 
-                // update the reduce result
-                ρ.ℓ = _.concat(ρ.ℓ, φ)
-                ρ.ι = φ
-                return ρ
-              }, {ι: item, ℓ: []}).ℓ }
+      // check whether the current item is visible
+      visible = parseInt(ι.getAttribute('data-visible')) === 1
 
-  // if the upper bound is positive get next siblings
+      // update ι with the previous sibling node
+      ι = ι.previousElementSibling
+
+      if(visible) {
+        before = _.concat(before, ι)
+        η -= 1
+      }
+    }
+  }
+
+    // before = _(Math.abs(lower))
+    //           .range()
+    //           .reduce( (ρ, ι) => {
+
+    //             if(!ρ.ι) return ρ
+    //             let φ = ρ.ι.previousElementSibling
+
+    //             // update the reduce result
+    //             ρ.ℓ = _.concat(ρ.ℓ, φ)
+    //             ρ.ι = φ
+    //             return ρ
+    //           }, {ι: item, ℓ: []}).ℓ }
+
   if(upper > 0) {
-    after = _(upper)
-              .range()
-              .reduce( (ρ, ι) => {
+    let ι = item,
+        visible,
+        η = upper
 
-                if(!ρ.ι) return ρ
-                let φ = ρ.ι.nextElementSibling
+    while(η > 0) {
+      // if there is no ι: break 
+      if(!ι) break
 
-                // update the reduce result
-                ρ.ℓ = _.concat(ρ.ℓ, φ)
-                ρ.ι = φ
-                return ρ
-              }, {ι: item, ℓ: []}).ℓ }
+      // check whether the current item is visible
+      visible = parseInt(ι.getAttribute('data-visible')) === 1
+
+      // update ι with the previous sibling node
+      ι = ι.nextElementSibling
+
+      if(visible) {
+        before = _.concat(before, ι)
+        η -= 1
+      }
+    }
+  }
+
+  // // if the upper bound is positive get next siblings
+  // if(upper > 0) {
+  //   after = _(upper)
+  //             .range()
+  //             .reduce( (ρ, ι) => {
+
+  //               if(!ρ.ι) return ρ
+  //               let φ = ρ.ι.nextElementSibling
+
+  //               // update the reduce result
+  //               ρ.ℓ = _.concat(ρ.ℓ, φ)
+  //               ρ.ι = φ
+  //               return ρ
+  //             }, {ι: item, ℓ: []}).ℓ }
 
   return _(before)
           .concat(after)
@@ -569,6 +613,8 @@ function update() {
   return _hideGrid()
     .then( () => _gridResize(items))
 
+    .then( () => scroll(0, 0))
+
     // attach the geighbour data to each item
     .then( () => 
           _.each(items, item => {
@@ -629,7 +675,6 @@ function update() {
     // adjust the padding
     .then( () =>  
       _.each(items, item => {
-        let β = item.getBoundingClientRect()
         item.style.paddingLeft    = `${_.random(_minPaddingX(), _maxPaddingX())}px`
         item.style.paddingRight   = `${_.random(_minPaddingX(), _maxPaddingX())}px`
         item.style.paddingTop     = `${_.random(_minPaddingY(), _maxPaddingY())}px`

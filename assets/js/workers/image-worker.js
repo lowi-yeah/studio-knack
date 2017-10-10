@@ -41,15 +41,28 @@ function mimetype(url) {
 
 //Listener for events of message type coming from main thread.
 self.addEventListener('message', function(e) {
-
-  // let Δ = e.data
-  // console.log('image worker got message:', Δ)
-
   e.data.forEach( δ => {
-    request.image(δ.url).then( ι => {
-      var encoded = base64Encode(ι),
-          μ       = mimetype(δ.url),
-          u       = `url(data:image/${μ};base64,${encoded})`
+    if(δ.url.match(/palette/))
+      request.json(δ.url).then( ι => {
+        self.postMessage( { τ: 'palette', ι: ι, id: δ.id })})
+    else 
+      request.image(δ.url).then( ι => {
+        var encoded = base64Encode(ι),
+            μ       = mimetype(δ.url),
+            u       = `url(data:image/${μ};base64,${encoded})`
+        self.postMessage( { τ: 'image', ι: u, id: δ.id })}) })
+    }, false)
 
-      self.postMessage( { ι: u, id: δ.id })}) })
-}, false)
+
+
+
+
+
+
+
+
+
+
+
+
+

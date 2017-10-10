@@ -4,6 +4,7 @@ import SVGMorpheus  from './lib/svg-morpheus'
 import voronoi      from './voronoi'
 import util         from './util'
 import filter       from './filter'
+import gradient     from './gradient'
 
 
 const EASINGS     = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
@@ -16,7 +17,8 @@ function _showFilters() {
   anime({ targets:     ƒ,
           translateX:  0,
           duration:   240 + Math.random() * 240,
-          easing:     _.sample(EASINGS)})
+          easing:     _.sample(EASINGS),
+          update:     gradient.updateMask})
 }
 
 function _hideFilters() {
@@ -26,7 +28,8 @@ function _hideFilters() {
   anime({ targets:    ƒ,
           translateX: ƒ.clientWidth - BASE_OFFSET,
           duration:   240 + Math.random() * 240,
-          easing:     _.sample(EASINGS)})
+          easing:     _.sample(EASINGS),
+          update:     gradient.updateMask})
 }
 
 function _initToc() { 
@@ -66,6 +69,7 @@ function _initFilters() {
   _.each(ε, ξ => {
     util.addEvent(ξ, 'click', () => {
       // console.log('ξ', ξ.getAttribute('data-category'))
+      _hideFilters()
       filter(ξ.getAttribute('data-category'))  
     })
     
