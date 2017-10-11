@@ -36,11 +36,17 @@
       <rect x="0" y="0" width="100%" height="100%" fill="#00ffff" mask="url(#m-cyan)" />
       <rect x="0" y="0" width="100%" height="100%" fill="#ff00ff" mask="url(#m-magenta)" />
       <rect x="0" y="0" width="100%" height="100%" fill="#ffff00" mask="url(#m-yellow)" />  
+
+     <!--  <rect x="0" y="0" width="100%" height="100%" fill="#0000ff" mask="url(#m-cyan)" />
+      <rect x="0" y="0" width="100%" height="100%" fill="#ff0000" mask="url(#m-magenta)" />
+      <rect x="0" y="0" width="100%" height="100%" fill="#00ff00" mask="url(#m-yellow)" />  
+ -->
     </symbol>
 
   </defs>
   
   <!-- <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%"></use> -->
   <g id="bg-masks"></g>
+  <use id="overlay-use" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%" clip-path="url(#overlay-clip)"></use>
 
 </svg>
