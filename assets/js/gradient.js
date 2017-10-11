@@ -13,7 +13,6 @@ let ηΣ  = scaleLinear()
             .range([0, 64]),
     startTime
 
-
 function _updateGradient(σ, ι, δ) {
   return () => {
     let τ = (performance.now() - δ) / /*81000*/20000,
@@ -29,11 +28,12 @@ function _initGradients(stops) {
 }
 
 
-function _makeClippingPath(item) {
+function _makeClippingPath(item, maskSelector) {
+  maskSelector = maskSelector || '#masks'
   let id = item.getAttribute('id'),
       cid = `c-${id}`,
-      Δ   = document.querySelector('#gradient defs'),
-      M   = document.querySelector('#masks'),
+      Δ   = document.querySelector('#the-overlay defs'),
+      M   = document.querySelector(maskSelector),
       β   = item.getBoundingClientRect(),
       cp  = document.createElementNS(XMLNS, 'clipPath'),
       cr  = document.createElementNS(XMLNS, 'rect'),
@@ -62,7 +62,7 @@ function _makeClippingPath(item) {
 
 function _initLogoMask() {
   let logo  = document.querySelector('#logo')
-  _makeClippingPath(logo)
+  _makeClippingPath(logo, '#bg-masks')
   updateMask('logo')
 }
 

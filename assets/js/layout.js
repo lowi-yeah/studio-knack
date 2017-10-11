@@ -5,6 +5,7 @@ import {scaleLinear,
 import parallax         from './parallax'
 import util             from './util'
 import gradient         from './gradient'
+import overlay          from './overlay'
 
 const NUM_COLUMNS = 24
 const ȣ = randomNormal(0, 0.5)
@@ -812,22 +813,23 @@ function update() {
     //   util.addEvent(c, 'mouseleave', exit) 
     // }))
 
- // HOVER
-    .then( () => _.each(items, item => {
-      let c = item.querySelector('.content'),
-          o = item.querySelector('.overlay'),
-          t = item.querySelector('.title'),
-          f = item.querySelector('.overlay-frame'),
-          
-
-          toggle = ε => {
-            console.log('toggle') }
-
-      // o.style.opacity = 0
-      // t.style.color = '#ffffff'
-
-      util.addEvent(c, 'click', toggle)
-    }))
+ // click
+    .then( () => {
+      let overlayId
+      function toggle(id, element, text) {
+        return event => {
+          if(id === overlayId) {
+            overlay.remove() 
+            overlayId = undefined }
+          else {
+            overlay.set(element, text)
+            
+            overlayId = id }}}
+      _.each(items, item => {
+        let content = item.querySelector('.content'),
+            id      = item.getAttribute('id'),
+            text    = item.getAttribute('data-caption')
+        util.addEvent(content, 'click', toggle(id, content, text))})})
 
     .then( () =>  {
         let ƒ = _.first(items),
@@ -837,8 +839,7 @@ function update() {
         ƒ.style.transform   = `translateX(${ x }px) translateY(${ y }px)`
         ƒ.style.paddingTop  = 0 })
     
-    .then( _showGrid )
-}
+    .then( _showGrid )}
 
 function init() {
   // make the grid visible

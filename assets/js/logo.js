@@ -42,11 +42,11 @@ function begin() {
   return new Promise( (resolve, reject) => {
     let ℓ = document.getElementById('logo'),
         ζ = anime.timeline({autoplay: false}),
-        h = 92
+        h = 128
         // ϕ  = 92/window.innerHeight,
     
     ζ.add( {targets:    ℓ,
-            width:      2.2 * h, // 2.380952381 is the w/h ratio of the logo
+            width:      2.380952381 * h, // 2.380952381 is the w/h ratio of the logo
             duration:   120 + Math.random() * 240,
             update:     gradient.updateLogoMask,
             easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)] })

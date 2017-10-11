@@ -34,8 +34,6 @@ function _hideFilters(morpheus) {
                               easing:     _.sample(EASINGS),
                               complete:   resolve,
                               update:     () => gradient.updateMask(id)})})})
-
-  console.log('_hideFilters', ƒ.clientWidth + BASE_OFFSET)
   morpheus.to('filter-open')
   ƒ.setAttribute('data-open', 0)
   return Promise.all(promises)
@@ -70,7 +68,6 @@ function _initFilters() {
 
   _.each(ε, ξ => _initCategoryButton(ξ, morpheus))
 
-
   return _hideFilters(morpheus)
     .then( () => {
       _.delay(() => {
@@ -78,8 +75,7 @@ function _initFilters() {
                 translateX: 0,
                 duration:   400,
                 easing:     _.sample(EASINGS),
-                update:     () => gradient.updateMask(β.getAttribute('id')) })
-      }, 1000)})}
+                update:     () => gradient.updateMask(β.getAttribute('id')) })}, 1000)})}
 
 
 function init() {

@@ -1,55 +1,11 @@
-#overlay-frame
-  pointer-events: none
+#the-overlay
   position: fixed
-  top: 0
-  left: 0
   width: 100vw
   height: 100vh
-  z-index: 200
-  display: flex
-  align-items: flex-end
-  
-  .caption-bg
-    position: absolute
-    width: 100vw
-    background: rgba($cyan, 1)
-    flex: 0 1 auto
-    +z-depth-6dp-flipped()
+  top: 0
+  left: 0
+  z-index: 6
+  pointer-events: none
 
-  .caption-frame
-    position: absolute
-    pointer-events: all
-    width: 100vw
-    padding-left: 1.5rem
-    // background: rgba($magenta, 0.54)
-    flex: 0 1 auto
-
-  svg
-    position: absolute
-    flex: 0 0 auto
-
-    
-  .caption
-    margin: 1.5rem 1rem
-    text-align: left
-    color: $black
-    font-weight: 500
-    padding: 0.25rem 0.5rem
-    font-size: 36px
-    opacity: 1
-    transition: font-size 0.4s ease, opacity 0.4s ease
-
-  #all-overlays
-    // display: none
-    // visibility: hidden
-    height: 0
-    opacity: 0
-    width: 100%
-    height: 100%
-    border: 1px solid $red
-    position: absolute
-
-      // svg
-      //   flex: 1 0 auto
-      //   width: 100%
-      //   height: 100%        
+#overlay-use
+  opacity: 0.72

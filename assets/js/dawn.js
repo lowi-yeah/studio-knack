@@ -2,7 +2,6 @@ import _        from 'lodash'
 import anime    from 'animejs'
 import gradient from './gradient'
 
-
 // Element.prototype.remove = function() {
 //     this.parentElement.removeChild(this) }
 

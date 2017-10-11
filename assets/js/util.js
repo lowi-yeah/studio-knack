@@ -75,33 +75,6 @@ function getCssValuePrefix() {
   dom = null
   return rtrnVal }
 
-
-// ClientRect
-//   bottom: 5032
-//   height: 624
-//   left: 0
-//   right: 743.28125
-//   top: 4408
-//   width: 743.28125
-
-//   bottom
-//   height
-//   left
-//   right
-//   top
-//   width
-//   x
-//   y
-
-// x
-// y
-// width
-// height
-// top
-// right
-// bottom
-// left
-
 function boundingBox(item) {
   let β = item.getBoundingClientRect()
   return { x:       β.left,

@@ -6,10 +6,8 @@ import images     from './images'
 import logo       from './logo'
 import util       from './util'
 import gradient   from './gradient'
+import overlay    from './overlay'
 import single     from './single'
-import anime      from 'animejs'
-
-let EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 
 function init() {
   console.log('ready!')
@@ -18,8 +16,10 @@ function init() {
   
 
   layout.init()
+    .then(overlay.init)
     .then(menu.init)
     .then(logo.begin)
+    
 
   
   // logo.begin()
