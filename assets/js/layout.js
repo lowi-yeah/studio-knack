@@ -232,20 +232,11 @@ function _siblings(item, lower, upper) {
           .value()
 }
 
-
-function _extent(item) {
-  let β = item.getBoundingClientRect()
-  return { x0: (β.x || β.left),
-           x1: (β.x || β.left) + β.width,
-           y0: (β.y || β.top),
-           y1: (β.y || β.top) + β.height }}
-
-
 function _itemz(item, siblings, overlapFn, deltaFn) {
-  let ε = _extent(item)
+  let ε = util.extent(item)
 
   return _.reduce(siblings, (ρ, ϑ) => {
-    let εϑ = _extent(ϑ)
+    let εϑ = util.extent(ϑ)
 
     // if there is overlap
     if(overlapFn(ε, εϑ))  {
@@ -302,8 +293,8 @@ function _itemLeft(item) {
 // calculates the whitespace of an item by adding it's own padding
 // with the directional padding of the items around it
 function _whitespace(item) {
-  let β         = item.getBoundingClientRect(),
-      ε         = _extent(item),
+  let β         = util.boundingBox(item),
+      ε         = util.extent(item),
       itemAbove = _itemAbove(item),                         // the items to the sides
       itemRight = _itemRight(item),
       itemBelow = _itemBelow(item),
@@ -318,7 +309,7 @@ function _whitespace(item) {
       εχ // helper
   
   if(itemAbove) {
-    εχ = _extent(itemAbove.ϑ)
+    εχ = util.extent(itemAbove.ϑ)
     top += ε.y0 - εχ.y1
     top += parseInt(itemAbove.ϑ.style.paddingBottom) }
   // no else.
@@ -328,19 +319,19 @@ function _whitespace(item) {
   // actually… we don't push text upwards and so we could ignore the whole above-shebang
 
   if(itemBelow) {
-    εχ = _extent(itemBelow.ϑ)
+    εχ = util.extent(itemBelow.ϑ)
     bottom += εχ.y0 - ε.y1
     bottom  += parseInt(itemBelow.ϑ.style.paddingTop) } 
   else bottom += (γh - (β.y + β.height) + 192)
 
   if(itemLeft) {
-    εχ = _extent(itemLeft.ϑ)
+    εχ = util.extent(itemLeft.ϑ)
     left += ε.x0 - εχ.x1
     left += parseInt(itemLeft.ϑ.style.paddingRight) }
   else left += ε.x0
 
   if(itemRight) {
-    εχ = _extent(itemRight.ϑ)
+    εχ = util.extent(itemRight.ϑ)
     right += εχ.x0 - ε.x1
     right += parseInt(itemRight.ϑ.style.paddingLeft) }
   else
@@ -349,8 +340,8 @@ function _whitespace(item) {
   return {top, left, bottom, right} }
 
 function _doDomElementsOverlap(element0, element1) {
-  let ε0 = _extent(element0),                   // bounding boxes
-      ε1 = _extent(element1),
+  let ε0 = util.extent(element0),                   // bounding boxes
+      ε1 = util.extent(element1),
       ωt = (ε1.y0 <= ε0.y0 && ε1.y1 >= ε0.y0),  // overlap flags
       ωb = (ε1.y0 >= ε0.y0 && ε1.y0 <= ε0.y1),
       ωl = (ε1.x0 <= ε0.x0 && ε1.x1 >= ε0.x0),
@@ -381,8 +372,8 @@ function _cleanupText(item) {
       let τ = item.querySelector('.text'),
           ς = τ.querySelector('span'),
     
-          τβ  = τ.getBoundingClientRect(),
-          ςβ  = ς.getBoundingClientRect(),
+          τβ  = util.boundingBox(τ),
+          ςβ  = util.boundingBox(ς),
     
           f   = parseInt(τ.style.fontSize),
           η   = ς.innerHTML.trim().length,
@@ -499,8 +490,8 @@ function _adjustText(item) {
     
         // top is being ignored
          // case 'top': 
-         //  ες = _extent(ς)
-         //  ετ = _extent(τ)
+         //  ες = util.extent(ς)
+         //  ετ = util.extent(τ)
          //  δx = _.random(-σ.left)
          //  δy = ες.y0 - ετ.y1
          //  ηw = (ες.x1 + σ.right) - (ετ.x0 + δx) - 48
@@ -510,9 +501,9 @@ function _adjustText(item) {
          //  break
     
         case 'right': 
-          ει = _extent(item)
-          ες = _extent(ς)
-          ετ = _extent(τ)
+          ει = util.extent(item)
+          ες = util.extent(ς)
+          ετ = util.extent(τ)
     
           δx = (ες.x1 - ει.x0) + 21
           δy = ες.y0 - ετ.y0 + _.random(21, (ες.y1 - ες.y0) * 0.618)
@@ -524,9 +515,9 @@ function _adjustText(item) {
           break
     
         case 'bottom': 
-          ει = _extent(item)
-          ες = _extent(ς)
-          ετ = _extent(τ)
+          ει = util.extent(item)
+          ες = util.extent(ς)
+          ετ = util.extent(τ)
           
           δx = _.max([-σ.left + (ες.x0 - ει.x0), -128])
           δy = ες.y1 - ετ.y0 + 21
@@ -545,10 +536,10 @@ function _adjustText(item) {
           break
     
         case 'left': 
-          ει = _extent(item)
-          ες = _extent(ς)
-          ετ = _extent(τ)
-          εs = _extent(s)
+          ει = util.extent(item)
+          ες = util.extent(ς)
+          ετ = util.extent(τ)
+          εs = util.extent(s)
     
           δx = -(εs.x1 - εs.x0) + (ες.x0 - ει.x0) -21
           δy = ες.y0 - ετ.y0 + _.random(21, (ες.y1 - ες.y0) * 0.618)
@@ -658,7 +649,7 @@ function update() {
         _(row)
           .reverse()
           .each( ι => {
-            let β  = ι.getBoundingClientRect(),
+            let β  = util.boundingBox(ι),
                 μ  = _.random(χ - (β.x + β.width)),
                 δx = _.max([0, μ]),
                 δy = _.random(0, 240)
@@ -717,7 +708,7 @@ function update() {
             let t = ε.target,
                 x = ε.clientX,
                 y = ε.clientY,
-                e = _extent(t),
+                e = util.extent(t),
 
                 d0 = util.distance({x, y}, {x: e.x0, y: e.y0}),
                 d1 = util.distance({x, y}, {x: e.x1, y: e.y0}),
@@ -727,14 +718,13 @@ function update() {
                 Δ  = _.sortBy([ ['top',     d0 + d1],
                                 ['right',   d1 + d2],
                                 ['bottom',  d2 + d3],
-                                ['left',    d0 + d3]], 
-                        i => i[1])
+                                ['left',    d0 + d3]], i => i[1])
             return  [Δ[0][0], Δ[1][0]]},
 
           // calculate the angle from which the mouse entered the rectangle
           α = ε => {
             let m = {x: ε.clientX, y: ε.clientY},
-                e = _extent(ε.target),
+                e = util.extent(ε.target),
                 p = {x: (e.x0 + e.x1)/2, y: (e.y0 + e.y1)/2},
                 a = Math.atan2(p.y - m.y, p.x - m.x) * -180 / Math.PI
             return a},
