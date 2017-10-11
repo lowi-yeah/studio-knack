@@ -34,8 +34,7 @@ function guid() {
 
 function fontSize(ε) {
   let style = window.getComputedStyle(ε, null).getPropertyValue('font-size')
-  return parseFloat(style)
-}
+  return parseFloat(style) }
 
 
 function getDevice(width) {

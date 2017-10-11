@@ -14,38 +14,19 @@ let EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'e
 function init() {
   console.log('ready!')
   console.log('device',  util.getDevice(window.innerWidth))
-  // let begin = performance.now()
-  // logo.begin().then(() => { voronoi.init()
-  //                           menu.init() })
   images.init()
-  logo.begin()
+  
 
   layout.init()
     .then(menu.init)
+    .then(logo.begin)
 
   
   // logo.begin()
 
-  // menu.init()
-
-
-  // setTimeout(gradient.updateLogoMask, 2000)
-
-
   //   .then( menu.init )
   //   .then( single.init )
   //   .then( layout.update )
-
-// logo.init()
-// menu.init()
-// about.init()
-// initDetail()
-// filter.init()
-// transition.init()
-// boring.boringHero()
-// hero.init()
-// bam.init()
-// initHover()
 
 }
 

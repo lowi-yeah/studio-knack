@@ -1,7 +1,6 @@
 import {select}     from 'd3-selection'
 import anime        from 'animejs'
 import SVGMorpheus  from './lib/svg-morpheus'
-import voronoi      from './voronoi'
 import util         from './util'
 import filter       from './filter'
 import gradient     from './gradient'
@@ -23,8 +22,6 @@ function _showFilters(morpheus) {
             easing:     _.sample(EASINGS),
             update:     () => gradient.updateMask(b.getAttribute('id'))})})}
 
-
-
 function _hideFilters(morpheus) {
   let ƒ = document.getElementById('filters'),
       buttons   = ƒ.querySelectorAll('.category.button'),
@@ -44,23 +41,6 @@ function _hideFilters(morpheus) {
   return Promise.all(promises)
 }
 
-function _initToc() { 
-  let toc = document.getElementById('toc') 
-  if (!toc) return 
-  let tocOptions  = { iconId:   'burger', 
-                      duration: 400, 
-                      rotation: 'none' }, 
-      morpheus    = new SVGMorpheus('#iconset', tocOptions) 
-  toc.style.display = 'flex' 
-  toc.onclick = () => { 
-    if( morpheus._curIconId === 'burger') _showMenu(morpheus) 
-    if( morpheus._curIconId === 'close' ) _hideMenu(morpheus) } 
-
-  _showMenu(morpheus) 
-
-  return morpheus 
-} 
-
 function _initCategoryButton(ξ, morpheus) {
   let id = ξ.getAttribute('id')
   if(!id) { 
@@ -75,8 +55,6 @@ function _initFilters() {
   let ƒ = document.getElementById('filters'),
       β = document.getElementById('filter-btn'),
       ε = ƒ.querySelectorAll('.category.button')
-  
-
 
   let morphOptions  = { iconId:   'filter-open', 
                         duration: 400, 
@@ -113,7 +91,6 @@ function init() {
       m.style.display = 'flex'
       m.style.transform = 'translateX(100%)'
 
-      _initToc()
       _initFilters()
         .then(() => { 
           m.style.transform = 'translateX(0)'
