@@ -1,20 +1,40 @@
 {{ partial "header.html" . }}
 
+<div id="curtain"></div>
+<div id="logo"></div>
 
-<article class="single section">
- 
-  <div class="fixed fullscreen slider js_slider">
-    <div class="frame js_frame">
-      <ul class="slides js_slides">
-        {{ range .Params.images }}
-          <li class="js_slide">
-            <div class="content" style="background-image:url('{{ . }}')"></div>
-          </li>
-        {{ end }}
-      </ul>
+<article class="single">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+         {{ .Title }}
+        </h1>
+      </div>
     </div>
-  </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="slider js_slider">
+        <div class="frame js_frame">
+          <ul class="slides js_slides">
+            {{ range .Params.images }}
+              <li class="js_slide">
+                <div class="content" style="background-image:url('{{ .url }}')"></div>
+                }
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
+</article>
+
+<!-- <article class="single section">
+ 
+ 
   <section class="draggable">
     <div class="box">
       <p class="title is-1">{{ .Title }}</p>
@@ -28,9 +48,9 @@
     
   </section>
 
-</article>
+</article> -->
 
-{{ partial "back.html" . }}
+<!-- {{ partial "back.html" . }} -->
 {{ partial "footer.html" . }}
 
 

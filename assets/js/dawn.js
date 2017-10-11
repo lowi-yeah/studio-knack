@@ -1,4 +1,7 @@
-import anime          from 'animejs'
+import _        from 'lodash'
+import anime    from 'animejs'
+import gradient from './gradient'
+
 
 // Element.prototype.remove = function() {
 //     this.parentElement.removeChild(this) }
@@ -8,7 +11,7 @@ import anime          from 'animejs'
 //         if(this[i] && this[i].parentElement) this[i].parentElement.removeChild(this[i]) } }
 
 let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
-    EASINGS     = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
+    EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
 
 function _offset(δ) {
   switch(δ){
@@ -18,11 +21,12 @@ function _offset(δ) {
     case 'bottom':  return  window.innerHeight }}
 
 function _openCurtain() {
-  let ρ         = { targets: '#curtain',
-                    duration: 800 + Math.random() * 1200,
-                    delay:    400,
-                    easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
-                    complete: () => curtain.setAttribute('data-lifted', 1)},
+  console.log('_openCurtain')
+  let ρ = { targets: '#curtain',
+            duration: 800 + Math.random() * 1200,
+            delay:    400,
+            easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
+            complete: () => curtain.setAttribute('data-lifted', 1)},
       δ = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)],
       ω = _offset(δ)
       
@@ -32,6 +36,5 @@ function _openCurtain() {
 
 console.log('dawn', Math.floor(Math.random() * DIRECTIONS.length))
 
-_openCurtain()
-
-// window.scrollTo(0, 0)
+gradient.init()
+  .then(_openCurtain)

@@ -1,0 +1,14 @@
+<svg version="1.1" id="filter-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
+<style type="text/css">
+	.st0{display:none;}
+	.st1{display:inline;}
+</style>
+<g id="filter-closed" class="st0">
+	<path class="st1" d="M12.7,38.1c2.1-2.1,25.5-25.5,25.5-25.5l-2.8-2.8L9.9,35.3C9.9,35.3,11.3,36.7,12.7,38.1z M9.9,12.7
+		c2.1,2.1,25.5,25.5,25.5,25.5l2.8-2.8L12.7,9.9C12.7,9.9,11.3,11.3,9.9,12.7z"/>
+</g>
+<g id="filter-open">
+	<path d="M20,36h8v-4h-8V36z M6,12v4h36v-4H6z M12,26h24v-4H12V26z"/>
+</g>
+</svg>

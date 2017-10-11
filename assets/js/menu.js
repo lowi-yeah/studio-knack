@@ -8,28 +8,40 @@ import gradient     from './gradient'
 
 
 const EASINGS     = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
-const BASE_OFFSET = 72
+const BASE_OFFSET = 4
 
-function _showFilters() {
+function _showFilters(morpheus) {
   console.log('_showFilters')
-  let ƒ = document.getElementById('filters')
+  let ƒ = document.getElementById('filters'),
+      buttons = ƒ.querySelectorAll('.category.button')
   ƒ.setAttribute('data-open', 1)
-  anime({ targets:     ƒ,
-          translateX:  0,
-          duration:   240 + Math.random() * 240,
-          easing:     _.sample(EASINGS),
-          update:     gradient.updateMask})
-}
+  morpheus.to('filter-closed')
+  _.each(buttons, b => {
+    anime({ targets:     b,
+            translateX:  0,
+            duration:   240 + Math.random() * 240,
+            easing:     _.sample(EASINGS),
+            update:     () => gradient.updateMask(b.getAttribute('id'))})})}
 
-function _hideFilters() {
-  console.log('_hideFilters')
-  let ƒ = document.getElementById('filters')
+
+
+function _hideFilters(morpheus) {
+  let ƒ = document.getElementById('filters'),
+      buttons   = ƒ.querySelectorAll('.category.button'),
+      promises  = _.map(buttons, b => {
+                    let id = b.getAttribute('id')
+                    return new Promise( resolve => {
+                      anime({ targets:    b,
+                              translateX: ƒ.clientWidth + BASE_OFFSET,
+                              duration:   240 + Math.random() * 240,
+                              easing:     _.sample(EASINGS),
+                              complete:   resolve,
+                              update:     () => gradient.updateMask(id)})})})
+
+  console.log('_hideFilters', ƒ.clientWidth + BASE_OFFSET)
+  morpheus.to('filter-open')
   ƒ.setAttribute('data-open', 0)
-  anime({ targets:    ƒ,
-          translateX: ƒ.clientWidth - BASE_OFFSET,
-          duration:   240 + Math.random() * 240,
-          easing:     _.sample(EASINGS),
-          update:     gradient.updateMask})
+  return Promise.all(promises)
 }
 
 function _initToc() { 
@@ -49,45 +61,65 @@ function _initToc() {
   return morpheus 
 } 
 
+function _initCategoryButton(ξ, morpheus) {
+  let id = ξ.getAttribute('id')
+  if(!id) { 
+    id = `i-${util.guid()}`
+    ξ.setAttribute('id', id) }
+
+  util.addEvent(ξ, 'click', () => {
+    _hideFilters(morpheus)
+    filter(ξ.getAttribute('data-category')) }) }
 
 function _initFilters() {
-  // console.log('_initFilters')
-  // let ς = document.querySelector('#filters select')
-  // ς.options.value = 'all'
-  // _.defer(() => filter(ς.value))
-
   let ƒ = document.getElementById('filters'),
       β = document.getElementById('filter-btn'),
-      ε = ƒ.querySelectorAll('.field button')
-  ƒ.style.transform = `translateX(${ƒ.clientWidth - 4}px)`
+      ε = ƒ.querySelectorAll('.category.button')
+  
+
+
+  let morphOptions  = { iconId:   'filter-open', 
+                        duration: 400, 
+                        rotation: 'none' }, 
+      morpheus    = new SVGMorpheus('#filter-icon', morphOptions) 
 
   util.addEvent(β, 'click', () => {
     let Φ = ƒ.getAttribute('data-open') === '0'
-    if(Φ) _showFilters()
-    else _hideFilters() })
+    if(Φ) _showFilters(morpheus)
+    else _hideFilters(morpheus) })
 
-  _.each(ε, ξ => {
-    util.addEvent(ξ, 'click', () => {
-      // console.log('ξ', ξ.getAttribute('data-category'))
-      _hideFilters()
-      filter(ξ.getAttribute('data-category'))  
-    })
-    
-  })
+  β.style.transform = 'translateX(100%)'
 
-  _.defer(_hideFilters)
+  _.each(ε, ξ => _initCategoryButton(ξ, morpheus))
 
-  // ƒ.style.background = '#FF6B67'
-  // _show( ƒ )
-}
+
+  return _hideFilters(morpheus)
+    .then( () => {
+      _.delay(() => {
+        anime({ targets:    β,
+                translateX: 0,
+                duration:   400,
+                easing:     _.sample(EASINGS),
+                update:     () => gradient.updateMask(β.getAttribute('id')) })
+      }, 1000)})}
 
 
 function init() {
   return new Promise(resolve => {
-    document.getElementById('menu').style.display = 'flex'
-    _initToc()
-    _initFilters()
-    resolve()
+    _.delay(() => {
+      let m = document.getElementById('menu')
+      if(!m) {resolve(); return}
+      
+      m.style.display = 'flex'
+      m.style.transform = 'translateX(100%)'
+
+      _initToc()
+      _initFilters()
+        .then(() => { 
+          m.style.transform = 'translateX(0)'
+          resolve() })
+    }, 640)
+
   })
 }
 export default {init}

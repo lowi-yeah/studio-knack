@@ -20,7 +20,10 @@ function _infoUrls() {
             url:  i.getAttribute('data-image-url')} }) }
 
 
+
 function init() {
+
+  console.log('worker: loading images')
   let ιUrls   = _urls('data-image-url'),
       pUrls   = _urls('data-image-palette'),
       ιWorker = new ImageWorker(),
@@ -31,21 +34,24 @@ function init() {
   ιWorker.onmessage = function (event) {
     let {ι, id, τ} = event.data
 
+    // console.log('worker message', id)
+
     if(τ === 'image')
       document.querySelector(`#${id} .image`).style.backgroundImage = ι
 
     if(τ === 'palette'){
-      let c = ι['dominant_colors'].vibrant
-      c = c || ι['dominant_colors']['vibrant_dark']
-      c = c || ι['dominant_colors']['vibrant_light']
-      c = c || {hex: '#000000'}
+      let cv = ι['dominant_colors'].vibrant
+      cv = cv || ι['dominant_colors']['vibrant_dark']
+      cv = cv || ι['dominant_colors']['vibrant_light']
+      cv = cv || {hex: '#ffffff'}
 
-      // let c = ι['dominant_colors'].muted
-      // c = c || ι['dominant_colors']['muted_dark']
-      // c = c || ι['dominant_colors']['muted_light']
-      // c = c || {hex: '#000000'}
-
-      document.querySelector(`#${id} .text`).style.color = c.hex
+      let cm = ι['dominant_colors'].muted
+      cm = cm || ι['dominant_colors']['muted_dark']
+      cm = cm || ι['dominant_colors']['muted_light']
+      cm = cm || {hex: '#000000'}
+      document.querySelector(`#${id} .overlay`).setAttribute('data-overlay', cm.hex)
+      document.querySelector(`#${id} .title`).setAttribute('data-color', cv.hex)
+      // document.querySelector(`#${id} .overlay`).style.background = c.hex
       }
 
 
@@ -54,6 +60,7 @@ function init() {
       console.log('image worker finished')
       ιWorker.terminate() // Terminate the worker
       ιWorker = null }} 
+      
   ιWorker.postMessage(_.concat(ιUrls, pUrls)) // send urls to worker
 }
 

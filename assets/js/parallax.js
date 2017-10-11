@@ -1,53 +1,63 @@
 import anime          from 'animejs'
 import util           from './util'
-import {scaleLinear}  from 'd3-scale'
+import {scalePow}  from 'd3-scale'
 import {randomNormal} from 'd3-random'
 
 
 const EASINGS = ['linear', 'easeInOutCubic', 'easeInOutSine']
 
-function _scroll(ƒs) { _.each(ƒs, ƒ => ƒ(window.scrollY)) }
+function _scroll(ƒs) { 
+  _.each(ƒs, ƒ => ƒ(window.scrollY))
+ }
+
+
+
+ function startAnimation(fps, fn) {
+  let fpsInterval   = 1000 / fps, 
+      then          = Date.now() + 2000,
+      startTime     = then, now, elapsed,
+      animate     = () => {
+                      requestAnimationFrame(animate)
+                      now = Date.now()
+                      elapsed = now - then
+                      if (elapsed > fpsInterval) {
+                        then = now - (elapsed % fpsInterval)
+                        fn() }}
+  animate() }
+
+function _offsetFn(ʀζ) {
+  return (item) => {
+    let δ   = 100,
+        μ   = (item.clientHeight + window.innerHeight),
+        ϕζ  = ʀζ(),
+        σ   = scalePow()
+                // .domain( [-0.38 * β.height, 0.618 * μ, μ + β.height])
+                .domain( [1.2 * μ, 0.38 * μ, -0.2 * μ])
+                .rangeRound( [ϕζ, 0, -ϕζ]),
+        ζ   = item.querySelector('.content')
+    // σ.clamp(true)
+    return offset => ζ.style.transform = `translateY(${σ(item.offsetTop + item.clientHeight - offset)}px)`}}
 
 function init(items) {
-  let ʀζ   = randomNormal(window.innerHeight * .38, 0.75),
-      ʀτ   = randomNormal(64, 0.75),
-      ƒs  = _.map(items, item => {let δ   = 100,
-                                      μ   = (item.clientHeight + window.innerHeight),
-                                      σ   = scaleLinear()
-                                              .domain( [-0.38 * item.clientHeight, 0.618 * μ, μ + item.clientHeight])
-                                              .range( [0, 0.5 * δ, δ]),
-                                      ζ   = item.querySelector('.content'),
-                                      τ   = item.querySelector('.text-frame'),
-                                      ϕζ  = ʀζ(),
-                                      ϕτ  = ʀτ(),
+  return new Promise( resolve => {
+    let ʀζ      = randomNormal(window.innerHeight * .16, 0.62),
+        ƒs      = _.map(items, _offsetFn(ʀζ)),
+        offset  = 0,
+        changed = false
+    
+    util.addEvent(window, 'scroll', () => {
+      changed = true
+      offset = window.scrollY})
+    
+    util.startAnimation(15, () => {
+      if(!changed) return
+      changed = false
+      _.each(ƒs, ƒ => ƒ(offset))
+    })
 
-                                      αζ  = anime({ targets:    ζ,
-                                                    translateY: [ϕζ, -ϕζ],
-                                                    duration:   δ,
-                                                    easing:     _.sample(EASINGS),
-                                                    // easing:     'linear',
-                                                    autoplay:   false}),
-                                      ατ  = anime({ targets:    τ,
-                                                    translateY: [ϕτ, -ϕτ],
-                                                    duration:   δ,
-                                                    easing:     _.sample(EASINGS),
-                                                    // easing:     'linear',
-                                                    autoplay:   false})
-                                  
-                                  σ.clamp(true)
-                                  return offset => {
-                                    let y0    = (item.offsetTop + item.δy),
-                                        y1    = y0 + item.clientHeight,
-                                        // < 0 when the item's top edge has crossed the window's bottom edge
-                                        δin   = (offset + window.innerHeight) - y0  
-                                    αζ.seek(σ(δin))
-                                    // ατ.seek(σ(δin)) 
-                                  }})
-
-  util.addEvent(window, 'scroll', () => _scroll(ƒs))
-  _.defer(() => _scroll(ƒs))
-  
-}
+    _.defer(() => {
+      _.each(ƒs, ƒ => ƒ(offset))
+      resolve() }) }) }
 
 
 export default {init}

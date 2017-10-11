@@ -18,11 +18,17 @@ function _start(fps) {
     startTime = then
     _animate()}
 
-export default function(selector) {
+function init(selector) {
+
   let slider = document.querySelector(selector)
+  console.log('init slider', slider)
+
   if (!slider) return
   
   imagesLoaded(slider).on('always', () => {
+    console.log('imagesloaded')
     lorySlider = lory(slider, {infinite: 1, enableMouseEvents: true})
     _start(0.16) // every five seconds
 })}
+
+export default { init }

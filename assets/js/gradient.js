@@ -6,139 +6,113 @@ import util           from './util'
 const XMLNS   = 'http://www.w3.org/2000/svg',
       XLINKNS = 'http://www.w3.org/1999/xlink'
 
+const EASINGS = ['linear']
+
 let ηΣ  = scaleLinear()
             .domain([-1, 1])
-            .range([0, 100]),
-    time
+            .range([0, 64]),
+    startTime
 
-function _update(ς, ι) {
+
+function _updateGradient(σ, ι, δ) {
   return () => {
-    let τ = (time - performance.now()) / /*81000*/20000,
+    let τ = (performance.now() - δ) / /*81000*/20000,
         ϕ = ηΣ(noise.simplex2(ι, τ))
-    ς.setAttribute('offset', `${ϕ}%`) }}
+    σ.setAttribute('offset', `${ϕ}%`) }}
 
-function _animateStop(ς, ι) {
-  // ς.setAttribute('offset', `${_.random(100)}%`)
-  util.startAnimation(24, _update(ς, ι))
+function _animateStop(σ, ι, δ) {
+  util.startAnimation(24, _updateGradient(σ, ι, δ))}
+
+function _initGradients(stops) {
+  startTime = performance.now()
+  _.each(stops, (σ, ι) => _animateStop(σ, ι, startTime))  
 }
 
-function _initGradient() {
-  let γ = document.getElementById('gradient'),
-      ℓ = γ.querySelectorAll('linearGradient'),
-      ς = γ.querySelectorAll('stop.animated'),
-      δ = { x1: '0%', y1: '0%', x2: '0%', y2: '100%'}
 
-  γ.setAttribute('width', `${window.innerWidth}px`)
-  γ.setAttribute('heigt', `${window.innerHeight}px` )
-  γ.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}` )
-  γ.style.display = 'block'
-  γ.style.opacity = 0
-
-  noise.seed(Math.random())
-  _.each(ℓ, ι => {
-    ι.setAttribute('x1', δ.x1)
-    ι.setAttribute('y1', δ.y1)
-    ι.setAttribute('x2', δ.x2)
-    ι.setAttribute('y2', δ.y2) })
+function _makeClippingPath(item) {
+  let id = item.getAttribute('id'),
+      cid = `c-${id}`,
+      Δ   = document.querySelector('#gradient defs'),
+      M   = document.querySelector('#masks'),
+      β   = item.getBoundingClientRect(),
+      cp  = document.createElementNS(XMLNS, 'clipPath'),
+      cr  = document.createElementNS(XMLNS, 'rect'),
+      use = document.createElementNS(XMLNS, 'use')
+ 
+  cp.setAttribute('id', cid)
+  cp.setAttribute('for', id)
   
-  time = performance.now()
+  cr.setAttribute('x',      0)
+  cr.setAttribute('y',      0)
+  cr.setAttribute('width',  0)
+  cr.setAttribute('height', 0)
 
-  _.each(ς, _update)
-  // _.delay(() => γ.style.display = 'block', 2000)
+  use.setAttributeNS(XLINKNS, 'xlink:href', `#gradients`)
+  use.setAttribute('clip-path', `url(#${cid})`)
+  use.setAttribute('x', '0')
+  use.setAttribute('y', '0')
+  use.setAttribute('width', '100%')
+  use.setAttribute('height', '100%')
 
-  anime({ targets: γ,
-          opacity: 1,
-          delay: 2000,
-          easing: 'linear',
-          duration: 240})
+  cp.appendChild(cr)
+  Δ.appendChild(cp)
+  M.appendChild(use) 
 
-  _.each(ς, _animateStop)
-  // _.each(ς, _update)
+  return cp }
+
+function _initLogoMask() {
+  let logo  = document.querySelector('#logo')
+  _makeClippingPath(logo)
+  updateMask('logo')
 }
 
-function _initMasks() {
-  console.log('init masks')
-  let M = document.querySelector('#masks'),
-      Δ = document.querySelector('#gradient defs'),
-      menuButtons = document.querySelectorAll('button'),
-      // menuButtons = document.querySelectorAll('#filter-btn'),
-      logo        = document.querySelector('#logo'),
-      items       = _.reduce(menuButtons, (ρ, ι) => _.concat(ρ, ι), [logo])
+function updateMask(id) {
+  let item  = document.getElementById(id),
+      β     = util.boundingBox(item),
+      mask  = document.querySelector(`clipPath[for=${id}]`),
+      rect
 
-  console.log('Δ', Δ)
-  console.log('logo', logo)
-  console.log('menuButtons', menuButtons)
-  console.log('items', items)
-
-  // make a clipping path for each button
-  return _.map(items, ι => {
-    
-    var β  = ι.getBoundingClientRect(),
-        cp = document.createElementNS(XMLNS, 'clipPath'),
-        cr = document.createElementNS(XMLNS, 'rect'),
-        u  = document.createElementNS(XMLNS, 'use'),
-        id = `c-${util.guid()}`
-  
-    cp.setAttribute('id', id)
-    
-    cr.setAttribute('x',      0)
-    cr.setAttribute('y',      0)
-    cr.setAttribute('width',  100)
-    cr.setAttribute('height', 100)
-
-    u.setAttributeNS(XLINKNS, 'xlink:href', `#gradients`)
-    u.setAttribute('clip-path', `url(#${id})`)
-    u.setAttribute('x', '0')
-    u.setAttribute('y', '0')
-    u.setAttribute('width', '100%')
-    u.setAttribute('height', '100%')
-
-    cp.appendChild(cr)
-    Δ.appendChild(cp)
-    M.appendChild(u)
-
-    return {item: ι, clip: cr}
-  })
+  if(!mask) mask = _makeClippingPath(item)
+  rect = mask.querySelector('rect')
+                
+  rect.setAttribute('x', β.x)
+  rect.setAttribute('y', β.y)
+  rect.setAttribute('width', β.width)
+  rect.setAttribute('height', β.height) 
 }
 
-function _updateMasks(masks) {
-
-  _.each(masks, ({item, clip}) => {
-    let β = item.getBoundingClientRect()
-    clip.setAttribute('x', (β.x || β.left))
-    clip.setAttribute('y', (β.y || β.top))
-    clip.setAttribute('width', β.width)
-    clip.setAttribute('height', β.height)
-  })
-
-
-
-  // let μ   = document.getElementById('masks'),
-
-  //     ℓβ  = document.getElementById('logo').getBoundingClientRect(),
-  //     ℓc  = document.getElementById('logo-clip').querySelector('rect'),
-
-  //     ƒβ  = document.getElementById('filter-btn').getBoundingClientRect(), 
-  //     ƒc  = document.getElementById('filter-clip').querySelector('rect')
-
-  // ℓc.setAttribute('x', ℓβ.x + 1)
-  // ℓc.setAttribute('width', _.max([ℓβ.width - 2, 0]))
-  // ℓc.setAttribute('y', ℓβ.y + 1)
-  // ℓc.setAttribute('height', _.max([ℓβ.height - 2, 0]))
-
-  // ƒc.setAttribute('x', ƒβ.x + 1)
-  // ƒc.setAttribute('width', _.max([ƒβ.width - 2, 0]))
-  // ƒc.setAttribute('y', ƒβ.y + 1)
-  // ƒc.setAttribute('height', _.max([ƒβ.height - 2, 0]))
-
-}
+function updateLogoMask() { updateMask('logo') }
 
 function init() {
-  let masks = _initMasks()
-  this.updateMask = _.partial(_updateMasks, masks)
+  console.log('init gradient')
+  return new Promise( resolve => {
+    let γ = document.getElementById('gradient'),
+        ℓ = γ.querySelectorAll('linearGradient'),
+        ς = γ.querySelectorAll('stop.animated'),
+        δ = { x1: '0%', y1: '0%', x2: '0%', y2: '100%'}
+    γ.setAttribute('width',   `${window.innerWidth}px`)
+    γ.setAttribute('heigt',   `${window.innerHeight}px` )
+    γ.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}` )
+  
+    γ.style.display = 'block'
+    γ.style.opacity = 0
+    
+    noise.seed(Math.random())
+  
+    _.each(ℓ, ι => {
+      ι.setAttribute('x1', δ.x1)
+      ι.setAttribute('y1', δ.y1)
+      ι.setAttribute('x2', δ.x2)
+      ι.setAttribute('y2', δ.y2) })
+    
+    _initLogoMask()
+    _initGradients(ς)
+    
+    γ.style.opacity = 1
 
-  _initGradient()
+    _.defer(resolve)
+  })
 }
 
-export default {init}
+export default {init, updateLogoMask, updateMask}
 

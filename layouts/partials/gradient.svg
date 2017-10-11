@@ -4,15 +4,10 @@
 
    <defs>
     <linearGradient id="yellow" x1="0%" y1="0%" x2="0%" y2="100%">
-      <!-- <stop offset="0%"   stop-color="#ffffff"/>
-      <stop offset="38%"  stop-color="#ffff44" class="animated"/>
-      <stop offset="50%"  stop-color="#ffff44" class="animated"/>
-      <stop offset="100%" stop-color="#ffffff"/> -->
       <stop offset="0%"   stop-color="#000000"/>
       <stop offset="38%"  stop-color="#ffffff" class="animated"/>
       <stop offset="50%"  stop-color="#ffffff" class="animated"/>
       <stop offset="100%" stop-color="#000000"/>
-
     </linearGradient>
     <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%"   stop-color="#000000"/>
@@ -38,29 +33,14 @@
     </mask>
 
     <symbol id="gradients">
-      <rect x="0" y="0" width="100%" height="100%" fill="#44ffff" mask="url(#m-cyan)" />
-      <rect x="0" y="0" width="100%" height="100%" fill="#ff44ff" mask="url(#m-magenta)" />
-      <rect x="0" y="0" width="100%" height="100%" fill="#ffff44" mask="url(#m-yellow)" />  
+      <rect x="0" y="0" width="100%" height="100%" fill="#00ffff" mask="url(#m-cyan)" />
+      <rect x="0" y="0" width="100%" height="100%" fill="#ff00ff" mask="url(#m-magenta)" />
+      <rect x="0" y="0" width="100%" height="100%" fill="#ffff00" mask="url(#m-yellow)" />  
     </symbol>
 
-    <!-- <clipPath id="logo-clip">
-      <rect x="0" y="0" width="200" height="200" />
-    </clipPath> -->
-    <!-- <clipPath id="filter-clip">
-      <rect x="0" y="0" width="200" height="200" />
-    </clipPath> -->
-
   </defs>
-   
-
-   <!--  <g class="gradients">
-      <rect fill="url(#magenta)"  x="0" y="0" width="100%" height="50%" />
-      <rect fill="url(#yellow)"   x="0" y="0" width="100%" height="50%"/>
-      <rect fill="url(#cyan)"     x="0" y="0" width="100%" height="50%" />
-    </g> -->
-  <g id="masks">
-  </g>
   
-
+  <g id="masks"></g>
+  <!-- <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%"></use> -->
 
 </svg>

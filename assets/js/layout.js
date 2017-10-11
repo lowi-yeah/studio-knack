@@ -4,10 +4,11 @@ import {scaleLinear,
         scaleQuantize}  from 'd3-scale'
 import parallax         from './parallax'
 import util             from './util'
+import gradient         from './gradient'
 
 const NUM_COLUMNS = 24
 const ȣ = randomNormal(0, 0.5)
-const EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
+const EASINGS = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 
 const ΔCONFIG = {
     mobile:     { numCols: 1,
@@ -234,10 +235,10 @@ function _siblings(item, lower, upper) {
 
 function _extent(item) {
   let β = item.getBoundingClientRect()
-  return { x0: β.x,
-           x1: β.x + β.width,
-           y0: β.y,
-           y1: β.y + β.height }}
+  return { x0: (β.x || β.left),
+           x1: (β.x || β.left) + β.width,
+           y0: (β.y || β.top),
+           y1: (β.y || β.top) + β.height }}
 
 
 function _itemz(item, siblings, overlapFn, deltaFn) {
@@ -577,13 +578,6 @@ function _clear() {
     while (grid.firstChild) grid.removeChild(grid.firstChild)
     resolve() }) }
 
-function init() {
-  // make the grid visible
-  let ƒ = document.getElementById('grid-wrap')
-  // ƒ.style.transform = `translateX(${window.innerWidth}px)`
-  ƒ.style.display  = 'flex'
-
-}
 
 function _hideGrid() {
   return new Promise( resolve => {
@@ -607,7 +601,15 @@ function _showGrid() {
             easing:   _.sample(EASINGS),
             complete: resolve})})}
 
+function _linearGradient(angle, hex) {
+  return `${util.getCssValuePrefix()}linear-gradient(${angle}deg, ${hex}, rgba(0, 0, 0, 0))`
+}
+
+
 function update() {
+  let grid = document.getElementById('grid')
+  if(!grid) return
+
   let items = document.querySelectorAll('.grid-item')
 
   return _hideGrid()
@@ -683,7 +685,7 @@ function update() {
 
     // set image shadow
     .then( () =>  _.each(items, item => {
-      item.querySelector('.image').setAttribute(_.sample(SHADOWS), 1)}) )
+      item.querySelector('.content').setAttribute(_.sample(SHADOWS), 1)}) )
 
 
     // resize the text
@@ -703,15 +705,141 @@ function update() {
 
     .then( () =>  parallax.init(items))
 
+    // HOVER
+    .then( () => _.each(items, item => {
+      let c = item.querySelector('.content'),
+          o = item.querySelector('.overlay'),
+          t = item.querySelector('.title'),
+          f = item.querySelector('.overlay-frame'),
+
+          // calculate the side from which the mouse entered the rectangle
+          δ = ε => {
+            let t = ε.target,
+                x = ε.clientX,
+                y = ε.clientY,
+                e = _extent(t),
+
+                d0 = util.distance({x, y}, {x: e.x0, y: e.y0}),
+                d1 = util.distance({x, y}, {x: e.x1, y: e.y0}),
+                d2 = util.distance({x, y}, {x: e.x1, y: e.y1}),
+                d3 = util.distance({x, y}, {x: e.x0, y: e.y1}),
+
+                Δ  = _.sortBy([ ['top',     d0 + d1],
+                                ['right',   d1 + d2],
+                                ['bottom',  d2 + d3],
+                                ['left',    d0 + d3]], 
+                        i => i[1])
+            return  [Δ[0][0], Δ[1][0]]},
+
+          // calculate the angle from which the mouse entered the rectangle
+          α = ε => {
+            let m = {x: ε.clientX, y: ε.clientY},
+                e = _extent(ε.target),
+                p = {x: (e.x0 + e.x1)/2, y: (e.y0 + e.y1)/2},
+                a = Math.atan2(p.y - m.y, p.x - m.x) * -180 / Math.PI
+            return a},
+
+          enter = ε => {  let d  = δ(ε),
+                              tl = anime.timeline()
+
+                          if(_.includes(d, 'top'))    f.style['align-items']  = 'flex-start'
+                          // if(_.includes(d, 'right'))  t.style['text-align']   = 'right'
+                          if(_.includes(d, 'bottom')) f.style['align-items']  = 'flex-end'
+                          // if(_.includes(d, 'left'))   t.style['text-align']   = 'left'
+
+                          o.style.background = _linearGradient(α(ε), o.getAttribute('data-overlay'))
+                          tl.add( { targets:  o,
+                                    opacity:  1,
+                                    duration: _.random(200, 320),
+                                    easing:   _.sample(EASINGS)})
+                          
+                          t.style.opacity = 1
+                          
+                          if(d[0] === 'top') {
+                            t.style.transform  = `translateX(0%) translateY(-100%)`
+                            tl.add( { targets:    t,
+                                      translateY: '0%',
+                                      duration:   _.random(200, 320),
+                                      easing:     _.sample(EASINGS)})}
+
+                          if(d[0] === 'right') {
+                            t.style.transform  = `translateX(100%) translateY(0%)`
+                            tl.add( { targets:    t,
+                                      translateX: '0%',
+                                      duration:   _.random(200, 320),
+                                      easing:     _.sample(EASINGS)})}
+
+                          if(d[0] === 'bottom') {
+                            t.style.transform  = `translateX(%) translateY(100%)`
+                            tl.add( { targets:    t,
+                                      translateY: '0%',
+                                      duration:   _.random(200, 320),
+                                      easing:     _.sample(EASINGS)})}
+                          
+                          if(d[0] === 'left') {
+                            t.style.transform  = `translateX(-100%) translateY(0%)`
+                            tl.add( { targets:    t,
+                                      translateX: '0%',
+                                      duration:   _.random(200, 320),
+                                      easing:     _.sample(EASINGS)})} },
+
+          exit  = ε => {  let d  = δ(ε),
+                              tl = anime.timeline()
+                          if(d[0] === 'top') {
+                            tl.add( { targets:    t,
+                                      translateY: '-100%',
+                                      opacity:    0,
+                                      duration:   _.random(200, 320),
+                                      easing:     _.sample(EASINGS)})}
+
+                          if(d[0] === 'right') {
+                            tl.add( { targets:    t,
+                                      translateX: '100%',
+                                      opacity:    0,
+                                      duration:   _.random(200, 320),
+                                      easing:     _.sample(EASINGS)})}
+
+                          if(d[0] === 'bottom') {
+                            tl.add( { targets:    t,
+                                      translateY: '100%',
+                                      opacity:    0,
+                                      duration:   _.random(200, 320),
+                                      easing:     _.sample(EASINGS)})}
+                          
+                          if(d[0] === 'left') {
+                            tl.add( { targets:    t,
+                                      translateX: '-100%',
+                                      opacity:    0,
+                                      duration:   _.random(200, 320),
+                                      easing:     _.sample(EASINGS)})}
+
+                          tl.add( { targets:  o,
+                                    opacity:  0,
+                                    duration: _.random(200, 320),
+                                    easing:   _.sample(EASINGS)})}
+      o.style.opacity = 0
+      t.style.color = '#ffffff'
+      util.addEvent(c, 'mouseenter', enter)
+      util.addEvent(c, 'mouseleave', exit) 
+    }))
+
     .then( () =>  {
         let ƒ = _.first(items),
-            x = parseFloat(ƒ.getAttribute('data-x'))
-        ƒ.setAttribute('data-y', 0)
-        ƒ.style.transform   = `translateX(${ x }px) translateY(${ 0 }px)`
+            x = parseFloat(ƒ.getAttribute('data-x')),
+            y = _.random(32, 128)
+        ƒ.setAttribute('data-y', y)
+        ƒ.style.transform   = `translateX(${ x }px) translateY(${ y }px)`
         ƒ.style.paddingTop  = 0 })
     
     .then( _showGrid )
    
+}
+
+function init() {
+  // make the grid visible
+  let ƒ = document.getElementById('grid-wrap')
+  if(ƒ) ƒ.style.display = 'flex' 
+  return update()
 }
 
 export default { init, update }

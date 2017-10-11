@@ -57,6 +57,66 @@ function isTouchDevice() {
 
 function pretty(s) { return JSON.stringify(s, null, 2) }
 
+function distance(p0, p1) {
+  return Math.sqrt( Math.pow((p1.x - p0.x), 2) + Math.pow((p1.y - p0.y), 2)  )
+}
+
+function getCssValuePrefix() {
+  var rtrnVal = '';//default to standard syntax
+  var prefixes = ['-o-', '-ms-', '-moz-', '-webkit-'];
+  // Create a temporary DOM object for testing
+  var dom = document.createElement('div');
+  for (var i = 0; i < prefixes.length; i++) {
+      // Attempt to set the style
+      dom.style.background = prefixes[i] + 'linear-gradient(#000000, #ffffff)';
+
+      // Detect if the style was successfully set
+      if (dom.style.background) {
+          rtrnVal = prefixes[i] }}
+  dom = null
+  return rtrnVal }
+
+
+// ClientRect
+//   bottom: 5032
+//   height: 624
+//   left: 0
+//   right: 743.28125
+//   top: 4408
+//   width: 743.28125
+
+//   bottom
+//   height
+//   left
+//   right
+//   top
+//   width
+//   x
+//   y
+
+// x
+// y
+// width
+// height
+// top
+// right
+// bottom
+// left
+
+function boundingBox(item) {
+  let β = item.getBoundingClientRect()
+  return { x:       β.left,
+           width:   β.width,
+           y:       β.top,
+           height:  β.height }}
+
+function extent(item) {
+  let β = item.getBoundingClientRect()
+  return { x0: (β.x || β.left),
+           x1: (β.x || β.left) + β.width,
+           y0: (β.y || β.top),
+           y1: (β.y || β.top) + β.height }}
+
 export default {
   addEvent,
   startAnimation,
@@ -66,5 +126,9 @@ export default {
   fontSize,
   isTouchDevice,
   getDevice,
-  pretty
+  pretty,
+  distance,
+  getCssValuePrefix,
+  boundingBox,
+  extent
 }

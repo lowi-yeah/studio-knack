@@ -6,6 +6,7 @@ import images     from './images'
 import logo       from './logo'
 import util       from './util'
 import gradient   from './gradient'
+import single     from './single'
 import anime      from 'animejs'
 
 let EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
@@ -17,11 +18,23 @@ function init() {
   // logo.begin().then(() => { voronoi.init()
   //                           menu.init() })
   images.init()
-  layout.init()
-  gradient.init()
   logo.begin()
-    .then( menu.init )
-    .then( layout.update )
+
+  layout.init()
+    .then(menu.init)
+
+  
+  // logo.begin()
+
+  // menu.init()
+
+
+  // setTimeout(gradient.updateLogoMask, 2000)
+
+
+  //   .then( menu.init )
+  //   .then( single.init )
+  //   .then( layout.update )
 
 // logo.init()
 // menu.init()
