@@ -12,6 +12,11 @@ import util     from './util'
 let EASINGS = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 let knackBase
 
+const LOGO_VIEW_BOX = { x: 0,
+                        y: 0,
+                        width: 400,
+                        height: 168.7}
+
 function _getRatio() {
   let ww = window.innerWidth,
       kw = knackBase.getBoundingClientRect().width
@@ -26,52 +31,37 @@ function resize() {
       ς  = r * 0.81,
       σx = ww * .095 / r,
       σy = ((wh - (kh * r)) / 2) / r
-  knackBase.style.transform   = `scale(${ς}) translate(${σx}px, ${σy}px)` 
-
-  let svg = document.getElementById('studio-knack')
-  svg.setAttribute('viewBox', `0 0 ${ww} ${wh}`)
-  // console.log('svg', svg)
-  }
-
-// little helper that waits fo the curtain to be completely lifted, before statring the animation
-function _animate(ζ, c) {
-  let lifted = c.getAttribute('data-lifted')
-  if(!lifted) setTimeout(() => _animate(ζ, c), 400)
-  else ζ.play() }
+  knackBase.style.transform = `scale(${ς}) translate(${σx}px, ${σy}px)` 
+  document.getElementById('studio-knack').setAttribute('viewBox', `0 0 ${ww} ${wh}`)}
 
 function init() {
-  let path  = document.getElementById('logo-clip'),
-      β     = util.boundingBox(path),
-      w     = window.innerWidth,
-      h     = window.innerHeight,
-      // s     = 0.81 * w / β.width,
-      s     = h / β.height,
-      l     = Math.floor((window.innerWidth - (β.width * s))/2)
-  path.style.transform = `translateX(${l}px) scale(${s})`
+  let c = document.getElementById('logo-clip'),
+      g = document.getElementById('logo-group'),
+      β = LOGO_VIEW_BOX,
+      w = window.innerWidth,
+      h = window.innerHeight,
+      s = h / β.height,
+      l = (w - (β.width * s))/2
+  // g.style.transform = `translateX(${l}px) scale(${s})`
 }
 
 function begin() {
-  console.log('logo begin')
-  return new Promise( (resolve, reject) => {
-    let ℓ = document.getElementById('logo-clip'),
-        ζ = anime.timeline({autoplay: false}),
-        h = 128
-        
-        // ϕ  = 92/window.innerHeight,
-    
-    ζ.add( {targets:    ℓ,
-            width:      2.380952381 * h, // 2.380952381 is the w/h ratio of the logo
-            duration:   120 + Math.random() * 240,
-            // update:     gradient.updateLogoMask,
-            easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)] })
-    // ζ.add( {targets:    ℓ,
-    //         height:     h,
-    //         duration:   120 + Math.random() * 240,
-    //         update:     gradient.updateLogoMask,
-    //         easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
-    //         complete:   resolve})
-
-   // _animate(ζ, document.getElementById('curtain'))
- })}
+  window.curtainPromise
+    .then(() => {
+        console.log('logo begin')
+        // let c = document.getElementById('logo-clip'),
+        //     g = document.getElementById('logo-group'),
+        //     w = window.innerWidth,
+        //     β = LOGO_VIEW_BOX,
+        //     s = 72 / β.height,
+        //     x = (w - (β.width * s))/2,
+        //     y = 16
+        // anime({ targets:    g,
+        //         translateX: `${x}px`,
+        //         translateY: `${y}px`,
+        //         scale:      s,
+        //         easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
+        //         duration:   _.random(420, 640)})
+      })}
 
 export default {init, begin}

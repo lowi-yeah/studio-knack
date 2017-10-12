@@ -1,4 +1,5 @@
-<svg id="logo" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px">
+<!-- <svg id="logo" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 400 168.7"> -->
+<svg id="logo" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100%" height="100%">
   <defs>
     <clipPath id="logo-clip">
       <path d="M328,166.7h22.3v-31.1l22.7,31.1h27l-31.4-40.1l27-32.1h-25.7l-19.6,25.1V94.5H328V166.7z M280.1,92.6
@@ -25,7 +26,11 @@
     </clipPath>
   </defs>
 
-  <use clip-path="url(#logo-clip)" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%"></use>
+  <g id="logo-group">
+    <use clip-path="url(#logo-clip)" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%"></use>
+  </g>
+  <!-- <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%"></use> -->
+
 <!--    _           _ _       _                _
      __| |_ _  _ __| (_)___  | |___ _  __ _ __| |__
     (_-<  _| || / _` | / _ \ | / / ' \/ _` / _| / /

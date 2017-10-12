@@ -31,10 +31,10 @@ const ȣ = randomNormal(64, 0.62)
 
 function _makePoints(element) {
   let ε  = util.extent(element),
-      p0 = [ε.x0 - ȣ(), ε.y0 - ȣ()],
-      p1 = [ε.x1 + ȣ(), ε.y0 - ȣ()],
-      p2 = [ε.x1 + ȣ(), ε.y1 + ȣ()],
-      p3 = [ε.x0 - ȣ(), ε.y1 + ȣ()]
+      p0 = [Math.round(ε.x0 - ȣ()), Math.round(ε.y0 - ȣ())],
+      p1 = [Math.round(ε.x1 + ȣ()), Math.round(ε.y0 - ȣ())],
+      p2 = [Math.round(ε.x1 + ȣ()), Math.round(ε.y1 + ȣ())],
+      p3 = [Math.round(ε.x0 - ȣ()), Math.round(ε.y1 + ȣ())]
   return [p0, p1, p2, p3] }
 
 function _origin() {
@@ -61,6 +61,7 @@ function _pointz() {
   let ρ = _(4).range()
               .map( i => { return { value: _interpolate(i) } })
               .value()
+  console.log('_pointz()', ρ)
   return ρ
 }
 
@@ -76,6 +77,7 @@ function _animate() {
 
 function init() {
   util.addEvent(window, 'scroll', _scroll)
+  document.getElementById('overlay-poly').setAttribute('points', _pointString(_origin))
 }
 
 function remove() {
@@ -89,6 +91,8 @@ function remove() {
 
 const ʆ = randomNormal(-64, 1)
 function set(item) {
+  console.log('set overlay', item)
+
   let title     = document.getElementById('overlay-title'),
       shadow    = document.getElementById('overlay-title-shadow'),
       content   = item.querySelector('.content')

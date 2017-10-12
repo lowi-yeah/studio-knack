@@ -20,7 +20,7 @@ function _updateGradient(σ, ι, δ) {
     σ.setAttribute('offset', `${ϕ}%`) }}
 
 function _animateStop(σ, ι, δ) {
-  // util.startAnimation(24, _updateGradient(σ, ι, δ))
+  util.startAnimation(24, _updateGradient(σ, ι, δ))
 }
 
 function _initGradients(stops) {

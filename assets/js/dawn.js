@@ -36,6 +36,6 @@ function _openCurtain() {
 
 console.log('dawn', Math.floor(Math.random() * DIRECTIONS.length))
 
-gradient.init()
-  .then(logo.init)
-  .then(_openCurtain)
+window.curtainPromise = gradient.init()
+                          .then(logo.init)
+                          .then(_openCurtain)
