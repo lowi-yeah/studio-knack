@@ -61,7 +61,6 @@ function _pointz() {
   let ρ = _(4).range()
               .map( i => { return { value: _interpolate(i) } })
               .value()
-  console.log('_pointz()', ρ)
   return ρ
 }
 
@@ -91,8 +90,6 @@ function remove() {
 
 const ʆ = randomNormal(-64, 1)
 function set(item) {
-  console.log('set overlay', item)
-
   let title     = document.getElementById('overlay-title'),
       shadow    = document.getElementById('overlay-title-shadow'),
       content   = item.querySelector('.content')

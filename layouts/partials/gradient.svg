@@ -34,13 +34,13 @@
 
     <symbol id="gradients">
       <rect class="bg" x="0" y="0" width="100%" height="100%"/>
-      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#00ffff" mask="url(#m-cyan)" /> -->
-      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ff00ff" mask="url(#m-magenta)" /> -->
-      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ffff00" mask="url(#m-yellow)" />   -->
+      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#00ffff" mask="url(#m-cyan)" />
+      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ff00ff" mask="url(#m-magenta)" />
+      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ffff00" mask="url(#m-yellow)" />  
 
-      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#0000ff" mask="url(#m-cyan)" />
-      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#0000ff" mask="url(#m-magenta)" />
-      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ff0000" mask="url(#m-yellow)" />  
+      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#0000ff" mask="url(#m-cyan)" /> -->
+      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#0000ff" mask="url(#m-magenta)" /> -->
+      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ff0000" mask="url(#m-yellow)" />   -->
     </symbol>
 
     <clipPath id="overlay-clip">
