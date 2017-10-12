@@ -2,25 +2,28 @@ import {randomNormal} from 'd3-random'
 import util           from './util'
 import anime          from 'animejs'
 
-function _resize(overlay){
-  let w = window.innerWidth,
-      h = window.innerHeight,
-      v = `0 0 ${w} ${h}`
-  overlay.setAttribute('viewBox', v)
-}
 
 let isSet       = false,
     prevPoints  = _origin(),
     points      = _origin(),
+    textX, textY,
     scrollOffset
+
+const EASINGS = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
 
 function _scroll() {
   if(isSet){
     let δ = window.scrollY - scrollOffset
     scrollOffset = window.scrollY
+
+    // points
     _(points).each(p => p[1] = p[1] - δ)
-    document.getElementById('overlay-poly')
-      .setAttribute('points', _pointString(points))
+    document.getElementById('overlay-poly').setAttribute('points', _pointString(points))
+
+    // text
+    textY -= (1.24 * δ)
+    document.getElementById('overlay-title').setAttribute('y', textY)
+    document.getElementById('overlay-title-shadow').setAttribute('y', textY)
   }
 }
 
@@ -72,26 +75,64 @@ function _animate() {
 }
 
 function init() {
-  console.log('init overlay')
-  let overlay = document.getElementById('the-overlay')
-  _resize(overlay)
   util.addEvent(window, 'scroll', _scroll)
 }
 
 function remove() {
   prevPoints = _.cloneDeep(points)
   points = _origin()
-  document.getElementById('overlay-text').textContent = ''
+  document.getElementById('overlay-title').textContent = ''
+  document.getElementById('overlay-title-shadow').textContent = ''
   isSet = false
   _animate()
 }
 
-function set(element, text) {
-  console.log('overlay.set', text)
+const ʆ = randomNormal(-64, 1)
+function set(item) {
+  let title     = document.getElementById('overlay-title'),
+      shadow    = document.getElementById('overlay-title-shadow'),
+      content   = item.querySelector('.content')
+      
   prevPoints = _.cloneDeep(points)
-  points = _makePoints(element)
+  points = _makePoints(content)
   scrollOffset = window.scrollY
-  document.getElementById('overlay-text').textContent = text
+
+  title.textContent = item.getAttribute('data-caption')
+  shadow.textContent = item.getAttribute('data-caption')
+
+  _.defer(() => {
+    let βc        = util.boundingBox(content),
+        easing    = _.sample(EASINGS),
+        duration  = _.random(240, 420)
+        
+    textX = βc.x + 24 + ʆ()
+    textY = βc.y + βc.height - 64
+
+    if(Math.random() < 0.5) {
+      title.setAttribute('x',  textX - window.innerWidth)
+      shadow.setAttribute('x', textX - window.innerWidth)
+    }
+    else {
+      title.setAttribute('x',  window.innerWidth - textX)
+      shadow.setAttribute('x', window.innerWidth - textX)
+    }
+
+    title.setAttribute('y', textY)
+    shadow.setAttribute('y', textY)
+
+    anime({ targets: title,
+            x: textX,
+            easing: easing,
+            duration: duration
+          })
+
+    anime({ targets: shadow,
+            x: textX,
+            easing: easing,
+            duration: duration
+          })
+  })
+
   isSet = true
   _animate()
 }

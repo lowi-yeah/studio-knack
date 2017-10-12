@@ -20,7 +20,8 @@ function _updateGradient(σ, ι, δ) {
     σ.setAttribute('offset', `${ϕ}%`) }}
 
 function _animateStop(σ, ι, δ) {
-  util.startAnimation(24, _updateGradient(σ, ι, δ))}
+  // util.startAnimation(24, _updateGradient(σ, ι, δ))
+}
 
 function _initGradients(stops) {
   startTime = performance.now()
@@ -32,7 +33,7 @@ function _makeClippingPath(item, maskSelector) {
   maskSelector = maskSelector || '#masks'
   let id = item.getAttribute('id'),
       cid = `c-${id}`,
-      Δ   = document.querySelector('#the-overlay defs'),
+      Δ   = document.querySelector('#gradient defs'),
       M   = document.querySelector(maskSelector),
       β   = item.getBoundingClientRect(),
       cp  = document.createElementNS(XMLNS, 'clipPath'),

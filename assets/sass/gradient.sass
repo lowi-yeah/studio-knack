@@ -2,18 +2,45 @@
   position: fixed
   top: 0
   left: 0
-  z-index: 3
   pointer-events: none
 
   #gradients
-    rect
+    rect.bg
+      fill: $white
+
+    rect.masked
       // mix-blend-mode: multiply
       // mix-blend-mode: exclusion
-      // mix-blend-mode: difference
-      
-      mix-blend-mode: screen
+      mix-blend-mode: difference
+      // mix-blend-mode: screen
       // mix-blend-mode: hard-light
 
 #masks
   use
-    mix-blend-mode: difference
+    // mix-blend-mode: difference
+    // mix-blend-mode: screen
+
+svg.overlay
+  position: fixed
+  width: 100vw
+  height: 100vh
+  top: 0
+  left: 0
+  pointer-events: none
+
+#overlay-back
+  z-index: 1
+
+#overlay-center
+  z-index: 5
+
+#overlay-front
+  z-index: 10
+
+#overlay-title, #overlay-title-shadow
+  font-size: 3rem
+  font-weight: 900
+
+#bg-masks
+
+#overlay-use

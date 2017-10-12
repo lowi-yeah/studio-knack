@@ -816,20 +816,19 @@ function update() {
  // click
     .then( () => {
       let overlayId
-      function toggle(id, element, text) {
+      function toggle(item) {
         return event => {
-          if(id === overlayId) {
+          if(item.getAttribute('id') === overlayId) {
             overlay.remove() 
             overlayId = undefined }
           else {
-            overlay.set(element, text)
-            
-            overlayId = id }}}
+            overlay.set(item)
+            overlayId = item.getAttribute('id') }}}
       _.each(items, item => {
         let content = item.querySelector('.content'),
             id      = item.getAttribute('id'),
             text    = item.getAttribute('data-caption')
-        util.addEvent(content, 'click', toggle(id, content, text))})})
+        util.addEvent(content, 'click', toggle(item))})})
 
     .then( () =>  {
         let ƒ = _.first(items),

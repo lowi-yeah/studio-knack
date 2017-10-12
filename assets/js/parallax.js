@@ -6,24 +6,9 @@ import {randomNormal} from 'd3-random'
 
 const EASINGS = ['linear', 'easeInOutCubic', 'easeInOutSine']
 
-function _scroll(ƒs) { 
-  _.each(ƒs, ƒ => ƒ(window.scrollY))
- }
-
-
-
- function startAnimation(fps, fn) {
-  let fpsInterval   = 1000 / fps, 
-      then          = Date.now() + 2000,
-      startTime     = then, now, elapsed,
-      animate     = () => {
-                      requestAnimationFrame(animate)
-                      now = Date.now()
-                      elapsed = now - then
-                      if (elapsed > fpsInterval) {
-                        then = now - (elapsed % fpsInterval)
-                        fn() }}
-  animate() }
+// function _scroll(ƒs) { 
+//   _.each(ƒs, ƒ => ƒ(window.scrollY))
+//  }
 
 function _offsetFn(ʀζ) {
   return (item) => {
@@ -40,14 +25,14 @@ function _offsetFn(ʀζ) {
 
 function init(items) {
   return new Promise( resolve => {
-    let ʀζ      = randomNormal(window.innerHeight * .16, 0.62),
+    let ʀζ      = randomNormal(window.innerHeight * .24, 1),
         ƒs      = _.map(items, _offsetFn(ʀζ)),
         offset  = 0,
         changed = false
     
     util.addEvent(window, 'scroll', () => {
       changed = true
-      offset = window.scrollY})
+      offset  = window.scrollY })
     
     util.startAnimation(15, () => {
       if(!changed) return
@@ -56,7 +41,7 @@ function init(items) {
     })
 
     _.defer(() => {
-      _.each(ƒs, ƒ => ƒ(offset))
+      // _.each(ƒs, ƒ => ƒ(offset))
       resolve() }) }) }
 
 
