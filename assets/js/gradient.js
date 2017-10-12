@@ -33,7 +33,7 @@ function _makeClippingPath(item, maskSelector) {
   maskSelector = maskSelector || '#masks'
   let id = item.getAttribute('id'),
       cid = `c-${id}`,
-      Δ   = document.querySelector('#gradient defs'),
+      Δ   = document.querySelector('defs#clipping-defs'),
       M   = document.querySelector(maskSelector),
       β   = item.getBoundingClientRect(),
       cp  = document.createElementNS(XMLNS, 'clipPath'),
@@ -82,8 +82,6 @@ function updateMask(id) {
   rect.setAttribute('height', β.height) 
 }
 
-function updateLogoMask() { updateMask('logo') }
-
 function init() {
   console.log('init gradient')
   return new Promise( resolve => {
@@ -106,7 +104,7 @@ function init() {
       ι.setAttribute('x2', δ.x2)
       ι.setAttribute('y2', δ.y2) })
     
-    _initLogoMask()
+    // _initLogoMask()
     _initGradients(ς)
     
     γ.style.opacity = 1
@@ -115,5 +113,5 @@ function init() {
   })
 }
 
-export default {init, updateLogoMask, updateMask}
+export default {init, updateMask}
 

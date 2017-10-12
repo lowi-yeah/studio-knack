@@ -1,6 +1,7 @@
 import _        from 'lodash'
 import anime    from 'animejs'
 import gradient from './gradient'
+import logo     from './logo'
 
 // Element.prototype.remove = function() {
 //     this.parentElement.removeChild(this) }
@@ -36,4 +37,5 @@ function _openCurtain() {
 console.log('dawn', Math.floor(Math.random() * DIRECTIONS.length))
 
 gradient.init()
+  .then(logo.init)
   .then(_openCurtain)

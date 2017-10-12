@@ -1,8 +1,10 @@
+import _ from 'lodash'
 import anime          from 'animejs'
 import {scaleLinear}  from 'd3-scale'
 import {randomNormal} from 'd3-random'
-import _ from 'lodash'
+
 import gradient from './gradient'
+import util     from './util'
 
 
 
@@ -37,26 +39,39 @@ function _animate(ζ, c) {
   if(!lifted) setTimeout(() => _animate(ζ, c), 400)
   else ζ.play() }
 
+function init() {
+  let path  = document.getElementById('logo-clip'),
+      β     = util.boundingBox(path),
+      w     = window.innerWidth,
+      h     = window.innerHeight,
+      // s     = 0.81 * w / β.width,
+      s     = h / β.height,
+      l     = Math.floor((window.innerWidth - (β.width * s))/2)
+  path.style.transform = `translateX(${l}px) scale(${s})`
+}
+
 function begin() {
   console.log('logo begin')
   return new Promise( (resolve, reject) => {
-    let ℓ = document.getElementById('logo'),
+    let ℓ = document.getElementById('logo-clip'),
         ζ = anime.timeline({autoplay: false}),
         h = 128
+        
         // ϕ  = 92/window.innerHeight,
     
     ζ.add( {targets:    ℓ,
             width:      2.380952381 * h, // 2.380952381 is the w/h ratio of the logo
             duration:   120 + Math.random() * 240,
-            update:     gradient.updateLogoMask,
+            // update:     gradient.updateLogoMask,
             easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)] })
-    ζ.add( {targets:    ℓ,
-            height:     h,
-            duration:   120 + Math.random() * 240,
-            update:     gradient.updateLogoMask,
-            easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
-            complete:   resolve})
+    // ζ.add( {targets:    ℓ,
+    //         height:     h,
+    //         duration:   120 + Math.random() * 240,
+    //         update:     gradient.updateLogoMask,
+    //         easing:     EASINGS[Math.floor(Math.random() * EASINGS.length)],
+    //         complete:   resolve})
 
-   _animate(ζ, document.getElementById('curtain'))})}
+   // _animate(ζ, document.getElementById('curtain'))
+ })}
 
-export default {begin}
+export default {init, begin}
