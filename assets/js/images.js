@@ -25,7 +25,8 @@ function init() {
 
   console.log('worker: loading images')
   let ιUrls   = _urls('data-image-url'),
-      pUrls   = _urls('data-image-palette'),
+      // pUrls   = _urls('data-image-palette'),
+      pUrls   = [],
       ιWorker = new ImageWorker(),
       ηι      = 0
 
@@ -39,20 +40,20 @@ function init() {
     if(τ === 'image')
       document.querySelector(`#${id} .image`).style.backgroundImage = ι
 
-    if(τ === 'palette'){
-      let cv = ι['dominant_colors'].vibrant
-      cv = cv || ι['dominant_colors']['vibrant_dark']
-      cv = cv || ι['dominant_colors']['vibrant_light']
-      cv = cv || {hex: '#ffffff'}
+    // if(τ === 'palette'){
+    //   let cv = ι['dominant_colors'].vibrant
+    //   cv = cv || ι['dominant_colors']['vibrant_dark']
+    //   cv = cv || ι['dominant_colors']['vibrant_light']
+    //   cv = cv || {hex: '#ffffff'}
 
-      let cm = ι['dominant_colors'].muted
-      cm = cm || ι['dominant_colors']['muted_dark']
-      cm = cm || ι['dominant_colors']['muted_light']
-      cm = cm || {hex: '#000000'}
-      document.querySelector(`#${id} .overlay`).setAttribute('data-overlay', cm.hex)
-      document.querySelector(`#${id} .title`).setAttribute('data-color', cv.hex)
-      // document.querySelector(`#${id} .overlay`).style.background = c.hex
-      }
+    //   let cm = ι['dominant_colors'].muted
+    //   cm = cm || ι['dominant_colors']['muted_dark']
+    //   cm = cm || ι['dominant_colors']['muted_light']
+    //   cm = cm || {hex: '#000000'}
+    //   // document.querySelector(`#${id} .overlay`).setAttribute('data-overlay', cm.hex)
+    //   // document.querySelector(`#${id} .title`).setAttribute('data-color', cv.hex)
+    //   // document.querySelector(`#${id} .overlay`).style.background = c.hex
+    //   }
 
 
     ηι += 1

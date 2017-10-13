@@ -7,6 +7,9 @@ let isSet       = false,
     prevPoints  = _origin(),
     points      = _origin(),
     textX, textY,
+    buttonX, buttonY,
+    hitX, hitY, 
+    hitScale = 1,
     scrollOffset
 
 const EASINGS = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
@@ -22,8 +25,18 @@ function _scroll() {
 
     // text
     textY -= (1.24 * δ)
+    buttonY -= (1.24 * δ)
+    hitY -= (1.24 * δ)
     document.getElementById('overlay-title').setAttribute('y', textY)
     document.getElementById('overlay-title-shadow').setAttribute('y', textY)
+
+    
+    document.getElementById('overlay-button').style.transform = 
+      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
+    document.getElementById('overlay-button-shadow').style.transform = 
+      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
+    document.getElementById('overlay-hit-area').style.transform = 
+      `translateX(${hitX}px) translateY(${hitY}px)`
   }
 }
 
@@ -68,7 +81,6 @@ function _animate() {
   anime({
     targets: '#overlay-poly',
     points: _pointz(),
-    // points: { value: _pointz() },
     easing: 'easeOutQuad',
     duration: _.random(240, 420)
   })
@@ -76,7 +88,27 @@ function _animate() {
 
 function init() {
   util.addEvent(window, 'scroll', _scroll)
+  document.getElementById('overlay-button-use').style.opacity = 0
+  document.getElementById('overlay-button-shadow').setAttribute('opacity', 0)
   document.getElementById('overlay-poly').setAttribute('points', _pointString(_origin))
+
+  // setup click handler
+  let hit = document.getElementById('overlay-hit-area')
+  util.addEvent(hit, 'mouseenter', () => {
+    hitScale = 1.2
+    document.getElementById('overlay-button').style.transform = 
+      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
+    document.getElementById('overlay-button-shadow').style.transform = 
+      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
+  })
+
+  util.addEvent(hit, 'mouseleave', () => {
+    hitScale = 1
+    document.getElementById('overlay-button').style.transform = 
+      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
+    document.getElementById('overlay-button-shadow').style.transform = 
+      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
+  })
 }
 
 function remove() {
@@ -84,55 +116,55 @@ function remove() {
   points = _origin()
   document.getElementById('overlay-title').textContent = ''
   document.getElementById('overlay-title-shadow').textContent = ''
+  document.getElementById('overlay-button-use').style.opacity = 0
+  document.getElementById('overlay-button-shadow').setAttribute('opacity', 0)
   isSet = false
   _animate()
 }
 
 const ʆ = randomNormal(-64, 1)
 function set(item) {
-  let title     = document.getElementById('overlay-title'),
-      shadow    = document.getElementById('overlay-title-shadow'),
-      content   = item.querySelector('.content')
+  let title         = document.getElementById('overlay-title'),
+      shadow        = document.getElementById('overlay-title-shadow'),
+      button        = document.getElementById('overlay-button'),
+      buttonShadow  = document.getElementById('overlay-button-shadow'),
+      hitArea       = document.getElementById('overlay-hit-area'),
+      content       = item.querySelector('.content')
       
+  // set the bg points
   prevPoints = _.cloneDeep(points)
   points = _makePoints(content)
   scrollOffset = window.scrollY
 
+  // update the caption
   title.textContent = item.getAttribute('data-caption')
   shadow.textContent = item.getAttribute('data-caption')
 
-  _.defer(() => {
-    let βc        = util.boundingBox(content),
-        easing    = _.sample(EASINGS),
-        duration  = _.random(240, 420)
-        
-    textX = βc.x + 24 + ʆ()
-    textY = βc.y + βc.height - 64
+  let βc        = util.boundingBox(content),
+      easing    = _.sample(EASINGS),
+      duration  = _.random(240, 420)
+      
+  textX = Math.round(βc.x + 24 )
+  textY = Math.round(βc.y + βc.height - 100)
 
-    if(Math.random() < 0.5) {
-      title.setAttribute('x',  textX - window.innerWidth)
-      shadow.setAttribute('x', textX - window.innerWidth)
-    }
-    else {
-      title.setAttribute('x',  window.innerWidth - textX)
-      shadow.setAttribute('x', window.innerWidth - textX)
-    }
+  buttonX = βc.x + 24
+  buttonY = βc.y + βc.height - 80
 
-    title.setAttribute('y', textY)
-    shadow.setAttribute('y', textY)
+  hitX = βc.x + 8
+  hitY = βc.y + βc.height - 92
 
-    anime({ targets: title,
-            x: textX,
-            easing: easing,
-            duration: duration
-          })
+  // position the caption
+  title.setAttribute('x', textX)
+  title.setAttribute('y', textY)
+  shadow.setAttribute('x', textX)
+  shadow.setAttribute('y', textY)
 
-    anime({ targets: shadow,
-            x: textX,
-            easing: easing,
-            duration: duration
-          })
-  })
+  button.style.transform        = `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
+  buttonShadow.style.transform  = `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
+  hitArea.style.transform       = `translateX(${hitX}px) translateY(${hitY}px)`
+
+  document.getElementById('overlay-button-use').style.opacity = 1
+  buttonShadow.setAttribute('opacity', 0.38)
 
   isSet = true
   _animate()

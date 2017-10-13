@@ -56,6 +56,10 @@
       <text id="overlay-title"></text>
     </clipPath>
 
+    <clipPath id="overlay-button-clip">
+      <path id="overlay-button" d="M0,0v64h64V0H0z M52,36L12,51.5V40.3l27.3-9.7L12,20.9V9.8l40,15.4V36z"/>
+    </clipPath>
+
   </defs>
 
 </svg>
