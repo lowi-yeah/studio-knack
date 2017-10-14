@@ -10,7 +10,7 @@ const EASINGS = ['linear']
 
 let ηΣ  = scaleLinear()
             .domain([-1, 1])
-            .range([0, 64]),
+            .range([0, 100]),
     startTime
 
 function _updateGradient(σ, ι, δ) {
@@ -20,7 +20,10 @@ function _updateGradient(σ, ι, δ) {
     σ.setAttribute('offset', `${ϕ}%`) }}
 
 function _animateStop(σ, ι, δ) {
-  util.startAnimation(8, _updateGradient(σ, ι, δ))
+  let ϕ = ηΣ(noise.simplex2(ι, performance.now() * Math.random()))
+  σ.setAttribute('offset', `${ϕ}%`)
+  // _updateGradient(σ, ι, δ)
+  // util.startAnimation(16, _updateGradient(σ, ι, δ))
 }
 
 function _initGradients(stops) {
@@ -29,61 +32,10 @@ function _initGradients(stops) {
 }
 
 
-function _makeClippingPath(item, maskSelector) {
-  maskSelector = maskSelector || '#masks'
-  let id = item.getAttribute('id'),
-      cid = `c-${id}`,
-      Δ   = document.querySelector('defs#clipping-defs'),
-      M   = document.querySelector(maskSelector),
-      β   = item.getBoundingClientRect(),
-      cp  = document.createElementNS(XMLNS, 'clipPath'),
-      cr  = document.createElementNS(XMLNS, 'rect'),
-      use = document.createElementNS(XMLNS, 'use')
- 
-  cp.setAttribute('id', cid)
-  cp.setAttribute('for', id)
-  
-  cr.setAttribute('x',      0)
-  cr.setAttribute('y',      0)
-  cr.setAttribute('width',  0)
-  cr.setAttribute('height', 0)
-
-  use.setAttributeNS(XLINKNS, 'xlink:href', `#gradients`)
-  use.setAttribute('clip-path', `url(#${cid})`)
-  use.setAttribute('x', '0')
-  use.setAttribute('y', '0')
-  use.setAttribute('width', '100%')
-  use.setAttribute('height', '100%')
-
-  cp.appendChild(cr)
-  Δ.appendChild(cp)
-  M.appendChild(use) 
-
-  return cp }
-
-function _initLogoMask() {
-  let logo  = document.querySelector('#logo')
-  _makeClippingPath(logo, '#bg-masks')
-  updateMask('logo')
-}
-
-function updateMask(id) {
-  let item  = document.getElementById(id),
-      β     = util.boundingBox(item),
-      mask  = document.querySelector(`clipPath[for=${id}]`),
-      rect
-
-  if(!mask) mask = _makeClippingPath(item)
-  rect = mask.querySelector('rect')
-                
-  rect.setAttribute('x', β.x)
-  rect.setAttribute('y', β.y)
-  rect.setAttribute('width', β.width)
-  rect.setAttribute('height', β.height) 
-}
 
 function init() {
   console.log('init gradient')
+  
   return new Promise( resolve => {
     let γ = document.getElementById('gradient'),
         ℓ = γ.querySelectorAll('linearGradient'),
@@ -96,6 +48,7 @@ function init() {
     γ.style.display = 'block'
     γ.style.opacity = 0
     
+
     noise.seed(Math.random())
   
     _.each(ℓ, ι => {
@@ -103,6 +56,11 @@ function init() {
       ι.setAttribute('y1', δ.y1)
       ι.setAttribute('x2', δ.x2)
       ι.setAttribute('y2', δ.y2) })
+
+    _.each(document.querySelectorAll('rect.gradient'), 
+      r => r.style.opacity = _.random(0.2, 1, true )  )
+
+    
     
     // _initLogoMask()
     _initGradients(ς)
@@ -113,5 +71,5 @@ function init() {
   })
 }
 
-export default {init, updateMask}
+export default {init}
 

@@ -6,18 +6,22 @@
 
 <div id="menu">
   <div id="filters" class="entry">
-    <button data-category="{{ . }}" id="filter-btn" class="button">
-      {{ partial "filter-icon.svg" . }} 
-    </button>
 
-    <button data-category="all" class="category button">
+    <button id="filter-btn" class="pattern button"> 
+      {{ partial "filter-icon.svg" . }}  
+    </button> 
+    <!-- {{ partial "filter-button.svg" . }}  -->
+
+    <div id="all-filter" data-category="all" class="category pattern button">
       Alles!
-    </button>
+    </div>
+
     {{ range .Site.Data.settings.filters  }}
-      <button data-category="{{ . }}" class="category button">
+      <button id="{{ . }}-filter" data-category="{{ . }}" class="category pattern button">
         {{.}}
       </button>
     {{ end }}
+    
   </div>
   <!-- <div id="search" class="entry">
     <button id="filter-btn"><i class="material">search</i></button>

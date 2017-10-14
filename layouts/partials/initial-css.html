@@ -50,16 +50,18 @@
     background-position: left center;
   }*/
 
-  #logo { 
+  #logo-frame {
+    pointer-events: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    z-index: 4;
-    transform-origin: center top;
+    z-index: 1;
   }
+
+  #logo { }
 
 
   g.knack > rect {
@@ -79,16 +81,14 @@
   }
 
   #menu {
-    display: none;
+    opacity: 0;
   }
 
   #gradient {
     display: none;
   }  
 
-
   #grid-wrap {
-    display: none;
     opacity: 0;
   }
 

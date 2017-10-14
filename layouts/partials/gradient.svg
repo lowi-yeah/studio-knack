@@ -1,49 +1,92 @@
 <svg
   id="gradient"
-  xmlns="http://www.w3.org/2000/svg">
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
 
-   <defs id="clipping-defs">
-    <linearGradient id="yellow" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%"   stop-color="#000000"/>
-      <stop offset="38%"  stop-color="#ffffff" class="animated"/>
-      <stop offset="50%"  stop-color="#ffffff" class="animated"/>
-      <stop offset="100%" stop-color="#000000"/>
+   <defs id="defs">
+
+     <linearGradient id="cyan-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="18%"  stop-color="#00ffff" class="animated" />
+      <stop offset="38%"  stop-color="#00ffff" class="animated" />
+      <stop offset="100%" stop-color="#ffffff"/>
     </linearGradient>
-    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="#000000"/>
-      <stop offset="38%"  stop-color="#ffffff" class="animated" />
-      <stop offset="18%"  stop-color="#ffffff" class="animated" />
-      <stop offset="100%" stop-color="#000000"/>
+    <linearGradient id="yellow-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="38%"  stop-color="#ff00ff" class="animated"/>
+      <stop offset="50%"  stop-color="#ff00ff" class="animated"/>
+      <stop offset="100%" stop-color="#ffffff"/>
     </linearGradient>
-    <linearGradient id="magenta" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="#000000"/>
-      <stop offset="62%"  stop-color="#ffffff" class="animated"/>
-      <stop offset="68%"  stop-color="#ffffff" class="animated"/>
-      <stop offset="100%" stop-color="#000000"/>
+    <linearGradient id="magenta-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="62%"  stop-color="#ffff00" class="animated"/>
+      <stop offset="68%"  stop-color="#ffff00" class="animated"/>
+      <stop offset="100%" stop-color="#ffffff"/>
     </linearGradient>
 
-    <mask id="m-cyan">
-      <rect x="0" y="0" width="100%" height="100%" fill="url(#cyan)"  />
-    </mask>
-    <mask id="m-magenta">
-      <rect x="0" y="0" width="100%" height="100%" fill="url(#magenta)"  />
-    </mask>
-    <mask id="m-yellow">
-      <rect x="0" y="0" width="100%" height="100%" fill="url(#yellow)"  />
-    </mask>
+     <linearGradient id="red-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="18%"  stop-color="#ff0000" class="animated" />
+      <stop offset="38%"  stop-color="#ff0000" class="animated" />
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="green-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="38%"  stop-color="#00ff00" class="animated"/>
+      <stop offset="50%"  stop-color="#00ff00" class="animated"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="blue-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="62%"  stop-color="#0000ff" class="animated"/>
+      <stop offset="68%"  stop-color="#0000ff" class="animated"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+
+    <filter id="inset-shadow-2" x="-50%" y="-50%" width="200%" height="200%">
+      <feComponentTransfer in=SourceAlpha>
+        <feFuncA type="table" tableValues="1 0" />
+      </feComponentTransfer>
+      <feGaussianBlur stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feFlood flood-color="rgb(0, 0, 0)" result="color"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feComposite in2="SourceAlpha" operator="in" />
+      <feMerge>
+        <feMergeNode in="SourceGraphic" />
+        <feMergeNode />
+      </feMerge>
+    </filter> 
+
+    <filter id="inset-shadow-1" x="-50%" y="-50%" width="200%" height="200%">
+      <feComponentTransfer in=SourceAlpha>
+        <feFuncA type="table" tableValues="1 0" />
+      </feComponentTransfer>
+      <feGaussianBlur stdDeviation="2"/>
+      <feOffset dx="1" dy="1" result="offsetblur"/>
+      <feFlood flood-color="rgb(0, 0, 0)" result="color"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feComposite in2="SourceAlpha" operator="in" />
+      <feMerge>
+        <feMergeNode in="SourceGraphic" />
+        <feMergeNode />
+      </feMerge>
+    </filter> 
 
     <symbol id="gradients">
       <rect class="bg" x="0" y="0" width="100%" height="100%"/>
-      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#00ffff" mask="url(#m-cyan)" />
-      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ff00ff" mask="url(#m-magenta)" />
-      <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ffff00" mask="url(#m-yellow)" />  
+      
+      <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#cyan-gradient)" />
+      <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#magenta-gradient)" />
+      <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#yellow-gradient)" />
 
-      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#0000ff" mask="url(#m-cyan)" /> -->
-      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#0000ff" mask="url(#m-magenta)" /> -->
-      <!-- <rect class="masked" x="0" y="0" width="100%" height="100%" fill="#ff0000" mask="url(#m-yellow)" />   -->
+      <!-- <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#red-gradient)" />
+      <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#green-gradient)" />
+      <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#blue-gradient)" /> -->
+
     </symbol>
 
-    <clipPath id="overlay-clip">
+   <!--  <clipPath id="overlay-clip">
       <polygon id="overlay-poly" points=""></polygon>
     </clipPath>
 
@@ -58,7 +101,11 @@
 
     <clipPath id="overlay-button-clip">
       <path id="overlay-button" d="M0,0v64h64V0H0z M52,36L12,51.5V40.3l27.3-9.7L12,20.9V9.8l40,15.4V36z"/>
-    </clipPath>
+    </clipPath> -->
+
+    <pattern id="debug-pattern" x="0" y="0" width="100%" height="100%" patternUnits="userSpaceOnUse">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%"></use>
+    </pattern>
 
   </defs>
 

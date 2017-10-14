@@ -54,6 +54,16 @@
   @return $text-list;
 }
 
+@mixin layer($z-index: 1) {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vh;
+  height: 100vw;
+  z-index: $z-index;
+  display: flex;
+}
+
 // @mixin stripes($color1: #fff, $color2: #000, $angle: 45deg, $width: 4px ) {
 //   background: repeating-linear-gradient(
 //     $angle,
