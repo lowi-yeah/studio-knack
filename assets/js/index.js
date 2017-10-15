@@ -19,10 +19,10 @@ pattern.init()
 
 window.curtainPromise
   .then(layout.init)
-  // .then(overlay.init)
   .then(logo.begin)
   .then(layout.show)
   .then(menu.init)
+  .then(overlay.init)
     
 
   

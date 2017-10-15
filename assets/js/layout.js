@@ -604,6 +604,8 @@ function _update() {
 
   let items = document.querySelectorAll('.grid-item')
 
+console.log('update', items.length)
+
   return _hideGrid()
     .then( () => _gridResize(items))
 

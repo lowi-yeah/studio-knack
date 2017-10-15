@@ -21,7 +21,7 @@ function _updateGradient(σ, ι, δ) {
 
 function _animateStop(σ, ι, δ) {
   let ϕ = ηΣ(noise.simplex2(ι, performance.now() * Math.random()))
-  σ.setAttribute('offset', `${ϕ}%`)
+  // σ.setAttribute('offset', `${ϕ}%`)
   // _updateGradient(σ, ι, δ)
   // util.startAnimation(16, _updateGradient(σ, ι, δ))
 }

@@ -1,173 +1,108 @@
 import {randomNormal} from 'd3-random'
-import util           from './util'
 import anime          from 'animejs'
+import pattern        from './pattern'
+// import dom            from './dom'
+import util           from './util'
 
 
-let isSet       = false,
-    prevPoints  = _origin(),
-    points      = _origin(),
-    textX, textY,
-    buttonX, buttonY,
-    hitX, hitY, 
-    hitScale = 1,
-    scrollOffset
+let ιtem
 
-const EASINGS = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
+function _update() {
+  if(!ιtem) return  
 
-function _scroll() {
-  if(isSet){
-    let δ = window.scrollY - scrollOffset
-    scrollOffset = window.scrollY
+  let rect    = document.querySelector('#overlay .bg'),
+      foreign = document.querySelector('#overlay foreignObject'),
+      text    = document.querySelector('#overlay .text'),
+      β       = util.boundingBox(ιtem.querySelector('.content')),
+      tl      = anime.timeline({})
+  
+  rect.setAttribute('x', β.x)
+  rect.setAttribute('y', β.y)
+  rect.setAttribute('width', β.width)
+  rect.setAttribute('height', β.height)
 
-    // points
-    _(points).each(p => p[1] = p[1] - δ)
-    document.getElementById('overlay-poly').setAttribute('points', _pointString(points))
+  foreign.setAttribute('x', β.x)
+  foreign.setAttribute('y', β.y)
+  foreign.setAttribute('width', β.width)
+  foreign.setAttribute('height', β.height)
 
-    // text
-    textY -= (1.24 * δ)
-    buttonY -= (1.24 * δ)
-    hitY -= (1.24 * δ)
-    document.getElementById('overlay-title').setAttribute('y', textY)
-    document.getElementById('overlay-title-shadow').setAttribute('y', textY)
+  text.innerHTML = ιtem.getAttribute('data-caption')
 
+  _.defer(() => {
+    let frame = document.querySelector('#overlay .overlay-frame'),
+        βF    = util.boundingBox(frame)
     
-    document.getElementById('overlay-button').style.transform = 
-      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
-    document.getElementById('overlay-button-shadow').style.transform = 
-      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
-    document.getElementById('overlay-hit-area').style.transform = 
-      `translateX(${hitX}px) translateY(${hitY}px)`
-  }
-}
+    if(βF.y < 0) foreign.setAttribute('y', 0)
+    
+    if(βF.y + βF.height > window.innerHeight) {
+      let ηy = β.y - ((βF.y + βF.height) - window.innerHeight)
+      foreign.setAttribute('y', ηy)
+    }
 
-const ȣ = randomNormal(64, 0.62)
+    // if(β.y + β.height < window.height ) β.y -= ((β.y + β.height) - window.height)
+  
+    // fade the background
+    tl.add({  targets:  rect,
+              opacity:  1,
+              duration: 320,
+              easing:   'easeInQuad'})
+    tl.add({  targets:  frame,
+              opacity:  1,
+              duration: 320,
+              easing:   'easeInQuad'})
 
-function _makePoints(element) {
-  let ε  = util.extent(element),
-      p0 = [Math.round(ε.x0 - ȣ()), Math.round(ε.y0 - ȣ())],
-      p1 = [Math.round(ε.x1 + ȣ()), Math.round(ε.y0 - ȣ())],
-      p2 = [Math.round(ε.x1 + ȣ()), Math.round(ε.y1 + ȣ())],
-      p3 = [Math.round(ε.x0 - ȣ()), Math.round(ε.y1 + ȣ())]
-  return [p0, p1, p2, p3] }
-
-function _origin() {
-  let p0 = [-2, -2],
-      p1 = [-2, -1],
-      p2 = [-1, -1],
-      p3 = [-2, -1]
-  return [p0, p1, p2, p3] }
-
-function _pointString(pointz) {
-  return _(pointz)
-            .map(p => `${Math.round(p[0])},${Math.round(p[1])}`)
-            .join(' ')
-}
-
-function _interpolate(index) {
-  let ps = _.slice(prevPoints, index + 1, 4),
-      s  = _.slice(points, 0, index + 1),
-      ρ  = _.concat(s, ps)
-  return _pointString(ρ)
-}
-
-function _pointz() {
-  let ρ = _(4).range()
-              .map( i => { return { value: _interpolate(i) } })
-              .value()
-  return ρ
-}
-
-function _animate() {
-  anime({
-    targets: '#overlay-poly',
-    points: _pointz(),
-    easing: 'easeOutQuad',
-    duration: _.random(240, 420)
   })
 }
 
 function init() {
-  util.addEvent(window, 'scroll', _scroll)
-  document.getElementById('overlay-button-use').style.opacity = 0
-  document.getElementById('overlay-button-shadow').setAttribute('opacity', 0)
-  document.getElementById('overlay-poly').setAttribute('points', _pointString(_origin))
+  console.log('init overlay')
+  let overlay = document.getElementById('overlay'),
+      rect    = document.querySelector('#overlay .bg'),
+      frame   = document.querySelector('#overlay .overlay-frame'),
+      foreign = document.querySelector('#overlay foreignObject')
 
-  // setup click handler
-  let hit = document.getElementById('overlay-hit-area')
-  util.addEvent(hit, 'mouseenter', () => {
-    hitScale = 1.2
-    document.getElementById('overlay-button').style.transform = 
-      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
-    document.getElementById('overlay-button-shadow').style.transform = 
-      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
-  })
+  overlay.style.display = 'block'
+  util.addEvent(window, 'scroll', remove)
+  pattern.make(overlay)
 
-  util.addEvent(hit, 'mouseleave', () => {
-    hitScale = 1
-    document.getElementById('overlay-button').style.transform = 
-      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
-    document.getElementById('overlay-button-shadow').style.transform = 
-      `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
-  })
+  rect.style.opacity    = 0
+  // foreign.style.opacity = 0
+  frame.style.opacity = 0
 }
 
 function remove() {
-  prevPoints = _.cloneDeep(points)
-  points = _origin()
-  document.getElementById('overlay-title').textContent = ''
-  document.getElementById('overlay-title-shadow').textContent = ''
-  document.getElementById('overlay-button-use').style.opacity = 0
-  document.getElementById('overlay-button-shadow').setAttribute('opacity', 0)
-  isSet = false
-  _animate()
+  if(!ιtem) return
+  ιtem    = null
+
+  let rect  = document.querySelector('#overlay .bg'),
+      foreign = document.querySelector('#overlay foreignObject'),
+      frame   = document.querySelector('#overlay .overlay-frame'),
+      δ  = _.random(120, 360),
+      ε  = 'easeOutQuad',
+      tl  = anime.timeline({})
+ 
+  tl.add({  targets:  frame,
+            opacity:  0,
+            duration: δ,
+            easing:   ε })
+  tl.add({  targets:  rect,
+            opacity:  0,
+            duration: δ,
+            easing:   ε })
 }
 
 const ʆ = randomNormal(-64, 1)
+
 function set(item) {
-  let title         = document.getElementById('overlay-title'),
-      shadow        = document.getElementById('overlay-title-shadow'),
-      button        = document.getElementById('overlay-button'),
-      buttonShadow  = document.getElementById('overlay-button-shadow'),
-      hitArea       = document.getElementById('overlay-hit-area'),
-      content       = item.querySelector('.content')
-      
-  // set the bg points
-  prevPoints = _.cloneDeep(points)
-  points = _makePoints(content)
-  scrollOffset = window.scrollY
-
-  // update the caption
-  title.textContent = item.getAttribute('data-caption')
-  shadow.textContent = item.getAttribute('data-caption')
-
-  let βc        = util.boundingBox(content),
-      easing    = _.sample(EASINGS),
-      duration  = _.random(240, 420)
-      
-  textX = Math.round(βc.x + 24 )
-  textY = Math.round(βc.y + βc.height - 100)
-
-  buttonX = βc.x + 24
-  buttonY = βc.y + βc.height - 80
-
-  hitX = βc.x + 8
-  hitY = βc.y + βc.height - 92
-
-  // position the caption
-  title.setAttribute('x', textX)
-  title.setAttribute('y', textY)
-  shadow.setAttribute('x', textX)
-  shadow.setAttribute('y', textY)
-
-  button.style.transform        = `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
-  buttonShadow.style.transform  = `translateX(${buttonX}px) translateY(${buttonY}px) scale(${hitScale})`
-  hitArea.style.transform       = `translateX(${hitX}px) translateY(${hitY}px)`
-
-  document.getElementById('overlay-button-use').style.opacity = 1
-  buttonShadow.setAttribute('opacity', 0.38)
-
-  isSet = true
-  _animate()
+  ιtem    = item
+  _update()
 }
 
 export default { init, set, remove }
+
+
+
+
+
+
+

@@ -13,14 +13,15 @@
 
 // Mixins
 // ------------------------------------
-$shadow-color: $black;
+// $shadow-color: $black;
 
 @mixin z-depth-transition() {
   transition: box-shadow .28s cubic-bezier(.4, 0, .2, 1);
 }
 
 @mixin z-depth-focus() {
-  box-shadow: 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36);
+  box-shadow: 0 0 8px rgba(0, 0, 0, .18), 
+              0 8px 16px rgba(0, 0, 0, .36);
 }
 
 @mixin z-depth-2dp() {
@@ -55,18 +56,21 @@ $shadow-color: $black;
   box-shadow: 0 8px 10px 1px rgba(0, 0, 0, .14),
               0 3px 14px 2px rgba(0, 0, 0, .12),
               0 5px 5px -3px rgba(0, 0, 0, .4);
+  // box-shadow: 8px 8px 0 0 $black;
 }
 
 @mixin z-depth-16dp() {
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14),
               0  6px 30px 5px rgba(0, 0, 0, .12),
               0  8px 10px -5px rgba(0, 0, 0, .4);
+  // box-shadow: 16px 16px 0 0 $black;
 }
 
 @mixin z-depth-24dp() {
   box-shadow: 0  9px 46px  8px rgba(0, 0, 0, .14),
               0 24px 38px  3px rgba(0, 0, 0, .12),
               0 11px 15px -7px rgba(0, 0, 0, .4);
+  // box-shadow: 24px 24px 0 0 $black;
 }
 
 @mixin z-depth($dp: 2) {
