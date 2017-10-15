@@ -22,19 +22,19 @@ function _offset(δ) {
 
 function _openCurtain() {
   console.log('_openCurtain')
-  let ρ = { targets: '#curtain',
-            duration: 800 + Math.random() * 1200,
-            delay:    400,
-            easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
-            complete: () => curtain.setAttribute('data-lifted', 1)},
-      δ = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)],
-      ω = _offset(δ)
-      
-  if(δ === 'left' || δ === 'right')  ρ.translateX =  ω
-  if(δ === 'top'  || δ === 'bottom') ρ.translateY =  ω
-  anime(ρ) }
-
-console.log('dawn', Math.floor(Math.random() * DIRECTIONS.length))
+  return new Promise(resolve => {
+    let ρ = { targets: '#curtain',
+              duration: 2000,
+              delay:    400,
+              easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
+              complete: resolve},
+        δ = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)],
+        ω = _offset(δ)
+        
+    if(δ === 'left' || δ === 'right')  ρ.translateX =  ω
+    if(δ === 'top'  || δ === 'bottom') ρ.translateY =  ω
+    anime(ρ) }
+  )}
 
 window.curtainPromise = gradient.init()
                           .then(logo.init)

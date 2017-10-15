@@ -50,27 +50,18 @@
     background-position: left center;
   }*/
 
-  #logo { 
+  #logo-frame {
+    pointer-events: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    z-index: 4;
-    transform-origin: center top;
+    z-index: 1;
   }
 
-
-  g.knack > rect {
-    mix-blend-mode: multiply;  
-  }
-  
-  #knack {
-    display: none;
-  }
-
-  #toc {
+  #overlay{ 
     display: none;
   }
 
@@ -79,21 +70,14 @@
   }
 
   #menu {
-    display: none;
+    opacity: 0;
   }
 
   #gradient {
     display: none;
   }  
 
-
   #grid-wrap {
-    display: none;
     opacity: 0;
   }
-
-  #x-scale, #y-scale {
-    transform-origin: center;
-  }
- 
 </style>

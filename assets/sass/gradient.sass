@@ -1,46 +1,41 @@
 #gradient
-  position: fixed
-  top: 0
-  left: 0
-  pointer-events: none
-
+  +layer
   #gradients
     rect.bg
-      fill: $white
+      fill: none
 
-    rect.masked
+    rect.gradient
       // mix-blend-mode: multiply
       // mix-blend-mode: exclusion
       // mix-blend-mode: difference
-      // mix-blend-mode: screen
+      mix-blend-mode: screen
       // mix-blend-mode: hard-light
 
-#masks
-  use
-    // mix-blend-mode: difference
+
+svg#overlay
+  +layer(4)
+  display: none
+
+.overlay-frame
+  padding: 1rem
+  display: flex
+  width: 100%
+  overflow: hidden
+  flex-direction: column
+  flex-wrap: wrap
+  // font-size: 2rem
+
+  .text
+    flex: 1 0  auto
+    @extend .title
+    @extend .is-2
+    font-weight: 800
+    color: $black
     // mix-blend-mode: screen
 
-svg.overlay
-  position: fixed
-  width: 100vw
-  height: 100vh
-  top: 0
-  left: 0
-  pointer-events: none
-
-#overlay-back
-  z-index: 1
-
-#overlay-center
-  z-index: 5
-
-#overlay-front
-  z-index: 10
-
-#overlay-title, #overlay-title-shadow
-  font-size: 3rem
-  font-weight: 900
-
-#bg-masks
-
-#overlay-use
+  .button
+    flex: 0 0 auto
+    width: 6rem
+    height: 3rem
+    pointer-events: all
+    +z-depth-4dp()

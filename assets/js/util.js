@@ -26,11 +26,14 @@ function scrollTop() {
       // left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
   return (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0) }
 
-function guid() {
+function guid(prefix) {
+  prefix = `${prefix}-` || ''
   let s4 = () =>  Math.floor((1 + Math.random()) * 0x10000)
                     .toString(16)
                     .substring(1)
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() }
+  // return prefix + s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() 
+  return prefix + s4() + s4() + '-' + s4() + s4()
+}
 
 function fontSize(ε) {
   let style = window.getComputedStyle(ε, null).getPropertyValue('font-size')

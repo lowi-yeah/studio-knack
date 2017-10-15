@@ -598,11 +598,13 @@ function _linearGradient(angle, hex) {
 }
 
 
-function update() {
+function _update() {
   let grid = document.getElementById('grid')
   if(!grid) return
 
   let items = document.querySelectorAll('.grid-item')
+
+console.log('update', items.length)
 
   return _hideGrid()
     .then( () => _gridResize(items))
@@ -813,38 +815,44 @@ function update() {
     //   util.addEvent(c, 'mouseleave', exit) 
     // }))
 
- // click
+    // click
     .then( () => {
-      let overlayId
-      function toggle(item) {
-        return event => {
-          if(item.getAttribute('id') === overlayId) {
-            overlay.remove() 
-            overlayId = undefined }
-          else {
-            overlay.set(item)
-            overlayId = item.getAttribute('id') }}}
+      let overlayId,
+          toggle = item =>          // toggle is a function on an item 
+                      event => {    // that retruns an event callback
+                        if(item.getAttribute('id') === overlayId) {
+                          overlay.remove() 
+                          overlayId = undefined }
+                        else {
+                          overlay.set(item)
+                          overlayId = item.getAttribute('id') }}
+
       _.each(items, item => {
         let content = item.querySelector('.content'),
             id      = item.getAttribute('id'),
             text    = item.getAttribute('data-caption')
         util.addEvent(content, 'click', toggle(item))})})
 
+    // adjust the top padding an position of the first item
+    // so we have a realtive consistent first impression upon opening the page
     .then( () =>  {
         let ƒ = _.first(items),
             x = parseFloat(ƒ.getAttribute('data-x')),
             y = _.random(32, 128)
         ƒ.setAttribute('data-y', y)
         ƒ.style.transform   = `translateX(${ x }px) translateY(${ y }px)`
-        ƒ.style.paddingTop  = 0 })
-    
-    .then( _showGrid )}
+        ƒ.style.paddingTop  = 0 }) }
 
-function init() {
-  // make the grid visible
-  let ƒ = document.getElementById('grid-wrap')
-  if(ƒ) ƒ.style.display = 'flex' 
-  return update()
+function update() {
+  return _update().then(_showGrid)
 }
 
-export default { init, update }
+function init() {
+  return _update()
+}
+
+function show() {
+  _showGrid()
+}
+
+export default { init, update, show }

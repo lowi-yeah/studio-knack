@@ -1,39 +1,4 @@
 
-$height: 4.5rem
-
-// #toc 
-//   display: flex
-//   width: $height
-//   height: $height
-//   border: none
-//   position: fixed
-//   right: 0
-//   top: 0
-//   z-index: 99
-//   svg
-//     flex: 1 0 auto
-
-// #home-btn
-//   // the logo ratio os 100/42 = 2.380952381
-//   width: 2.380952381 * $height
-//   height: $height
-//   border: none
-//   display: flex
-//   align-content: center
-//   align-items: center
-//   margin: 0
-//   padding: 0
-//   background: transparent
-//   pointer-events: all
-
-//   // mix-blend-mode: multiply
-//   flex: 0 1 auto
-  
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-
-
 #search-btn
   position: relative
   display: flex
@@ -43,53 +8,14 @@ $height: 4.5rem
 
 #menu
   background: transparent
-  position: fixed
-  top: 1rem
-  right: 0
-  z-index: 12
+  +layer(3)
   flex-direction: column
   align-items: flex-end
   pointer-events: none
 
-  .entry
-    flex: 0 1 auto
-    display: flex
-    align-items: flex-start
-    margin-bottom: 1rem
-
-    .item
-      flex: 0 0 auto
-      background: $red
-
-  button
-    width: $height
-    height: $height
+  .button
+    height: 3rem
     border: none
-    display: flex
-    align-content: center
-    align-items: center
-    margin: 0
-    padding: 0
-    // background: $whit  e
-    pointer-events: all
-
-    // mix-blend-mode: multiply
-    flex: 0 0 auto
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover
-      background: #00ffff
-      cursor: pointer 
-
-    i
-      flex: 0 1 auto
-      position: relative
-      font-size: 3rem 
-
-
 
   #filters
     display: flex
@@ -97,24 +23,15 @@ $height: 4.5rem
     justify-content: flex-end
     align-items: flex-end
 
-    #filter-btn
-      display: flex
-      width: $height
-      height: $height
-      border: none
-      padding: 0.5rem
-      svg
-        flex: 1 0 auto
 
     .button
       pointer-events: all
-      width: 100%
       flex: 1 0 auto
       margin-bottom: 1rem
       background: transparent
       
-      font-size: 2rem
-      font-weight: 900
+      // font-size: 2rem
+      font-weight: 700
       
       padding: 0 1rem
       +z-depth-4dp()
@@ -123,12 +40,33 @@ $height: 4.5rem
       &:hover, &:focus, &:active
         +z-depth-focus()
 
-  #search
-    background: #ffff00
-    .input
-      margin-left: 1rem
-      margin-right: 1rem
-      align-self: center
+#filter-btn
+  margin-bottom: 1rem
+  margin-top: 1rem
+  margin-right: 0.5rem
+  width: 48px
+  height: 48px
+  margin-top: 1rem
+  padding: 0
+
+  +z-depth-4dp()
+  +z-depth-transition()
+  
+  &:hover, &:focus, &:active
+    +z-depth-focus()
+  
+  svg#filter-icon
+    background: transparent
+    flex: 1 0 auto 
+    z-index: 2
+
+
+#search
+  background: #ffff00
+  .input
+    margin-left: 1rem
+    margin-right: 1rem
+    align-self: center
 
 
 
