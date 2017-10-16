@@ -145,6 +145,8 @@
       margin: 0
       pointer-events: all
       position: relative
+      width: 100%
+      height: 100%
       overflow: hidden
       +z-depth-4dp
       
@@ -152,6 +154,7 @@
         cursor: pointer
 
       .image
+        z-index: 0
         mix-blend-mode: normal
         flex: 1 0 auto
         position: absolute
@@ -163,6 +166,46 @@
         background-repeat: no-repeat
         background-position: center center
         overflow: hidden
+
+      .overlay
+        display: flex
+        flex-direction: column
+        flex-wrap: wrap
+        flex: 1 0 auto
+        z-index: 1
+        margin: 0
+        pointer-events: all
+        position: relative
+        width: 100%
+        height: 100%
+
+        opacity: 0
+        transition: opacity 0.24s linear
+        pointer-events: none
+        &.active
+          opacity: 1
+          pointer-events: all
+
+      .caption
+        margin: 1.5rem 1rem
+        z-index: 1
+        flex: 1 0  auto
+        // position: relative
+        // @extend .title
+        // @extend .is-2
+        font-size: 2rem
+        font-weight: 800
+        color: $black
+        filter: url(#inset-shadow-1)
+
+      .button
+        margin: 1.5rem 1rem
+        z-index: 1
+        flex: 0 0 auto
+        width: 6rem
+        height: 3rem
+        font-weight: 800
+        +z-depth-4dp()
 
   
     .text

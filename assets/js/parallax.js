@@ -25,7 +25,7 @@ function _offsetFn(ʀζ) {
 
 function init(items) {
   return new Promise( resolve => {
-    let ʀζ      = randomNormal(window.innerHeight * .24, 1),
+    let ʀζ      = randomNormal(window.innerHeight * .32, 1),
         ƒs      = _.map(items, _offsetFn(ʀζ)),
         offset  = 0,
         changed = false

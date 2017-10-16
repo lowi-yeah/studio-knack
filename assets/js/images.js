@@ -51,7 +51,8 @@ function init() {
       cm = cm || ι['dominant_colors']['muted_light']
       cm = cm || {hex: '#000000'}
 
-      document.querySelector(`#${id}`).setAttribute('data-image-palette', cm.hex)
+      // document.querySelector(`#${id}`).setAttribute('data-image-palette', cm.hex)
+      document.querySelector(`#${id} .overlay .caption`).style.color = cm.hex
       }
 
 

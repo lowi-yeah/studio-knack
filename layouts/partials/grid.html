@@ -18,17 +18,17 @@
       {{ with $image.info }}      data-image-info="{{ . }}"     {{ end }} >
 
       <div class="content" href="{{ .Permalink }}">
-        <div class="image" style="background-image: url({{ $image.tiny }})">
-        </div>       
+        <div class="image" style="background-image: url({{ $image.tiny }})"></div>       
+
+        <div class="overlay"> 
+          <div class="caption"> {{ .Title }} </div>
+          <a href="#" class="button"> more > </a>
+        </div>
            
       </div>  
       <div class="text">
         <div class="text-frame">
-          <!-- <a href="{{ .Permalink }}"> -->
-            <!-- <span>{{ .Params.title }}</span> -->
           <span>{{ .Params.tag }}</span>
-            <!-- <span>{{ .Params.id }}</span> -->
-          <!-- </a> -->
         </div>
       </div>
     </section>

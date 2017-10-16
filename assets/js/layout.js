@@ -836,7 +836,8 @@ function _update() {
           hide        = () => _.delay(() => {
                                   if(over) return
                                   overlayId = undefined
-                                  overlay.remove()  }, 200),
+                                  overlay.remove()  
+                                }, 200),
   
           toggle      = item => {     
                           if(item.getAttribute('id') === overlayId) {
