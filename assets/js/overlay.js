@@ -54,14 +54,15 @@ function _update() {
 
 function init() {
   console.log('init overlay')
-  let overlays  = document.querySelectorAll('svg.overlay'),
-      rect      = document.querySelector('svg.overlay .bg'),
-      frame     = document.querySelector('svg.overlay .overlay-frame'),
-      foreign   = document.querySelector('svg.overlay foreignObject')
+  let overlays    = document.querySelectorAll('svg.overlay'),
+      overlayBack = document.getElementById('overlay-back'),
+      rect        = document.querySelector('svg.overlay .bg'),
+      frame       = document.querySelector('svg.overlay .overlay-frame'),
+      foreign     = document.querySelector('svg.overlay foreignObject')
 
-  _.each(overlays, o => {
-    o.style.display = 'block'
-    pattern.make(o) })
+  console.log('overlayBack', overlayBack)
+  pattern.make(overlayBack) 
+  _.each(overlays, o => { o.style.display = 'block' })
 
   util.addEvent(window, 'scroll', remove)
 

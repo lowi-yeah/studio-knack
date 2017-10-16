@@ -28,7 +28,7 @@
         </filter>
     </defs>
 
-    <rect filter="url(#fancy-shadow)" class="bg" x="-2" y="-2" width="1" height="1"/> 
+    <rect class="bg" x="-2" y="-2" width="1" height="1"/> 
     <!-- <rect filter="url(#inset-shadow-2)" class="bg" x="-2" y="-2" width="1" height="1"/>  -->
 
     
