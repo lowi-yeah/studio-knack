@@ -27,7 +27,10 @@ function _openCurtain() {
               duration: 2000,
               delay:    400,
               easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
-              complete: resolve},
+              complete: () => {
+                document.getElementById('curtain').style.display = 'none'
+                resolve()
+              }},
         δ = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)],
         ω = _offset(δ)
         
