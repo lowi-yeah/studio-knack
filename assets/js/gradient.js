@@ -39,7 +39,6 @@ function init() {
   
     γ.style.display = 'block'
     γ.style.opacity = 0
-    
 
     noise.seed(Math.random())
   

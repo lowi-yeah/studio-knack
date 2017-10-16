@@ -13,12 +13,15 @@
       // mix-blend-mode: color-burn
 
 
-svg#overlay
+svg#overlay-back
+  +layer(2)
+  display: none
+svg#overlay-front
   +layer(4)
   display: none
 
 .overlay-frame
-  padding: 1rem
+  padding: 1.5rem 1rem
   display: flex
   width: 100%
   overflow: hidden
@@ -32,11 +35,12 @@ svg#overlay
     @extend .is-2
     font-weight: 800
     color: $black
-    // mix-blend-mode: screen
+    filter: url(#inset-shadow-1)
 
   .button
     flex: 0 0 auto
     width: 6rem
     height: 3rem
     pointer-events: all
+    font-weight: 800
     +z-depth-4dp()
