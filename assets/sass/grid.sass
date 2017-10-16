@@ -146,17 +146,10 @@
       pointer-events: all
       position: relative
       overflow: hidden
-
-      +z-depth-transition()
       +z-depth-4dp
-      // box-shadow: 8px 8px 0 0 $black
-      // transition: box-shadow .28s cubic-bezier(.4, 0, .2, 1), transform  .28s cubic-bezier(.4, 0, .2, 1)
       
       &:hover
         cursor: pointer
-        +z-depth-focus()
-        // transform: translateX(6px) translateY(6px);
-        // box-shadow: 1px 1px 0 0 $black;
 
       .image
         mix-blend-mode: normal

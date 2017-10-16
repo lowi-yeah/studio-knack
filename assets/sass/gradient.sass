@@ -20,6 +20,10 @@ svg#overlay-front
   +layer(4)
   display: none
 
+.overlay
+  foreignObject
+    cursor: pointer
+
 .overlay-frame
   padding: 1.5rem 1rem
   display: flex
@@ -41,6 +45,5 @@ svg#overlay-front
     flex: 0 0 auto
     width: 6rem
     height: 3rem
-    pointer-events: all
     font-weight: 800
     +z-depth-4dp()

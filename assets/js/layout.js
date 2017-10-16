@@ -815,23 +815,58 @@ console.log('update', items.length)
     //   util.addEvent(c, 'mouseleave', exit) 
     // }))
 
-    // click
+    // click & hover
     .then( () => {
+
+      // we neet to work around some issue with the hovers:
+      // below we attach enter- & leave-handlers to the .content of the item 
+      // (which has nothing to do with the overlay)
+      // but we need pointer events in the foreignt object (which lives in the overlay)
+      // alas, if we have pointer-events and activete the hover, the mouse leave
+      // attached to the content will be immediately triggered.
+      // what a conundrum…
       let overlayId,
-          toggle = item =>          // toggle is a function on an item 
-                      event => {    // that retruns an event callback
-                        if(item.getAttribute('id') === overlayId) {
-                          overlay.remove() 
-                          overlayId = undefined }
-                        else {
-                          overlay.set(item)
-                          overlayId = item.getAttribute('id') }}
+          over        = false,
+          foreign     = document.querySelector('.overlay foreignObject'),
+          isMobile    = util.isMobile(),
+            
+          show        = item => _.delay(() => { 
+                                    if(!over) return
+                                    overlayId = item.getAttribute('id')
+                                    overlay.set(item) }, 200),
+  
+          hide        = () => _.delay(() => {
+                                  if(over) return
+                                  overlayId = undefined
+                                  overlay.remove()  }, 200),
+  
+          toggle      = item => {     
+                          if(item.getAttribute('id') === overlayId) {
+                            overlay.remove() 
+                            overlayId = undefined }
+                          else {
+                            overlay.set(item)
+                            overlayId = item.getAttribute('id') }}
+
+      if(!isMobile) {
+        util.addEvent(foreign, 'mouseenter', () => over = true)  
+        util.addEvent(foreign, 'mouseleave', () => {
+          over = false
+          hide() })}
 
       _.each(items, item => {
-        let content = item.querySelector('.content'),
-            id      = item.getAttribute('id'),
-            text    = item.getAttribute('data-caption')
-        util.addEvent(content, 'click', toggle(item))})})
+        let content = item.querySelector('.content')
+              
+        if(isMobile)
+          util.addEvent(content, 'click', () => toggle(item))
+        else {
+          util.addEvent(content, 'mouseenter', event => {
+            over = true
+            show(item) }) 
+
+          util.addEvent(content, 'mouseleave', event => {
+            over = false
+            hide() })}})})
 
     // adjust the top padding an position of the first item
     // so we have a realtive consistent first impression upon opening the page

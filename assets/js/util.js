@@ -92,18 +92,22 @@ function extent(item) {
            y0: (β.y || β.top),
            y1: (β.y || β.top) + β.height }}
 
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) }
+
 export default {
   addEvent,
-  startAnimation,
-  clearElement,
-  guid,
-  scrollTop,
-  fontSize,
-  isTouchDevice,
-  getDevice,
-  pretty,
-  distance,
-  getCssValuePrefix,
   boundingBox,
-  extent
+  clearElement,
+  distance,
+  extent,
+  fontSize,
+  getCssValuePrefix,
+  getDevice,
+  guid,
+  isMobile,
+  isTouchDevice,
+  pretty,
+  scrollTop,
+  startAnimation
 }

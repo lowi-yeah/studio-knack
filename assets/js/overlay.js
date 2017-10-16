@@ -5,52 +5,7 @@ import pattern        from './pattern'
 import util           from './util'
 
 
-let ιtem
-
-function _update() {
-  if(!ιtem) return  
-
-  let rect    = document.querySelector('svg.overlay .bg'),
-      foreign = document.querySelector('svg.overlay foreignObject'),
-      text    = document.querySelector('svg.overlay .text'),
-      button  = document.querySelector('svg.overlay .button'),
-      βi      = util.boundingBox(ιtem),
-      βc      = util.boundingBox(ιtem.querySelector('.content')),
-      tl      = anime.timeline({})
-  
-  rect.setAttribute('x', βi.x)
-  rect.setAttribute('y', βi.y)
-  rect.setAttribute('width',  βi.width)
-  rect.setAttribute('height', βi.height)
-
-  foreign.setAttribute('x', βc.x)
-  foreign.setAttribute('y', βc.y)
-  foreign.setAttribute('width',  βc.width)
-  foreign.setAttribute('height', βc.height)
-
-  text.innerHTML      = ιtem.getAttribute('data-caption')
-  text.style.color    = ιtem.getAttribute('data-image-palette')
-  button.style.color  = ιtem.getAttribute('data-image-palette')
-
-  _.defer(() => {
-    let frame = document.querySelector('svg.overlay .overlay-frame'),
-        βF    = util.boundingBox(frame)
-    
-    if(βF.y < 0) foreign.setAttribute('y', 0)
-    
-    if(βF.y + βF.height > window.innerHeight) {
-      let ηy = β.y - ((βF.y + βF.height) - window.innerHeight)
-      foreign.setAttribute('y', ηy) }
-
-    // fade the overlay
-    tl.add({  targets:  rect,
-              opacity:  1,
-              duration: 320,
-              easing:   'easeInQuad'})
-    tl.add({  targets:  frame,
-              opacity:  1,
-              duration: 320,
-              easing:   'easeInQuad'}) })}
+let ιtem, τimeline
 
 function init() {
   console.log('init overlay')
@@ -63,39 +18,88 @@ function init() {
   console.log('overlayBack', overlayBack)
   pattern.make(overlayBack) 
   _.each(overlays, o => { o.style.display = 'block' })
-
   util.addEvent(window, 'scroll', remove)
-
-  rect.style.opacity  = 0
-  frame.style.opacity = 0
 }
 
 function remove() {
-  if(!ιtem) return
-  ιtem    = null
+  return new Promise( resolve => {
+    if(!ιtem) return resolve()
 
-  let rect    = document.querySelector('svg.overlay .bg'),
-      foreign = document.querySelector('svg.overlay foreignObject'),
-      frame   = document.querySelector('svg.overlay .overlay-frame'),
-      δ  = _.random(120, 360),
-      ε  = 'easeOutQuad',
-      tl  = anime.timeline({})
- 
-  tl.add({  targets:  frame,
-            opacity:  0,
-            duration: δ,
-            easing:   ε })
-  tl.add({  targets:  rect,
-            opacity:  0,
-            duration: δ,
-            easing:   ε })
-}
+    ιtem    = null
+    let rect    = document.querySelector('svg.overlay .bg'),
+        foreign = document.querySelector('svg.overlay foreignObject'),
+        frame   = document.querySelector('svg.overlay .overlay-frame'),
+        δ  = _.random(120, 360),
+        ε  = 'easeOutQuad'
+  
+    _.defer(() => {
+      τimeline = anime.timeline({})
+      τimeline.add({  targets:  frame,
+                opacity:  0,
+                duration: δ,
+                easing:   ε,
+                complete: () => foreign.style['pointer-events'] = 'none' })
+      τimeline.add({  targets:  rect,
+                opacity:  0,
+                duration: δ,
+                easing:   ε,
+                complete: () => {
+                  τimeline = undefined
+                  resolve() }})})})}
 
 const ʆ = randomNormal(-64, 1)
 
 function set(item) {
-  ιtem    = item
-  _update()
+
+  return new Promise( resolve => {
+    ιtem    = item
+  
+    let rect    = document.querySelector('svg.overlay .bg'),
+        foreign = document.querySelector('svg.overlay foreignObject'),
+        text    = document.querySelector('svg.overlay .text'),
+        button  = document.querySelector('svg.overlay .button'),
+        βi      = util.boundingBox(ιtem),
+        βc      = util.boundingBox(ιtem.querySelector('.content'))
+    
+    
+    rect.setAttribute('x', βi.x)
+    rect.setAttribute('y', βi.y)
+    rect.setAttribute('width',  βi.width)
+    rect.setAttribute('height', βi.height)
+  
+    foreign.setAttribute('x', βc.x)
+    foreign.setAttribute('y', βc.y)
+    foreign.setAttribute('width',  βc.width)
+    foreign.setAttribute('height', βc.height)
+  
+    text.innerHTML      = ιtem.getAttribute('data-caption')
+    text.style.color    = ιtem.getAttribute('data-image-palette')
+    button.style.color  = ιtem.getAttribute('data-image-palette')
+  
+    _.defer(() => {
+      let frame = document.querySelector('svg.overlay .overlay-frame'),
+          βF    = util.boundingBox(frame)
+      
+      if(βF.y < 0) foreign.setAttribute('y', 0)
+      
+      if(βF.y + βF.height > window.innerHeight) {
+        let ηy = β.y - ((βF.y + βF.height) - window.innerHeight)
+        foreign.setAttribute('y', ηy) }
+      
+      τimeline = anime.timeline({})
+      τimeline.add({  targets:  rect,
+                opacity:  1,
+                duration: 320,
+                easing:   'easeInQuad'})
+      τimeline.add({  targets:  frame,
+                opacity:  1,
+                duration: 320,
+                easing:   'easeInQuad',
+                complete: () => {
+                  τimeline = undefined
+                  foreign.style['pointer-events'] = 'all'
+                  resolve() }})})
+  })
 }
 
 export default { init, set, remove }

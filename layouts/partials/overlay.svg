@@ -28,7 +28,7 @@
         </filter>
     </defs>
 
-    <rect class="bg" x="-2" y="-2" width="1" height="1"/> 
+    <rect class="bg" x="-2" y="-2" width="1" height="1" style="opacity:0"/> 
     <!-- <rect filter="url(#inset-shadow-2)" class="bg" x="-2" y="-2" width="1" height="1"/>  -->
 
     
@@ -37,7 +37,7 @@
 <svg id="overlay-front" class="overlay" xmlns='http://www.w3.org/2000/svg' xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Text-Elemente -->
     <foreignObject x="0" y="0" width="0" height="0">
-      <xhtml:div class="overlay-frame">
+      <xhtml:div class="overlay-frame" style="opacity:0">
         <xhtml:div class="text">Demo test that is supposed to be word-wrapped somewhere along the line to show that it is indeed possible to simulate ordinary text containers in svg.</xhtml:div>
         <xhtml:a href="#" class="button">
           more >
