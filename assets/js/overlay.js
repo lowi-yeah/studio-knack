@@ -13,7 +13,8 @@ function _update() {
   let rect    = document.querySelector('#overlay .bg'),
       foreign = document.querySelector('#overlay foreignObject'),
       text    = document.querySelector('#overlay .text'),
-      β       = util.boundingBox(ιtem.querySelector('.content')),
+      β       = util.boundingBox(ιtem),
+      // β       = util.boundingBox(ιtem.querySelector('.content')),
       tl      = anime.timeline({})
   
   rect.setAttribute('x', β.x)
@@ -32,7 +33,7 @@ function _update() {
     let frame = document.querySelector('#overlay .overlay-frame'),
         βF    = util.boundingBox(frame)
     
-    if(βF.y < 0) foreign.setAttribute('y', 0)
+    if(βF.y < 0) { foreign.setAttribute('y', 0)}
     
     if(βF.y + βF.height > window.innerHeight) {
       let ηy = β.y - ((βF.y + βF.height) - window.innerHeight)

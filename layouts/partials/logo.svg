@@ -42,6 +42,5 @@
                   |___/         |__/ -->
   <text filter="url(#inset-shadow-1)" x="14" y="128"></text>
 
-
-  <!-- <rect id="debug-rect" fill="url(#debug-pattern)" x="0" y="0px" width="128px" height="100%" /> -->
+  <!-- <rect id="debug-rect" fill="url(#debug-pattern)" x="98%" y="0px" width="2%" height="100%" /> -->
 </svg>

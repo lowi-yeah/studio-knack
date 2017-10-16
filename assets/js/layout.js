@@ -841,7 +841,7 @@ console.log('update', items.length)
             y = _.random(32, 128)
         ƒ.setAttribute('data-y', y)
         ƒ.style.transform   = `translateX(${ x }px) translateY(${ y }px)`
-        ƒ.style.paddingTop  = 0 }) }
+        ƒ.style.paddingTop  = 24 }) }
 
 function update() {
   return _update().then(_showGrid)
