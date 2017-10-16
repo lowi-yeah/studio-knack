@@ -52,24 +52,35 @@ function _initCategoryButton(ξ, morpheus) {
     id = util.guid('i-')
     ξ.setAttribute('id', id) }
   util.addEvent(ξ, 'click', () => {
-    let category = ξ.getAttribute('data-category')
-    _hideFilters(morpheus, category)
-    filter(category) }) }
+  
+    let grid        = document.getElementById('grid'),
+        gridFilter  = grid.getAttribute('data-filter'),
+        category    = ξ.getAttribute('data-category')
+    
+    if(gridFilter && category === gridFilter) {
+      _hideFilters(morpheus)
+      filter('all')   
+    } else {
+      _hideFilters(morpheus, category)
+      filter(category)   
+    }
+
+    
+
+  }) }
 
 function _initFilterMenuButton() {
   let button = document.getElementById('filter-btn'),
       morphOptions  = { iconId:   'filter-open', 
                         duration: 400, 
                         rotation: 'none' }, 
-      morpheus    = new SVGMorpheus('#filter-icon', morphOptions) 
+      morpheus    = new SVGMorpheus('#menu-icon', morphOptions) 
 
   // console.log('button')
 
   // toggle filter menu on click
   util.addEvent(button, 'click', () => {
-    
     let Φ = button.getAttribute('data-open') === '0'
-    console.log('click', Φ)
     if(Φ) _showFilters(morpheus)
     else _hideFilters(morpheus) 
   })

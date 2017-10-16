@@ -1,27 +1,15 @@
 <!-- <button id="home-btn" class="button"></button> -->
 
-<!-- <button id="toc" class="button"> 
-  {{ partial "iconset" . }} 
-</button> -->
-
 <div id="menu">
   <div id="filters" class="entry">
-
     <button id="filter-btn" class="pattern button"> 
-      {{ partial "filter-icon.svg" . }}  
+      {{ partial "menu-icon.svg" . }}  
     </button> 
-    <!-- {{ partial "filter-button.svg" . }}  -->
-
-    <div id="all-filter" data-category="all" class="category pattern button">
-      Alles!
-    </div>
-
     {{ range .Site.Data.settings.filters  }}
       <button id="{{ . }}-filter" data-category="{{ . }}" class="category pattern button">
         {{.}}
       </button>
     {{ end }}
-    
   </div>
   <!-- <div id="search" class="entry">
     <button id="filter-btn"><i class="material">search</i></button>

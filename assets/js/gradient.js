@@ -46,18 +46,8 @@ function init() {
       ι.setAttribute('x1', δ.x1)
       ι.setAttribute('y1', δ.y1)
       ι.setAttribute('x2', δ.x2)
-      ι.setAttribute('y2', δ.y2) 
-
-      let stops   = ι.querySelectorAll('stop.animated'),
-          offsets = _(stops)
-                      .map( s => _.random(100))
-                      .sortBy( s => s)
-                      .value()
-      _.each(stops, (s, i) => {
-        s.setAttribute('offset', `${offsets[i]}%`)
-        // _animateStop(s, i, 0) 
-      })
-    })
+      ι.setAttribute('y2', δ.y2) })
+    shuffle()
 
     _.each(document.querySelectorAll('rect.gradient'), 
       r => r.style.opacity = _.random(0.12, 0.81, true )  )
@@ -68,5 +58,19 @@ function init() {
   })
 }
 
-export default {init}
+function shuffle() {
+  _.each(document.querySelectorAll('#gradient linearGradient'), 
+    ℓ => {
+      let stops   = ℓ.querySelectorAll('stop.animated'),
+          offsets = _(stops)
+                      .map( s => _.random(100))
+                      .sortBy( s => s)
+                      .value()
+      _.each(stops, (s, i) => {
+        s.setAttribute('offset', `${offsets[i]}%`)
+      })
+    })
+}
+
+export default {init, shuffle}
 

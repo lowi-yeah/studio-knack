@@ -8,8 +8,8 @@ let EASINGS = ['linear', 'easeInOutQuad',
 
 
 function filter(category) {
-  let text = category === 'all' ? '' : category
-  logo.setText(text)
+  // let text = category === 'all' ? '' : category
+  // logo.setText(text)
 
   document.getElementById('grid').setAttribute('data-filter', category)
 

@@ -17,15 +17,6 @@ function _getRatio() {
   return ww/kw }
 
 function _resize(logo) {
-  // let bBox  = util.boundingBox(logo),
-  //     scale = (window.innerWidth / bBox.width),
-  //     // scale = (window.innerHeight  / bBox.height),
-  //     // δx    = ((scale * bBox.width) - window.innerWidth)/2
-  //     δx    = 0,
-  //     δy    = 0
-  // return {x: `${δx}px`, y: `${δy}px`, σ: scale} 
-  // return {x: `${400}px`, y: 0, σ: 1} 
-
   // viewbox of the logo svg is: '0 0 320 134.9'
   // the goal is a logo height of 72(?)
   // so the the scale
@@ -38,11 +29,13 @@ function _resize(logo) {
 function init() {
   console.log('init logo')
   let logo      = document.getElementById('logo'),
-      category  = document.querySelector('#logo-frame > text'),
+      texts     = document.querySelectorAll('#logo-frame .subtext'),
       transform = _resize(logo)
   pattern.make(logo)
-  pattern.make(category)
+  _.each(texts, text => pattern.make(text))
   dom.transform(logo, transform) 
+
+  util.addEvent(logo, 'click', gradient.shuffle)
 }
 
 function setText(text) {
