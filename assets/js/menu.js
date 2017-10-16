@@ -12,8 +12,6 @@ const EASINGS     = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuar
 const BASE_OFFSET = 4
 
 function _showFilters(morpheus) {
-  console.log('_showFilters')
-  
   let menuButton  = document.getElementById('filter-btn'),
       buttons     = document.querySelectorAll('#filters .category.button')
   menuButton.setAttribute('data-open', 1)
@@ -27,11 +25,17 @@ function _showFilters(morpheus) {
   })
 }
 
-function _hideFilters(morpheus) {
+function _hideFilters(morpheus, category) {
   let menuButton  = document.getElementById('filter-btn'),
       buttons     = document.querySelectorAll('.category.button'),
       promises    = _.map(buttons, b => 
                       new Promise( resolve => {
+
+                        // don't hide the selected category label
+                        if( category && 
+                            category !== 'all' && 
+                            category === b.getAttribute('data-category') ) return resolve()
+
                         let τ = { x: `${b.clientWidth + BASE_OFFSET }px`},
                             α = { duration: _.random(240, 420),
                                   easing:   'random',
@@ -48,8 +52,9 @@ function _initCategoryButton(ξ, morpheus) {
     id = util.guid('i-')
     ξ.setAttribute('id', id) }
   util.addEvent(ξ, 'click', () => {
-    _hideFilters(morpheus)
-    filter(ξ.getAttribute('data-category')) }) }
+    let category = ξ.getAttribute('data-category')
+    _hideFilters(morpheus, category)
+    filter(category) }) }
 
 function _initFilterMenuButton() {
   let button = document.getElementById('filter-btn'),
