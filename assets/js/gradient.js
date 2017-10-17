@@ -49,8 +49,9 @@ function init() {
       ι.setAttribute('y2', δ.y2) })
     shuffle()
 
-    _.each(document.querySelectorAll('rect.gradient'), 
-      r => r.style.opacity = _.random(0.12, 0.81, true )  )
+    // set the opacity of the gradients to 0
+    // they will appear durin the curtain opening
+    _.each(document.querySelectorAll('rect.gradient'), r => r.style.opacity = 0  )
     
     γ.style.opacity = 1
 

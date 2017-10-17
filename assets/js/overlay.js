@@ -5,13 +5,12 @@ import util           from './util'
 let itemId
 
 function init() {
-  console.log('init overlay')
   let overlay = document.getElementById('overlay-back'),
       rect    = document.querySelector('svg.overlay .bg')
+  if(!overlay) return
   pattern.make(overlay) 
   overlay.style.display = 'block'
-  util.addEvent(window, 'scroll', remove)
-}
+  util.addEvent(window, 'scroll', remove) }
 
 function remove() {
   if(!itemId) return

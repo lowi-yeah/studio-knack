@@ -75,7 +75,6 @@
 
     <symbol id="gradients">
       <rect class="bg" x="0" y="0" width="100%" height="100%"/>
-      
       <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#cyan-gradient)" />
       <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#magenta-gradient)" />
       <rect class="gradient" x="0" y="0" width="100%" height="100%" fill="url(#yellow-gradient)" />
@@ -104,6 +103,10 @@
     </clipPath> -->
 
     <pattern id="debug-pattern" x="0" y="0" width="100%" height="100%" patternUnits="userSpaceOnUse">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%"></use>
+    </pattern>
+
+    <pattern id="curtain-pattern" x="0" y="0" width="100%" height="100%" patternUnits="userSpaceOnUse">
       <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#gradients" x="0" y="0" width="100%" height="100%"></use>
     </pattern>
 

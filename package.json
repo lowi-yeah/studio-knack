@@ -12,7 +12,8 @@
     "start:hugo": "hugo -w --config config.dev.toml",
     "start:datocms": "dato dump --watch",
     "start:livereload": "livereload public -e 'html' -p 5678",
-    "start": "dato check && concurrently -p \"[{name}]\" -c \"blue,cyan,magenta,yellow\" -k -n hugo,webpack,livereload,dato \"npm run start:hugo\" \"npm run start:assets\" \"npm run start:livereload\" \"npm run start:datocms\""
+    "start": "dato check && concurrently -p \"[{name}]\" -c \"blue,cyan,magenta,yellow\" -k -n hugo,webpack,livereload,dato \"npm run start:hugo\" \"npm run start:assets\" \"npm run start:livereload\" \"npm run start:datocms\"",
+    "index": "hugo-lunr -i \"content/**\" -o public/knack-index.json"
   },
   "dependencies": {
     "animejs": "^2.0.2",
@@ -26,6 +27,7 @@
     "draggabilly": "^2.1.1",
     "figlet": "^1.2.0",
     "gsap": "^1.20.2",
+    "hugo-lunr": "^0.0.4",
     "imagesloaded": "^4.1.1",
     "infinite-scroll": "^3.0.1",
     "ismobilejs": "^0.4.1",

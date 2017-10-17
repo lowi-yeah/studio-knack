@@ -17,12 +17,12 @@
       {{ with $image.palette }}   data-image-palette="{{ . }}"  {{ end }} 
       {{ with $image.info }}      data-image-info="{{ . }}"     {{ end }} >
 
-      <div class="content" href="{{ .Permalink }}">
+      <div class="content">
         <div class="image" style="background-image: url({{ $image.tiny }})"></div>       
 
         <div class="overlay"> 
           <div class="caption"> {{ .Title }} </div>
-          <a href="#" class="button"> more > </a>
+          <a href="{{ .Permalink }}" class="button"> more > </a>
         </div>
            
       </div>  

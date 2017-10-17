@@ -22,22 +22,25 @@ function _offset(δ) {
 
 function _openCurtain() {
   console.log('_openCurtain')
-  return new Promise(resolve => {
-    let ρ = { targets: '#curtain',
-              duration: 2000,
-              delay:    400,
-              easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
-              complete: () => {
-                document.getElementById('curtain').style.display = 'none'
-                resolve()
-              }},
-        δ = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)],
-        ω = _offset(δ)
-        
-    if(δ === 'left' || δ === 'right')  ρ.translateX =  ω
-    if(δ === 'top'  || δ === 'bottom') ρ.translateY =  ω
-    anime(ρ) }
-  )}
+  let ρ = new Promise( resolve => {
+                          let α = { targets: '#curtain',
+                                    duration: _.random(2000, 3200),
+                                    delay:    400,
+                                    easing:   _.sample(EASINGS),
+                                    complete: resolve },
+                              δ = _.sample(DIRECTIONS)
+                          if(δ === 'left' || δ === 'right')  α.width  = 0
+                          if(δ === 'top'  || δ === 'bottom') α.height = 0
+                          anime(α)}),
+
+      ϑ = _.map(document.querySelectorAll('rect.gradient'), gradient => 
+              new Promise( resolve => 
+                              anime({ targets: gradient,
+                                      duration: _.random(1600, 2000),
+                                      opacity:  _.random(0.12, 0.81, true),
+                                      easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
+                                      complete: resolve})))
+  return Promise.all(_.concat(ϑ, ρ))}
 
 window.curtainPromise = gradient.init()
                           .then(logo.init)
