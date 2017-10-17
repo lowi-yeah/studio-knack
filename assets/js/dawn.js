@@ -1,19 +1,47 @@
-import anime from 'animejs'
-import logo from './logo'
+import _        from 'lodash'
+import anime    from 'animejs'
+import gradient from './gradient'
+import logo     from './logo'
 
-let DIRECTIONS  = { top: 0, left: 1, bottom: 2, right: 3 },
-    EASINGS     = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
+// Element.prototype.remove = function() {
+//     this.parentElement.removeChild(this) }
+
+// NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+//     for(var i = this.length - 1; i >= 0; i--) {
+//         if(this[i] && this[i].parentElement) this[i].parentElement.removeChild(this[i]) } }
+
+let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
+    EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
+
+function _offset(δ) {
+  switch(δ){
+    case 'left':    return -window.innerWidth
+    case 'right':   return  window.innerWidth
+    case 'top':     return -window.innerHeight
+    case 'bottom':  return  window.innerHeight }}
 
 function _openCurtain() {
-  let curtain         = document.getElementById('curtain'),
-      direction       = Math.floor(Math.random() * 4),
-      offset          = Math.random() < 0.5 ? window.innerWidth : -window.innerWidth,
-      animationParams = { targets: curtain,
-                          transform: `translate(${offset})`,
-                          duration: 800 + Math.random() * 1200,
-                          delay:    400,
-                          easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)]}
-  anime(animationParams) }
+  console.log('_openCurtain')
+  let ρ = new Promise( resolve => {
+                          let α = { targets: '#curtain',
+                                    duration: _.random(2000, 3200),
+                                    delay:    400,
+                                    easing:   _.sample(EASINGS),
+                                    complete: resolve },
+                              δ = _.sample(DIRECTIONS)
+                          if(δ === 'left' || δ === 'right')  α.width  = 0
+                          if(δ === 'top'  || δ === 'bottom') α.height = 0
+                          anime(α)}),
 
-logo.init()
-_openCurtain()
+      ϑ = _.map(document.querySelectorAll('rect.gradient'), gradient => 
+              new Promise( resolve => 
+                              anime({ targets: gradient,
+                                      duration: _.random(1600, 2000),
+                                      opacity:  _.random(0.12, 0.81, true),
+                                      easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
+                                      complete: resolve})))
+  return Promise.all(_.concat(ϑ, ρ))}
+
+window.curtainPromise = gradient.init()
+                          .then(logo.init)
+                          .then(_openCurtain)

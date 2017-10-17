@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build:hugo": "NODE_ENV=production hugo --config config.prod.toml",
+    "build:hugo": "NODE_ENV=production hugo --config config.prod.toml --verbose",
     "build:assets": "NODE_ENV=production webpack -p --config webpack.prod.config.js",
     "build:datocms": "dato dump",
     "build": "npm run build:datocms && npm run build:hugo && npm run build:assets",
@@ -12,17 +12,22 @@
     "start:hugo": "hugo -w --config config.dev.toml",
     "start:datocms": "dato dump --watch",
     "start:livereload": "livereload public -e 'html' -p 5678",
-    "start": "dato check && concurrently -p \"[{name}]\" -c \"blue,cyan,magenta,yellow\" -k -n hugo,webpack,livereload,dato \"npm run start:hugo\" \"npm run start:assets\" \"npm run start:livereload\" \"npm run start:datocms\""
+    "start": "dato check && concurrently -p \"[{name}]\" -c \"blue,cyan,magenta,yellow\" -k -n hugo,webpack,livereload,dato \"npm run start:hugo\" \"npm run start:assets\" \"npm run start:livereload\" \"npm run start:datocms\"",
+    "index": "hugo-lunr -i \"content/**\" -o public/knack-index.json"
   },
   "dependencies": {
     "animejs": "^2.0.2",
+    "aos": "^2.2.0",
+    "bricks.js": "^1.8.0",
     "bulma": "^0.5.1",
+    "d3-random": "^1.1.0",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",
     "d3-voronoi": "^1.1.2",
     "draggabilly": "^2.1.1",
     "figlet": "^1.2.0",
     "gsap": "^1.20.2",
+    "hugo-lunr": "^0.0.4",
     "imagesloaded": "^4.1.1",
     "infinite-scroll": "^3.0.1",
     "ismobilejs": "^0.4.1",
@@ -33,9 +38,8 @@
     "masonry": "^0.0.2",
     "material-shadows": "^3.0.1",
     "packery": "^2.1.1",
-    "scroll-lazy": "^1.0.3",
-    "skrollr": "^0.6.26",
-    "tinycolor2": "^1.4.1"
+    "tinycolor2": "^1.4.1",
+    "waypoints": "^4.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -52,10 +56,13 @@
     "html-tag": "^0.2.1",
     "import-glob-loader": "^1.1.0",
     "node-sass": "^3.13.0",
+    "postcss-assets": "^5.0.0",
+    "postcss-loader": "^2.0.6",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.9",
     "webpack": "^1.14.0",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "worker-loader": "^1.0.0"
   }
 }

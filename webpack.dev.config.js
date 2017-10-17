@@ -5,8 +5,8 @@ const extractSass       = new ExtractTextPlugin('all.css')
 module.exports = {
   entry: {
     all:  __dirname + '/assets/js/index.js',
-    dawn: __dirname + '/assets/js/dawn.js'
-  },
+    dawn: __dirname + '/assets/js/dawn.js' },
+    
   resolve: {
     root: __dirname + '/assets/js',
     alias: {
@@ -19,21 +19,21 @@ module.exports = {
   },
   module: {
     loaders: [
-      // { test: /.*\.sass$/,
-      //   loaders: ['style', 'css', 'sass', 'import-glob'] },
       { test: /.*\.sass$/,
-        loader: extractSass.extract(['css', 'sass', 'import-glob'])},
+        loader: extractSass.extract(['css', 'postcss-loader', 'sass', 'import-glob'])},
       
       { test: /\.js$/,
         exclude: /(node_modules)/,
         loader: 'babel-loader',
         query: { presets: ['es2015'] } },
 
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,     loader: 'url-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]' },
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url-loader?limit=65000&mimetype=application/font-woff&name=assets/fonts/[name].[ext]' },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url-loader?limit=65000&mimetype=application/font-woff2&name=assets/fonts/[name].[ext]' },
-      { test: /\.[ot]tf(\?v=\d+\.\d+\.\d+)?$/,  loader: 'url-loader?limit=65000&mimetype=application/octet-stream&name=assets/fonts/[name].[ext]' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,     loader: 'url-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'}
+      // images
+      // { test: /\.(jpe?g|png|gif|svg)$/i, loader: "file-loader?name=/images/[name].[ext]"},
+
+      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url-loader?limit=65000&mimetype=application/font-woff&name=/assets/fonts/[name].[ext]' },
+      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url-loader?limit=65000&mimetype=application/font-woff2&name=/assets/fonts/[name].[ext]' },
+      { test: /\.[ot]tf(\?v=\d+\.\d+\.\d+)?$/,  loader: 'url-loader?limit=65000&mimetype=application/octet-stream&name=/assets/fonts/[name].[ext]' },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,     loader: 'url-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=/assets/fonts/[name].[ext]'}
     ]
   },
   plugins: [
@@ -49,5 +49,11 @@ module.exports = {
     inline:   true,
     stats:    'minimal'
   },
+  worker: {
+    output: {
+      filename: "/hash.worker.js",
+      chunkFilename: "[id].hash.worker.js"
+    }
+  }
 };
 

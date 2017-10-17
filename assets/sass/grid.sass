@@ -5,121 +5,223 @@
   to 
     background-position: 6px 0
 
-#next
-  // display: flex
-  pointer-events: none
-  a
-    @extend .title
-    @extend .is-1
-    +text-stroke()
-    font-variant: small-caps
-    flex: 1 0 auto
-    background-color: #ffffff
-    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")
-    background-position: 0 0
+// #next
+//   // display: flex
+//   pointer-events: none
+//   a
+//     @extend .title
+//     @extend .is-1
+//     +text-stroke()
+//     font-variant: small-caps
+//     flex: 1 0 auto
+//     background-color: #ffffff
+//     background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")
+//     background-position: 0 0
 
-    // workaround for isotope layout
-    margin-top: 480px
+//     // workaround for isotope layout
+//     margin-top: 480px
     
-    &:hover
-      animation: animatedNext 1s linear infinite
+//     &:hover
+//       animation: animatedNext 1s linear infinite
 
-.page-load-status 
-  display: none
-  position: fixed
-  right: 0
-  bottom: 0
-  width: 100%
+// .page-load-status 
+//   display: none
+//   position: fixed
+//   right: 0
+//   bottom: 0
+//   width: 100%
 
-  @keyframes loading 
-    from 
-      width: 0%
-    to 
-      width: 100%
+//   @keyframes loading 
+//     from 
+//       width: 0%
+//     to 
+//       width: 100%
 
-  .infinite-scroll-request
-    $height: 33vh
-    height: $height
-    width: 100%
-    position: relative
-    overflow: hidden
-    background-color: transparent
-    &:before
-      display: block
-      position: absolute
-      content: ""
-      left: 0px
-      width: 0px
-      height: $height
-      // background-color: #ffffff
-      background-color: transparent
-      background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")
-      animation: loading 2s linear infinite
-
-
-
+//   .infinite-scroll-request
+//     $height: 33vh
+//     height: $height
+//     width: 100%
+//     position: relative
+//     overflow: hidden
+//     background-color: transparent
+//     &:before
+//       display: block
+//       position: absolute
+//       content: ""
+//       left: 0px
+//       width: 0px
+//       height: $height
+//       // background-color: #ffffff
+//       background-color: transparent
+//       background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")
+//       animation: loading 2s linear infinite
 
 
 // Encode/Decode urls:
 // http://www.utilities-online.info/urlencode/
+=columns($count: 12)
+  $col: "auto "
+  $cols: ""
+  @for $i from 0 to $count 
+    $cols: $cols + $col;
+  grid-template-columns: unquote("#{$cols}")
 
-.grid-item 
-  // color: $black
-  width: 25% 
-  display: flex
-  padding: 6rem 0
+#grid-wrap
+  pointer-events: none
+  opacity: 0
+  padding-top: 8rem
+  z-index: 2
+  position: relative
+  width: 100%
 
-  +mobile 
-    width: 100% 
 
-  +tablet
-    width: 50% 
+#grid
+  position: relative
+  width: 100vw
+  height: 100%
+  padding-bottom: 62vh
   
-  +desktop
-    width: 33.33%
-  
-  +widescreen
-    width: 25%
-  
-  +fullhd
-    width: 25%
+  // display: flex
+  // flex-direction: column
 
+  display: grid
+  grid-auto-rows: 1.5rem
+  +columns(24)
+
+  $gap: 1px
+  grid-column-gap: $gap
+  grid-row-gap: $gap
   
-  &[size="2"] 
-    width: 66.666% 
+  justify-content: stretch
+  justify-items: center
+  grid-auto-flow: row
+  
+  .grid-item 
+    position: relatives;
+    -webkit-backface-visibility: hidden
+    -webkit-perspective: 1000
+    // mix-blend-mode: multiply
+    background: transparent
+    // background: $yellow
+    // border: 1px solid $grey
+
+    // padding: 9rem 1.5rem
+    display: flex
+    z-index: 2
+
+    
+    align-self: stretch
+    justify-self: stretch
+
+    grid-row: span 1
+    grid-column: span 2
+
     +mobile 
-      width: 100%
+      grid-column: span 12
 
-  &[size="3"] 
-    width: 100%
+    +tablet
+      grid-column: span 4
+    
+    +desktop
+      grid-column: span 4
+    
+    +widescreen
+      grid-column: span 4
+    
+    +fullhd
+      grid-column: span 3
 
-  &[emphasis] 
-    .box
-      +pb('lines-45-b', 8px, $white, $red, 1, 'none')
-      &:hover
-        +pb('lines-45-b', 36px, $white, $red, 1, 'none')
+    // grid-row: 1 / span 2
 
-  .box
-    box-shadow: none
-    flex: 1 1 auto
+    &[data-emphasis]
+      border: 4px solid #ff0000
 
-    &:hover 
-      box-shadow: none
-      
-    &:after 
-      transition: background-size .32s linear
-
-    .image
-      width: 100%
+    & > .content
+      -webkit-backface-visibility: hidden
+      -webkit-perspective: 1000
+      display: flex
+      flex: 1 0 auto
+      z-index: 1
+      margin: 0
+      pointer-events: all
       position: relative
-      img
-        height: 100%
-      .shadow
-        pointer-events: none
-        top: 0
+      width: 100%
+      height: 100%
+      overflow: hidden
+      +z-depth-4dp
+      
+      &:hover
+        cursor: pointer
+
+      .image
+        z-index: 0
+        mix-blend-mode: normal
+        flex: 1 0 auto
         position: absolute
-        height: 100%
+        top: 0%
+        left: 0%
         width: 100%
-        +z-depth-6dp-inset()
+        height: 100%
+        background-size: cover
+        background-repeat: no-repeat
+        background-position: center center
+        overflow: hidden
 
+      .overlay
+        display: flex
+        flex-direction: column
+        flex-wrap: wrap
+        flex: 1 0 auto
+        z-index: 1
+        margin: 0
+        pointer-events: all
+        position: relative
+        width: 100%
+        height: 100%
 
+        opacity: 0
+        transition: opacity 0.24s linear
+        pointer-events: none
+        &.active
+          opacity: 1
+          pointer-events: all
+
+      .caption
+        margin: 1.5rem 1rem
+        z-index: 1
+        flex: 1 0  auto
+        // position: relative
+        // @extend .title
+        // @extend .is-2
+        font-size: 2rem
+        font-weight: 800
+        color: $black
+        filter: url(#inset-shadow-1)
+
+      .button
+        margin: 1.5rem 1rem
+        z-index: 1
+        flex: 0 0 auto
+        width: 6rem
+        height: 3rem
+        font-weight: 800
+        +z-depth-4dp()
+
+  
+    .text
+      // color: $grey
+      color: $black
+      pointer-events: none
+      // mix-blend-mode: multiply
+      // color: #FF9E4F
+      // +z-depth-2dp()
+      // border: 1px solid $red
+
+      font-weight: 700
+      line-height: 0.81
+      position: absolute
+      left: 0
+      top: 0
+      // top: -3rem
+      z-index: 2
+      pointer-events: none

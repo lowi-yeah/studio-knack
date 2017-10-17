@@ -37,35 +37,24 @@ function _about(doneFn){
   console.log('τ', τ)
 
   // ————————————————————————————————
-  anime({ targets: '#about-link',
-          fontSize: 32,
-          easing:   _.sample(EASINGS),
-          duration: 420 })
+  // anime({ targets: '#about-link',
+  //         fontSize: 32,
+  //         easing:   _.sample(EASINGS),
+  //         duration: 420 })
 
   // ————————————————————————————————
-  anime({ targets: '#about-link',
-          fontSize: 32,
-          easing:   _.sample(EASINGS),
-          duration: 420 })
-
-  // ————————————————————————————————
-  τ.add({ targets: '#about-link',
-          translateX: 116,
-          easing:   _.sample(EASINGS),
-          delay:    _.random(120, 240),
-          duration: _.random(240, 420) })
-
-  τ.add({ targets: '#about-link',
-          translateX: 116,
-          translateY: -ω,
-          easing:   _.sample(EASINGS),
-          duration: _.random(240, 420) })
-
   τ.add({ targets: '#menu',
           translateX: -window.innerWidth,
           easing:   _.sample(EASINGS),
           delay: _.random(240, 420),
           duration: _.random(240, 420) })
+  
+  τ.add({ targets: '#about-link',
+          translateX: -window.innerWidth,
+          easing:   _.sample(EASINGS),
+          delay:    _.random(120, 240),
+          duration: _.random(240, 420) })
+  
 
   setTimeout(doneFn, τ.duration)
 
