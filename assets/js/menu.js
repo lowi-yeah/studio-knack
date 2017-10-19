@@ -16,21 +16,17 @@ function _showFilters(morpheus) {
       buttons     = document.querySelectorAll('#filters .category.button')
   menuButton.setAttribute('data-open', 1)
   morpheus.to('filter-closed')
- 
   _.each(buttons, b => {
     let τ = { x: '0px'},
         α = { duration: _.random(240, 420),
               easing:   'random'}
-    dom.transform(b, τ, α) 
-  })
-}
+    dom.transform(b, τ, α)})}
 
 function _hideFilters(morpheus, category) {
   let menuButton  = document.getElementById('filter-btn'),
       buttons     = document.querySelectorAll('.category.button'),
       promises    = _.map(buttons, b => 
                       new Promise( resolve => {
-
                         // don't hide the selected category label
                         if( category && 
                             category !== 'all' && 
@@ -43,8 +39,7 @@ function _hideFilters(morpheus, category) {
                         dom.transform(b, τ, α) }))
   morpheus.to('filter-open')
   menuButton.setAttribute('data-open', 0)
-  return Promise.all(promises)
-}
+  return Promise.all(promises) }
 
 function _initCategoryButton(ξ, morpheus) {
   let id = ξ.getAttribute('id')
@@ -52,31 +47,22 @@ function _initCategoryButton(ξ, morpheus) {
     id = util.guid('i-')
     ξ.setAttribute('id', id) }
   util.addEvent(ξ, 'click', () => {
-  
     let grid        = document.getElementById('grid'),
         gridFilter  = grid.getAttribute('data-filter'),
         category    = ξ.getAttribute('data-category')
-    
     if(gridFilter && category === gridFilter) {
       _hideFilters(morpheus)
-      filter('all')   
-    } else {
+      filter('all') } 
+    else {
       _hideFilters(morpheus, category)
-      filter(category)   
-    }
-
-    
-
-  }) }
+      filter(category) }})}
 
 function _initFilterMenuButton() {
-  let button = document.getElementById('filter-btn'),
+  let button        = document.getElementById('filter-btn'),
       morphOptions  = { iconId:   'filter-open', 
                         duration: 400, 
                         rotation: 'none' }, 
-      morpheus    = new SVGMorpheus('#menu-icon', morphOptions) 
-
-  // console.log('button')
+      morpheus      = new SVGMorpheus('#menu-icon', morphOptions) 
 
   // toggle filter menu on click
   util.addEvent(button, 'click', () => {
@@ -131,7 +117,6 @@ function init() {
                   })
            })
     }, 640)
-
   })
 }
 export default {init}

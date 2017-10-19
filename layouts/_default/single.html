@@ -1,12 +1,14 @@
 {{ partial "header.html" . }}
+
 {{ partial "curtain.svg" . }}
 {{ partial "gradient.svg" . }}
-<!-- {{ partial "back.svg" . }} -->
 {{ partial "logo.svg" . }}
 <script src="/assets/dawn.js"></script>
 
-
 <article class="single">
+  
+  <div class="hero-image" style="background-image: url({{ .Params.image.tiny }})"></div>
+
   <section class="hero">
     <div class="hero-body">
       <div class="container">
@@ -16,42 +18,9 @@
       </div>
     </div>
   </section>
-  <section>
-    <div class="container">
-      <div class="slider js_slider">
-        <div class="frame js_frame">
-          <ul class="slides js_slides">
-            {{ range .Params.images }}
-              <li class="js_slide">
-                <div class="content" style="background-image:url('{{ .url }}')"></div>
-                }
-              </li>
-            {{ end }}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+  
 
 </article>
-
-<!-- <article class="single section">
- 
- 
-  <section class="draggable">
-    <div class="box">
-      <p class="title is-1">{{ .Title }}</p>
-      <div class="content">
-        {{ .Content }}  
-      </div>
-    </div>
-      {{ with .Params.latlng }}
-        <iframe width="100%" height="420" src="http://maps.stamen.com/toner/embed#14/{{.latitude}}/{{.longitude}}"></iframe>  
-      {{ end }}
-    
-  </section>
-
-</article> -->
 
 {{ partial "footer.html" . }}
 

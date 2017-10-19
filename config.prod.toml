@@ -1,12 +1,4 @@
-baseurl = "/"
-Paginate = 124
-[params]
-  env = "production"
-[[menu.main]]
-  name = "Home"
-  weight = 1
-  identifier = "home"
-  url = "/"
+
 
 # datocms:start
 languageCode = "en"

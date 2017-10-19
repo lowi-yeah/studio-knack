@@ -10,7 +10,7 @@ import util       from './util'
 import gradient   from './gradient'
 import overlay    from './overlay'
 import pattern    from './pattern'
-import single     from './single'
+import footer     from './footer'
 
 let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
     EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
@@ -106,6 +106,7 @@ function init() {
   interceptLinks()
   images.init()  
   pattern.init()
+  footer.init()
   
   window.curtainPromise
     .then(layout.init)
@@ -119,7 +120,6 @@ function init() {
   // logo.begin()
 
   //   .then( menu.init )
-  //   .then( single.init )
   //   .then( layout.update )
 
 }

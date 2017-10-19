@@ -1,0 +1,59 @@
+{{ partial "header.html" . }}
+
+{{ partial "curtain.svg" . }}
+{{ partial "gradient.svg" . }}
+{{ partial "logo.svg" . }}
+{{ partial "overlay.svg" . }}
+<script src="/assets/dawn.js"></script>
+
+<article id="single">
+  
+  <div class="hero-image" style="background-image: url({{ .Params.image.tiny }})"></div>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-1">
+         {{ .Title }}
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container is-fluid">
+      <div  class="grid-wrap">
+        <div id="arcticle-grid" class="flex">
+          {{ range .Params.content }}
+    
+            <!-- <pre class="code"> {{ .image }} </pre> -->
+    
+            {{ with .image }}
+              {{ partial "article/image" . }}
+            {{ end }}
+    
+            {{ with .text }}
+              {{ partial "article/text" . }}
+            {{ end }}
+    
+            <!-- {{ with .gallery }}
+              <h4>gallery: {{ . }}</h4>
+            {{ end }} -->
+    
+            {{ with .facts }}
+              {{ partial "article/metadata" . }}
+            {{ end }}
+    
+            
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+</article>
+<script src="/assets/article.js"></script>
+{{ partial "footer.html" . }}
+
+

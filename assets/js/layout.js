@@ -573,7 +573,7 @@ function _clear() {
 
 function _hideGrid() {
   return new Promise( resolve => {
-    let ƒ = document.getElementById('grid-wrap')
+    let ƒ = document.querySelector('.grid-wrap')
     anime({ targets:  ƒ, 
             opacity:  0,
             duration: 240 + Math.random() * 320,
@@ -584,10 +584,10 @@ function _hideGrid() {
 
 function _showGrid() {
   return new Promise( resolve => {
-    let ƒ = document.getElementById('grid-wrap')
+    let ƒ = document.querySelector('.grid-wrap')
     // ƒ.style.transform =  `translateX(${window.innerWidth})`
     // ƒ.style.opacity   =  1
-    anime({ targets:  '#grid-wrap', 
+    anime({ targets:  '.grid-wrap', 
             opacity: 1, 
             duration: 240 + Math.random() * 320,
             easing:   _.sample(EASINGS),
@@ -603,6 +603,8 @@ function _update() {
   if(!grid) return
 
   let items = document.querySelectorAll('.grid-item')
+
+  console.log('_update! items', items)
 
   return _hideGrid()
     .then( () => _gridResize(items))
@@ -681,137 +683,33 @@ function _update() {
 
     // resize the text
     .then( () =>  _.each(items, item => {
-      item.querySelector('.text').style.fontSize = '48px'
-      item.querySelector('.text').style.width = `${item.clientWidth}px` }) )
+      let text = item.querySelector('.text')
+      if(!text) return
+      text.style.fontSize = '48px'
+      text.style.width = `${item.clientWidth}px` }) )
 
     // layout the text
     .then( () =>  {
-      let promises = _.map(items, item => _adjustText(item))
+      let promises  = _(items)
+                        .map(items, item => {
+                          if(!item.querySelector('.text')) return
+                          return _adjustText(item)})
+                        .compact()
+                        .value()
       return Promise.all(promises)})
 
     // clean up the text
     .then( () =>  {
-      let promises = _.map(items, item => _cleanupText(item))
+      let promises  = _(items)
+                        .map(items, item => {
+                          if(!item.querySelector('.text')) return
+                          return _cleanupText(item)})
+                        .compact()
+                        .value()
       return Promise.all(promises)})
-
+    
+    // initialize the parallax
     .then( () =>  parallax.init(items))
-
-    // HOVER
-    // .then( () => _.each(items, item => {
-    //   let c = item.querySelector('.content'),
-    //       o = item.querySelector('.overlay'),
-    //       t = item.querySelector('.title'),
-    //       f = item.querySelector('.overlay-frame'),
-
-    //       // calculate the side from which the mouse entered the rectangle
-    //       δ = ε => {
-    //         let t = ε.target,
-    //             x = ε.clientX,
-    //             y = ε.clientY,
-    //             e = util.extent(t),
-
-    //             d0 = util.distance({x, y}, {x: e.x0, y: e.y0}),
-    //             d1 = util.distance({x, y}, {x: e.x1, y: e.y0}),
-    //             d2 = util.distance({x, y}, {x: e.x1, y: e.y1}),
-    //             d3 = util.distance({x, y}, {x: e.x0, y: e.y1}),
-
-    //             Δ  = _.sortBy([ ['top',     d0 + d1],
-    //                             ['right',   d1 + d2],
-    //                             ['bottom',  d2 + d3],
-    //                             ['left',    d0 + d3]], i => i[1])
-    //         return  [Δ[0][0], Δ[1][0]]},
-
-    //       // calculate the angle from which the mouse entered the rectangle
-    //       α = ε => {
-    //         let m = {x: ε.clientX, y: ε.clientY},
-    //             e = util.extent(ε.target),
-    //             p = {x: (e.x0 + e.x1)/2, y: (e.y0 + e.y1)/2},
-    //             a = Math.atan2(p.y - m.y, p.x - m.x) * -180 / Math.PI
-    //         return a},
-
-    //       enter = ε => {  let d  = δ(ε),
-    //                           tl = anime.timeline()
-
-    //                       if(_.includes(d, 'top'))    f.style['align-items']  = 'flex-start'
-    //                       // if(_.includes(d, 'right'))  t.style['text-align']   = 'right'
-    //                       if(_.includes(d, 'bottom')) f.style['align-items']  = 'flex-end'
-    //                       // if(_.includes(d, 'left'))   t.style['text-align']   = 'left'
-
-    //                       o.style.background = _linearGradient(α(ε), o.getAttribute('data-overlay'))
-    //                       tl.add( { targets:  o,
-    //                                 opacity:  1,
-    //                                 duration: _.random(200, 320),
-    //                                 easing:   _.sample(EASINGS)})
-                          
-    //                       t.style.opacity = 1
-                          
-    //                       if(d[0] === 'top') {
-    //                         t.style.transform  = `translateX(0%) translateY(-100%)`
-    //                         tl.add( { targets:    t,
-    //                                   translateY: '0%',
-    //                                   duration:   _.random(200, 320),
-    //                                   easing:     _.sample(EASINGS)})}
-
-    //                       if(d[0] === 'right') {
-    //                         t.style.transform  = `translateX(100%) translateY(0%)`
-    //                         tl.add( { targets:    t,
-    //                                   translateX: '0%',
-    //                                   duration:   _.random(200, 320),
-    //                                   easing:     _.sample(EASINGS)})}
-
-    //                       if(d[0] === 'bottom') {
-    //                         t.style.transform  = `translateX(%) translateY(100%)`
-    //                         tl.add( { targets:    t,
-    //                                   translateY: '0%',
-    //                                   duration:   _.random(200, 320),
-    //                                   easing:     _.sample(EASINGS)})}
-                          
-    //                       if(d[0] === 'left') {
-    //                         t.style.transform  = `translateX(-100%) translateY(0%)`
-    //                         tl.add( { targets:    t,
-    //                                   translateX: '0%',
-    //                                   duration:   _.random(200, 320),
-    //                                   easing:     _.sample(EASINGS)})} },
-
-    //       exit  = ε => {  let d  = δ(ε),
-    //                           tl = anime.timeline()
-    //                       if(d[0] === 'top') {
-    //                         tl.add( { targets:    t,
-    //                                   translateY: '-100%',
-    //                                   opacity:    0,
-    //                                   duration:   _.random(200, 320),
-    //                                   easing:     _.sample(EASINGS)})}
-
-    //                       if(d[0] === 'right') {
-    //                         tl.add( { targets:    t,
-    //                                   translateX: '100%',
-    //                                   opacity:    0,
-    //                                   duration:   _.random(200, 320),
-    //                                   easing:     _.sample(EASINGS)})}
-
-    //                       if(d[0] === 'bottom') {
-    //                         tl.add( { targets:    t,
-    //                                   translateY: '100%',
-    //                                   opacity:    0,
-    //                                   duration:   _.random(200, 320),
-    //                                   easing:     _.sample(EASINGS)})}
-                          
-    //                       if(d[0] === 'left') {
-    //                         tl.add( { targets:    t,
-    //                                   translateX: '-100%',
-    //                                   opacity:    0,
-    //                                   duration:   _.random(200, 320),
-    //                                   easing:     _.sample(EASINGS)})}
-
-    //                       tl.add( { targets:  o,
-    //                                 opacity:  0,
-    //                                 duration: _.random(200, 320),
-    //                                 easing:   _.sample(EASINGS)})}
-    //   o.style.opacity = 0
-    //   t.style.color = '#ffffff'
-    //   util.addEvent(c, 'mouseenter', enter)
-    //   util.addEvent(c, 'mouseleave', exit) 
-    // }))
 
     // click & hover
     .then( () => {
@@ -870,8 +768,9 @@ function _update() {
     // adjust the top padding an position of the first item
     // so we have a realtive consistent first impression upon opening the page
     .then( () =>  {
-        let ƒ = _.first(items),
-            x = parseFloat(ƒ.getAttribute('data-x')),
+        let ƒ = _.first(items)
+        if(!ƒ) return
+        let x = parseFloat(ƒ.getAttribute('data-x')),
             y = _.random(32, 128)
         ƒ.setAttribute('data-y', y)
         ƒ.style.transform   = `translateX(${ x }px) translateY(${ y }px)`

@@ -8,8 +8,38 @@ body
   background: $white
   color: $black
 
-a:hover, a:active
-  color: $black
+// a 
+//   text-decoration: underline
+//   &:hover, &:active
+//     color: $black
+
+$a-color: $black
+
+a
+  color: $a-color
+  text-decoration: none
+  border-bottom: 1px dashed lighten($a-color, 15%)
+  display: inline-block
+  position: relative
+  padding: 0 .2em
+  transition: all 250ms
+  z-index: 1000
+  line-height: 1.4
+  &:before
+    content: ""
+    z-index: -1
+    width: 100%
+    height: 0%
+    background: rgba(lighten($a-color,20%),.16)
+    bottom: 0
+    left: 0
+    position: absolute
+    transition: height 250ms
+  &:hover
+    border-color: transparent
+    &:before
+      height: 100%
+
 
 #debug
   border: 1px solid $red
@@ -20,3 +50,13 @@ a:hover, a:active
 .icon.is-large
   font-size: 2rem
   // line-height: 1.2
+
+#map
+  width: 100%
+  height: 100%
+
+.card
+  box-shadow: none
+
+pre
+  overflow-x: scroll

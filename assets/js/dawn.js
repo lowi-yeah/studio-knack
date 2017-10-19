@@ -11,7 +11,7 @@ import logo     from './logo'
 //         if(this[i] && this[i].parentElement) this[i].parentElement.removeChild(this[i]) } }
 
 let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
-    EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
+    EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine']
 
 function _offset(δ) {
   switch(δ){
@@ -24,7 +24,8 @@ function _openCurtain() {
   console.log('_openCurtain')
   let ρ = new Promise( resolve => {
                           let α = { targets: '#curtain',
-                                    duration: _.random(2000, 3200),
+                                    // duration: _.random(2000, 3200),
+                                    duration: 200,
                                     delay:    400,
                                     easing:   _.sample(EASINGS),
                                     complete: resolve },
@@ -37,7 +38,8 @@ function _openCurtain() {
               new Promise( resolve => 
                               anime({ targets: gradient,
                                       duration: _.random(1600, 2000),
-                                      opacity:  _.random(0.12, 0.81, true),
+                                      // opacity:  _.random(0.12, 0.81, true),
+                                      opacity:  1,
                                       easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
                                       complete: resolve})))
   return Promise.all(_.concat(ϑ, ρ))}

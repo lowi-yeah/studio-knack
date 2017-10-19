@@ -3,23 +3,13 @@ let ImageWorker   = require('worker-loader!./workers/image-worker.js')
 
 function _urls(attribute) {
   let items = document.querySelectorAll('.grid-item')
-  return _.map(items, i => {
-    return {id:   i.getAttribute('id'),
-            url:  i.getAttribute(attribute)} }) }
-
-function _imageUrls() {
-  let items = document.querySelectorAll('.grid-item')
-  return _.map(items, i => {
-    return {id:   i.getAttribute('id'),
-            url:  i.getAttribute('data-image-url')} }) }
-
-function _infoUrls() {
-  let items = document.querySelectorAll('.grid-item')
-  return _.map(items, i => {
-    return {id:   i.getAttribute('id'),
-            url:  i.getAttribute('data-image-url')} }) }
-
-
+  return _(items)
+            .map(i => {
+              if( !i.getAttribute(attribute) ) return
+              return {id:   i.getAttribute('id'),
+                      url:  i.getAttribute(attribute)} })
+            .compact()
+            .value() }
 
 function init() {
 

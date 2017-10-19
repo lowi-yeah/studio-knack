@@ -67,8 +67,6 @@ function update(item) {
 function init() {
   let patternItems = document.querySelectorAll('.pattern')
   _.each(patternItems, item => _makeSvg(item))
-
-
 }
 
 

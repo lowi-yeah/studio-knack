@@ -20,7 +20,7 @@ function _resize(logo) {
   // viewbox of the logo svg is: '0 0 320 134.9'
   // the goal is a logo height of 72(?)
   // so the the scale
-  let ω = { x: 16, y: 16, σ: (72/134.9) },
+  let ω = { x: 32, y: 16, σ: (72/134.9) },
       τ = { x: `${ω.x}px`, y: `${ω.y}px`, σ: ω.σ }
   return τ
 

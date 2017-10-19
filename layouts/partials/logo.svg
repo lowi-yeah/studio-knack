@@ -29,6 +29,9 @@
       c0-9.7,2.6-16.1,8.6-21.8C273.2,2.6,280.4,0,289.8,0"/>
   </g>
 
+  <!-- <rect id="debug-rect" fill="url(#debug-pattern)" x="0%" y="0" width="2%" height="100%" /> -->
+
+
 <!--       _
    __ __ _| |_ ___ __ _ ___ _ _ _  _
   / _/ _` |  _/ -_) _` / _ \ '_| || |
@@ -53,5 +56,6 @@
     </text>
   </a>
  -->
-  <!-- <rect id="debug-rect" fill="url(#debug-pattern)" x="0%" y="0" width="4%" height="100%" /> -->
+
+  
 </svg>
