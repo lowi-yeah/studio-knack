@@ -4,9 +4,11 @@ let _         = require('lodash'),
     d3        = require('d3-scale')
 
 
-var ratioΣ = d3.scaleQuantize()
-                .domain([0.5, 2])
-                .range([0.5, 1, 2])
+// let ratioΣ = d3.scaleQuantize()
+//                 .domain([0.5, 1, 2])
+//                 .range([0.5, 1, 2])
+
+let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
 
 // This function helps transforming structures
 // —eg. [{ tagName: 'meta', attributes: { name: 'description', content: 'foobar' } }]—
@@ -49,6 +51,8 @@ function _articleContent(item) {
           caption = item.caption,
           size    = item.size
 
+      console.log('', item.image.width, item.image.height, item.image.width/item.image.height, ratio)
+
       return { image: { id, url, ratio, tiny, info, palette, caption, size }}}
 
   if(type === 'article_factsheet') 
@@ -62,7 +66,7 @@ function _articleContent(item) {
               client:   item.entity.client }}
 
    if(type === 'gallery') { 
-    return { gallery: item.gallery.map(item => item.url({ w: 800, auto: 'compress' })) } }
+    return { gallery: item.gallery.map(item => item.url({ w: 1200, auto: 'compress' })) } }
 }
 
 // Arguments that will receive the mapping function:
@@ -127,7 +131,7 @@ module.exports = (dato, root, i18n) => {
     let entries = _.map(dato.entries, (entry, index) => {
                       let frontmatter = { title:        entry.title,
                                           images:       _.map(entry.gallery, image => 
-                                                            { return { url:     image.url({ w: 800, auto: 'compress' }),
+                                                            { return { url:     image.url({ w: 1200, auto: 'compress' }),
                                                                        info:    image.url({ fm: 'json' }),
                                                                        tiny:    image.url({ w: 2 }),
                                                                        palette: image.url({ w: 800, palette: 'json', colors: '2' }) }}),
