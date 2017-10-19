@@ -1,4 +1,4 @@
-import dom from './dom'
+import dom  from './dom'
 import util from './util'
 
 const XMLNS   = 'http://www.w3.org/2000/svg',
@@ -31,8 +31,10 @@ function make(item) {
 }
 
 function _makeSvg(item) {
+
   let svg   = document.createElementNS(XMLNS, 'svg'),
-      rect  = document.createElementNS(XMLNS, 'rect') 
+      rect  = document.createElementNS(XMLNS, 'rect'),
+      watch = item.classList.contains('watch')
 
   rect.setAttribute('x', 0)
   rect.setAttribute('y', 0)
@@ -52,6 +54,8 @@ function _makeSvg(item) {
   item.appendChild(svg)
 
   make(svg) 
+
+  if(watch) util.addEvent(window, 'scroll', () => update(svg))
 }
 
 function update(item) {

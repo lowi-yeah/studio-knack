@@ -1,5 +1,13 @@
-import ℓ from 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
+import '../sass/index.sass'
+import 'leaflet/dist/leaflet.css'
+
+import L        from 'leaflet'
+// import overlay  from './common/overlay'
+import util     from './common/util'
+import pattern  from './common/pattern'
+import images   from './article/images'
+import menu     from './article/menu'
+
 
 const LAYER_TOKEN   = 'pk.eyJ1IjoibG93aSIsImEiOiJjaXpyZnYwMHUwMDI2MnFzN21wNm1zeGF2In0.t4FHMAzcW-5SMIfKneu3YQ'
 const ACCESS_TOKEN  = 'pk.eyJ1IjoibG93aSIsImEiOiJjajh4aXJwOHMxa3MxMzNyMHBhZGE0bnZ1In0.B6U7OjjTGl7oBB-3d1Vdsg'
@@ -19,12 +27,22 @@ function _initMap() {
     id: 'mapbox.streets',
     accessToken: ACCESS_TOKEN
   }).addTo(map)
-
-  console.log('map', map)
 }
 function init() {
   console.log('initializing article.')
   _initMap()
+
+  images.init()  
+  menu.init()
+  pattern.init()
+  
+
+  
+  window.curtainPromise
+    .then(() => {
+      document.querySelector('.grid-wrap').style.opacity = 1
+      document.getElementById('footer').style.display = 'flex'
+      console.log('BAM!')})
   
 }
 

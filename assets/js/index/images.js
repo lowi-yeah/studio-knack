@@ -1,5 +1,5 @@
-import util from './util'
-let ImageWorker   = require('worker-loader!./workers/image-worker.js')
+import util from '../common/util'
+let ImageWorker   = require('worker-loader!../workers/image-worker.js')
 
 function _urls(attribute) {
   let items = document.querySelectorAll('.grid-item')

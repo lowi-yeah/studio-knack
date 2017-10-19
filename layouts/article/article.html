@@ -1,16 +1,23 @@
-{{ partial "header.html" . }}
-
-{{ partial "curtain.svg" . }}
-{{ partial "gradient.svg" . }}
-{{ partial "article/logo.svg" . }}
-{{ partial "overlay.svg" . }}
-<script src="/assets/dawn.js"></script>
+{{ partial "intro.html" . }}
 
 <article id="single">
 
+  {{ partial "curtain.svg" . }}
+  {{ partial "gradient.svg" . }}
+  {{ partial "article/logo.svg" . }}
+  {{ partial "overlay.svg" . }}
+  
+<script src="/assets/dawn.js"></script>
+
+
   {{ partial "article/menu.html" . }}
   
-  <div class="hero-image" style="background-image: url({{ .Params.image.tiny }})"></div>
+  <div  class="worker image" 
+        id="hero-image" 
+        style="background-image: url({{ .Params.image.tiny }})"
+        data-image-palette="{{ .Params.image.palette }}"
+        data-image-url="{{ .Params.image.url }}" 
+        ></div>
 
   <section class="hero">
     <div class="hero-body">
@@ -25,7 +32,7 @@
   <section>
     <div class="container is-fluid">
       <div  class="grid-wrap">
-        <div id="arcticle-grid" class="flex">
+        <div class="flex">
           {{ range .Params.content }}
     
             <!-- <pre class="code"> {{ .image }} </pre> -->
@@ -56,6 +63,7 @@
 
 </article>
 <script src="/assets/article.js"></script>
-{{ partial "footer.html" . }}
+{{ partial "footer" . }}
+{{ partial "outro" . }}
 
 

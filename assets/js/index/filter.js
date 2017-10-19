@@ -1,7 +1,8 @@
 import anime  from 'animejs'
-import util   from './util'
+import util   from '../common/util'
+import logo   from '../common/logo'
 import layout from './layout'
-import logo   from './logo'
+
 let EASINGS = ['linear', 'easeInOutQuad',
  'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 

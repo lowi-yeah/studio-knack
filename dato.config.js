@@ -40,9 +40,16 @@ function _articleContent(item) {
 
   if(type === 'article_image') {  
       if(!item.image) return null
-      let url   = item.image.url({ w: 1200, auto: 'compress' }),
-          ratio = ratioΣ(item.image.width/item.image.height)
-      return { image: { url, ratio }}}
+      let id      = 'i-' + item.image.url().match(/\d{5,}/)[0],
+          url     = item.image.url({ w: 1200, auto: 'compress' }),
+          ratio   = ratioΣ(item.image.width/item.image.height),
+          tiny    = item.image.url({ w: 2, auto: 'compress' }),
+          info    = item.image.url({ fm: 'json' }),
+          palette = item.image.url({ w: 800, palette: 'json', colors: '4' }),
+          caption = item.caption,
+          size    = item.size
+
+      return { image: { id, url, ratio, tiny, info, palette, caption, size }}}
 
   if(type === 'article_factsheet') 
     return { facts: {

@@ -2,10 +2,10 @@ import {randomNormal}   from 'd3-random'
 import anime            from 'animejs'
 import {scaleLinear, 
         scaleQuantize}  from 'd3-scale'
-import parallax         from './parallax'
-import util             from './util'
-import gradient         from './gradient'
-import overlay          from './overlay'
+import parallax         from '../common/parallax'
+import util             from '../common/util'
+import gradient         from '../common/gradient'
+import overlay          from '../common/overlay'
 
 const NUM_COLUMNS = 24
 const ȣ = randomNormal(0, 0.5)

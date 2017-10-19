@@ -2,10 +2,9 @@ import anime              from 'animejs'
 import {scaleLinear,
         scaleSequential,
         interpolateWarm } from 'd3-scale'
-import {cubehelix}        from 'd3-color'
 import {interpolateCubehelix,
         interpolateLab}   from 'd3-interpolate'
-import noise              from './noise'
+import noise              from '../lib/noise'
 import util               from './util'
 
 const XMLNS   = 'http://www.w3.org/2000/svg',
@@ -14,48 +13,6 @@ const XMLNS   = 'http://www.w3.org/2000/svg',
 const EASINGS     = ['linear'],
       STOP_COLORS = ['#ffff00', '#ff00ff', '#00ffff']
 
-
-// function _animate() {
-//   noise.seed(Math.random())
-//   let gradient  = document.getElementById('rainbow-gradient'),
-//       stops     = gradient.querySelectorAll('#gradient stop.animated'),
-//       startTime = performance.now(),
-//       ηΣ        = scaleLinear()
-//                     .domain([-1, 1])
-//                     .range([0, 100]),
-//       offsets, offset, τ, o, c,
-//       update    = () => {
-//                     offsets = _(stops)
-//                                 .map((s, ι) => {
-//                                   τ = (performance.now() - startTime) / 40000,
-//                                   o = ηΣ(noise.simplex2(ι, τ)),
-//                                   c = STOP_COLORS[ι]
-//                                   return { o, c} })
-//                                 .sortBy( s => s.o)
-//                                 .value()
-//                     _.each(stops, (stop, ι) => {
-//                       offset = offsets[ι]
-//                       stop.setAttribute('offset',     `${offset.o}%`)
-//                       stop.setAttribute('stop-color', `${offset.c}`) })}
-//   update() }
-
-
-// function _animate() {
-//   noise.seed(Math.random())
-//   let colorized = document.querySelector('#gradient .colorized'),
-//       startTime = performance.now(),
-//       rainbow   = scaleSequential(interpolateWarm),
-//       τ, c,
-//       update    = () => { τ = (performance.now() - startTime) / 40000,
-//                           c = rainbow((noise.simplex2(0, τ) + 1)/2)
-//                           colorized.setAttribute('fill', c) }
-//   util.startAnimation(16, update)
-// }
-
-function colorFunction() {
-  // return interpolateCubehelixLong(cubehelix(-100, 0.75, 0.35), cubehelix(80, 1.50, 0.8))
-  return interpolateCubehelix('#D8EEED', '#FEEEFB', '#FFFDF2')
-}
 
 function _alphaCoordinates(α) {
   α = α * (Math.PI / 180)
@@ -70,7 +27,8 @@ function _animate() {
   let gradient  = document.getElementById('rainbow-gradient'),
       [s0, s1]  = gradient.querySelectorAll('stop'),
       startTime = performance.now(),
-      colorΣ    = scaleSequential(colorFunction()),
+      // colorΣ    = scaleSequential(interpolateCubehelix('#ffff00', '#ff00ff', '#00ffff')),
+      colorΣ    = scaleSequential(interpolateLab('#ffff00', '#ff00ff', '#00ffff')),
       rotationΣ = scaleLinear()
                     .domain([-1, 1])
                     .rangeRound([0, 360]),

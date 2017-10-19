@@ -1,19 +1,25 @@
 footer#footer
   background: transparent
-  position: fixed
-  bottom: 0
   width: 100vw
-  z-index: 1
   padding-bottom: 1.5rem
+  border-top: 1px solid $grey-light
+  display: flex
 
   ul
     margin: 0
     display: flex
-    flex-direction: column
-    align-items: flex-start;
+    flex-direction: row
+    align-items: baseline
+
+    +mobile 
+      flex-direction: column
 
   li 
     flex: 0 0 auto
+    margin-right: 0.5rem
+
+    &:last-child
+      margin-right: 0
 
     &.small
       font-size: $size-small
@@ -24,13 +30,23 @@ footer#footer
     a
       display: flex
       text-decoration: none
+      height: 100%
+      position: relative
 
       .icon
         flex: 0 0 auto
         height: 0.75rem
 
+        &.empty
+          width: 1px
+
       .text
         flex: 0 0 auto
+
+        &.no-icon 
+          margin-top: 0
+
+  
 
 
 

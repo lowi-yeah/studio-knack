@@ -1,11 +1,12 @@
 import {select}     from 'd3-selection'
 import anime        from 'animejs'
-import SVGMorpheus  from './lib/svg-morpheus'
-import util         from './util'
+import SVGMorpheus  from '../lib/svg-morpheus'
+import util         from '../common/util'
+import gradient     from '../common/gradient'
+import pattern      from '../common/pattern'
+import dom          from '../common/dom'
 import filter       from './filter'
-import gradient from './gradient'
-import pattern  from './pattern'
-import dom      from './dom'
+
 
 
 const EASINGS     = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
