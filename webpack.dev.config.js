@@ -8,7 +8,6 @@ module.exports = {
     dawn:     __dirname + '/assets/js/dawn.js',
     article:  __dirname + '/assets/js/article.js'
   },
-    
   resolve: {
     root: __dirname + '/assets/js',
     alias: {
