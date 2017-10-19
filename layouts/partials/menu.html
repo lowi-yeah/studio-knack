@@ -1,19 +1,14 @@
-<!-- <button id="home-btn" class="button"></button> -->
-
 <div id="menu">
-  <div id="filters" class="entry">
-    <button id="filter-btn" class="pattern button"> 
-      {{ partial "menu-icon.svg" . }}  
-    </button> 
-    {{ range .Site.Data.settings.filters  }}
-      <button id="{{ . }}-filter" data-category="{{ . }}" class="category pattern button">
-        {{.}}
-      </button>
-    {{ end }}
-  </div>
-  <!-- <div id="search" class="entry">
-    <button id="filter-btn"><i class="material">search</i></button>
-    <input class="input" type="text" placeholder="Primary input">
-  </div> -->
+  <button id="toc-btn" class="pattern button"> 
+    {{ partial "menu-icon.svg" . }}  
+  </button> 
+
+   <div class="items"> 
+    {{ range .Site.Data.settings.filters  }} 
+      <button id="{{ . }}-menu" data-category="{{ . }}" class="filter item pattern button"> 
+        {{.}} 
+      </button> 
+    {{ end }} 
+  </div> 
 </div>
 

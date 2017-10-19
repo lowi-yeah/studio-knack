@@ -1,0 +1,17 @@
+<section class="grid-item meta section watch pattern" data-visible="1" >
+  <div class="card">
+    <div class="card-content">
+      <div class="items">
+        {{ range $key, $value := . }}
+          {{ if $value }}
+            <div class="item">
+              <p class="title is-7">{{ $key }}</p>
+              {{ $p := (print "article/meta/" $key ".html") }}
+              {{ partial $p . }}
+            </div>
+          {{ end }}
+        {{ end }}
+      </div>  
+    </div>  
+  </div>  
+</section>

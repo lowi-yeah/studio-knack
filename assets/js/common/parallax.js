@@ -1,6 +1,6 @@
 import anime          from 'animejs'
 import util           from './util'
-import {scalePow}  from 'd3-scale'
+import {scalePow}     from 'd3-scale'
 import {randomNormal} from 'd3-random'
 
 

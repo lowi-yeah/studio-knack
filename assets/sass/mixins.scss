@@ -65,6 +65,16 @@
   pointer-events: none;
 }
 
+// generate 'auto' columns
+@mixin columns($count: 12) {
+  $col: "auto ";
+  $cols: "";
+  @for $i from 0 to $count {
+    $cols: $cols + $col;
+  }
+  grid-template-columns: unquote("#{$cols}");
+}
+
 // @mixin stripes($color1: #fff, $color2: #000, $angle: 45deg, $width: 4px ) {
 //   background: repeating-linear-gradient(
 //     $angle,

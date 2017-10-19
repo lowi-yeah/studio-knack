@@ -1,7 +1,12 @@
 let _         = require('lodash'),
     htmlTag   = require('html-tag'),
     getPixels = require('get-pixels'),
-    tinycolor = require('tinycolor2')
+    d3        = require('d3-scale')
+
+
+var ratioΣ = d3.scaleQuantize()
+                .domain([0.5, 2])
+                .range([0.5, 1, 2])
 
 // This function helps transforming structures
 // —eg. [{ tagName: 'meta', attributes: { name: 'description', content: 'foobar' } }]—
@@ -25,44 +30,40 @@ function _aboutContent(item) {
               role:         item.role,
               description:  item.description}}}}
 
-function _download(uri) {
-  return new Promise(function(resolve, reject){
-    request.head(uri, function(err, res, body) {
-        if(err) reject(err)
-        resolve(res)})})}
+function _articleContent(item) {
+  let type = item.entity.itemType.apiKey
 
-function _getImageBrightness(image) {
-  return new Promise((resolve, reject) => {
-    let url = image.url({ w: 32, auto: 'compress' })
-    getPixels(url, function(err, pixels) {
-      if(err) reject(err)
+  console.log('ITEM:', item.entity.itemType.apiKey)
 
-      let [width, height, channels] = pixels.shape,
-          sumBrightness = 0
-  
-      for(let x = 0; x < width; x++) {
-        for(let y = 0; y < height; y++) {
-          let channels      = pixels.pick(x, y, null),
-              [cn]          = channels.shape,
-              rgb           = _(cn)
-                                .range()
-                                .reduce((ρ, ι) => {
-                                  if(ι === 0) ρ.r = channels.get(ι)
-                                  if(ι === 1) ρ.g = channels.get(ι)
-                                  if(ι === 2) ρ.b = channels.get(ι)
-                                  if(ι === 3) ρ.a = channels.get(ι)/255.0
-                                  return ρ }, {}),
-              color         = tinycolor(rgb)
-          sumBrightness += _.round(color.getBrightness())}}
-  
-      resolve({ url: image.url({ w: 800, auto: 'compress' }),
-                brightness: _.round(sumBrightness/(width * height))})})})}
+  if(type === 'article_text')  
+    return { text: item.text }
 
-function _processImages(images) {
-  let promises = _.map(images, _getImageBrightness)
-  return Promise.all(promises)
+  if(type === 'article_image') {  
+      if(!item.image) return null
+      let id      = 'i-' + item.image.url().match(/\d{5,}/)[0],
+          url     = item.image.url({ w: 1200, auto: 'compress' }),
+          ratio   = ratioΣ(item.image.width/item.image.height),
+          tiny    = item.image.url({ w: 2, auto: 'compress' }),
+          info    = item.image.url({ fm: 'json' }),
+          palette = item.image.url({ w: 800, palette: 'json', colors: '4' }),
+          caption = item.caption,
+          size    = item.size
+
+      return { image: { id, url, ratio, tiny, info, palette, caption, size }}}
+
+  if(type === 'article_factsheet') 
+    return { facts: {
+              timeline: item.entity.timeline,
+              status:   item.entity.status,
+              location: { text: item.entity.location,
+                          coordinates: item.entity.map },
+              topology: item.entity.topology,
+              size:     item.entity.size,
+              client:   item.entity.client }}
+
+   if(type === 'gallery') { 
+    return { gallery: item.gallery.map(item => item.url({ w: 800, auto: 'compress' })) } }
 }
-
 
 // Arguments that will receive the mapping function:
 //
@@ -89,8 +90,10 @@ module.exports = (dato, root, i18n) => {
   // ————————————————————————————————  
   // load the categories and put them into the config
   // categories are the validation-values of entry > category
-  var categoryId = '53589',
-      categories = dato.entitiesRepo.entities.field[categoryId].validators.enum.values;
+  // var categoryId = '53589',
+  //     categories = dato.entitiesRepo.entities.field[categoryId].validators.enum.values;
+
+  var categories = ['architecture', 'design', 'studio']
 
   // Create a YAML data file to store global data about the site
   root.createDataFile('data/settings.yml', 'yaml', {
@@ -118,38 +121,8 @@ module.exports = (dato, root, i18n) => {
       layout:       'about' }
   });
 
-  // Entries
-  // ————————————————————————————————
-  // async doesn't work :(
-  // new Promise( resolve => root.directory('content/entry', dir => resolve(dir)))
-  //   .then(dir => {
-  //     let entriesҎ = _.map(dato.entries, (entry, index) => {
-  //                         return new Promise((resolve, reject) => {
-  //                           _processImages(entry.gallery)
-  //                             .then(images => {
-  //                               let frontmatter = { title:       entry.title,
-  //                                                   // images:      images,
-  //                                                   date:        entry.date,
-  //                                                   category:    entry.category,
-  //                                                   location:    entry.location,
-  //                                                   latlng:      entry.latlng,
-  //                                                   size:        entry.size,
-  //                                                   weight:      entry.date,
-  //                                                   emphasis:    entry.emphasis,
-  //                                                   seoMetaTags: toHtml(entry.seoMetaTags) },
-  //                                   content     = entry.description || '' ,
-  //                                   post        = { frontmatter, content}
-  //                               resolve([`${entry.slug}.md`, 'yaml', post])})})})
-  //     Promise.all(entriesҎ)
-  //       .then( entries => {
-  //         console.log('dirr', dir.createPost)
-  //         _.each(entries, ([slug, format, post]) => {
-  //           dir.createPost(slug, format, post)
-  //         })
-  //         done = true
-  //       })
-  //   })
-
+  
+  
   root.directory('content/entry', dir => {
     let entries = _.map(dato.entries, (entry, index) => {
                       let frontmatter = { title:        entry.title,
@@ -175,4 +148,30 @@ module.exports = (dato, root, i18n) => {
       dir.createPost(slug, format, post)
     })                      
   })
+
+  // Articles
+  // ————————————————————————————————
+  root.directory('content/article', dir => {
+    let articles  = _.map(dato.articles, (article, index) => {
+
+                      // console.log('## article')
+                      // console.log(article.content)
+
+                      let αContent    = _.compact(article.content.map(item => _articleContent(item))), 
+                          frontmatter = { title:        article.title,
+                                          label:        article.label,
+                                          category:     article.category,
+                                          image:        { url:      article.heroImage.url({ w: 800, auto: 'compress' }),
+                                                          info:     article.heroImage.url({ fm: 'json' }),
+                                                          tiny:     article.heroImage.url({ w: 2 }),
+                                                          palette:  article.heroImage.url({ w: 800, palette: 'json', colors: '2' }) },
+                                          // seoMetaTags:  toHtml(dato.aboutPage.seoMetaTags),
+                                          layout:       'article',
+                                          id:           'knc-' + index,
+                                          content:      αContent },
+                          content     = '',
+                          post        = {frontmatter, content}
+                        return [`${article.slug}.md`, 'yaml', post]})
+    _.each(articles, ([slug, format, post]) => dir.createPost(slug, format, post))})
+
 }

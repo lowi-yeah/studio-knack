@@ -14,15 +14,16 @@
   pointer-events: none
 
   .button
-    height: 3rem
     border: none
 
-  #filters
+  .filter.button
+    height: 3rem
+
+  .items
     display: flex
     flex-direction: column
     justify-content: flex-end
     align-items: flex-end
-
 
     .button
       pointer-events: all
@@ -40,14 +41,15 @@
       &:hover, &:focus, &:active
         +z-depth-focus()
 
-#filter-btn
+#toc-btn
   margin-bottom: 1rem
   margin-top: 1rem
-  margin-right: 0.5rem
+  margin-right: 0
   width: 48px
   height: 48px
-  margin-top: 1rem
   padding: 0
+  pointer-events: all
+  background: transparent
 
   +z-depth-4dp()
   +z-depth-transition()

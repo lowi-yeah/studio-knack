@@ -1,0 +1,69 @@
+{{ partial "intro.html" . }}
+
+<article id="single">
+
+  {{ partial "curtain.svg" . }}
+  {{ partial "gradient.svg" . }}
+  {{ partial "article/logo.svg" . }}
+  {{ partial "overlay.svg" . }}
+  
+<script src="/assets/dawn.js"></script>
+
+
+  {{ partial "article/menu.html" . }}
+  
+  <div  class="worker image" 
+        id="hero-image" 
+        style="background-image: url({{ .Params.image.tiny }})"
+        data-image-palette="{{ .Params.image.palette }}"
+        data-image-url="{{ .Params.image.url }}" 
+        ></div>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-1">
+         {{ .Title }}
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container is-fluid">
+      <div  class="grid-wrap">
+        <div class="flex">
+          {{ range .Params.content }}
+    
+            <!-- <pre class="code"> {{ .image }} </pre> -->
+    
+            {{ with .image }}
+              {{ partial "article/image" . }}
+            {{ end }}
+    
+            {{ with .text }}
+              {{ partial "article/text" . }}
+            {{ end }}
+    
+            <!-- {{ with .gallery }}
+              <h4>gallery: {{ . }}</h4>
+            {{ end }} -->
+    
+            {{ with .facts }}
+              {{ partial "article/metadata" . }}
+            {{ end }}
+    
+            
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+</article>
+<script src="/assets/article.js"></script>
+{{ partial "footer" . }}
+{{ partial "outro" . }}
+
+

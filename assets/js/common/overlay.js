@@ -1,11 +1,10 @@
-// import {randomNormal} from 'd3-random'
 import pattern        from './pattern'
 import util           from './util'
 
 let itemId
 
 function init() {
-  let overlay = document.getElementById('overlay-back'),
+  let overlay = document.getElementById('overlay'),
       rect    = document.querySelector('svg.overlay .bg')
   if(!overlay) return
   pattern.make(overlay) 

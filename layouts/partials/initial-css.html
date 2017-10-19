@@ -1,6 +1,11 @@
 <style type="text/css">
-
+  
+  html {
+    background: #ffffff;
+  }
+  
   body {
+    background: #ffffff;
     box-sizing: border-box;
     display: block;
     width: 100%;
@@ -36,7 +41,6 @@
     display: none;
   }
 
-
   /*#logo { 
     position: fixed;
     top: 0;
@@ -59,7 +63,8 @@
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    z-index: 1;
+    z-index: 3;
+    opacity: 0
   }
 
   svg.overlay{ 
@@ -67,6 +72,10 @@
   }
 
   #next {
+    display: none;
+  }
+
+  footer#footer.footer {
     display: none;
   }
 
@@ -78,7 +87,7 @@
     display: none;
   }  
 
-  #grid-wrap {
+  .grid-wrap {
     opacity: 0;
   }
 </style>

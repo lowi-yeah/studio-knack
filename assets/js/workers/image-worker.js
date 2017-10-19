@@ -45,6 +45,9 @@ self.addEventListener('message', function(e) {
     if(δ.url.match(/palette/))
       request.json(δ.url).then( ι => {
         self.postMessage( { τ: 'palette', ι: ι, id: δ.id })})
+    if(δ.url.match(/fm=json/))
+      request.json(δ.url).then( ι => {
+        self.postMessage( { τ: 'info', ι: ι, id: δ.id })})
     else 
       request.image(δ.url).then( ι => {
         var encoded = base64Encode(ι),

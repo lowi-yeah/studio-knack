@@ -1,4 +1,4 @@
-{{ partial "header.html" . }}
+{{ partial "intro.html" . }}
 
 <article id="about">
   <header>
@@ -12,7 +12,7 @@
   <section class="content">
     <div class="about grid">
 
-      <section class="grid-item section gallery">
+    <!--   <section class="grid-item section gallery">
         <div class="slider js_slider">
           <div class="frame js_frame">
             <ul class="slides js_slides">
@@ -25,7 +25,7 @@
           </div>
         </div>
 
-      </section>
+      </section> -->
 
       {{ range .Params.content }}
         
@@ -73,6 +73,6 @@
   
 </article>
 
-{{ partial "footer.html" . }}
+{{ partial "outro.html" . }}
 
 
