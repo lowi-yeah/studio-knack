@@ -83,8 +83,10 @@ module.exports = (dato, root, i18n) => {
   // ————————————————————————————————  
   // load the categories and put them into the config
   // categories are the validation-values of entry > category
-  var categoryId = '53589',
-      categories = dato.entitiesRepo.entities.field[categoryId].validators.enum.values;
+  // var categoryId = '53589',
+  //     categories = dato.entitiesRepo.entities.field[categoryId].validators.enum.values;
+
+  var categories = ['architecture', 'design', 'studio']
 
   // Create a YAML data file to store global data about the site
   root.createDataFile('data/settings.yml', 'yaml', {

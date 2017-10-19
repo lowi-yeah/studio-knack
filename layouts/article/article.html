@@ -2,11 +2,13 @@
 
 {{ partial "curtain.svg" . }}
 {{ partial "gradient.svg" . }}
-{{ partial "logo.svg" . }}
+{{ partial "article/logo.svg" . }}
 {{ partial "overlay.svg" . }}
 <script src="/assets/dawn.js"></script>
 
 <article id="single">
+
+  {{ partial "article/menu.html" . }}
   
   <div class="hero-image" style="background-image: url({{ .Params.image.tiny }})"></div>
 

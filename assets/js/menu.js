@@ -11,103 +11,112 @@ import dom      from './dom'
 const EASINGS     = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 const BASE_OFFSET = 4
 
-function _showFilters(morpheus) {
-  let menuButton  = document.getElementById('filter-btn'),
-      buttons     = document.querySelectorAll('#filters .category.button')
-  menuButton.setAttribute('data-open', 1)
-  morpheus.to('filter-closed')
-  _.each(buttons, b => {
-    let τ = { x: '0px'},
-        α = { duration: _.random(240, 420),
-              easing:   'random'}
-    dom.transform(b, τ, α)})}
-
-function _hideFilters(morpheus, category) {
-  let menuButton  = document.getElementById('filter-btn'),
-      buttons     = document.querySelectorAll('.category.button'),
-      promises    = _.map(buttons, b => 
+function _showFilter() {
+  let items   = document.querySelectorAll('#menu .filter.item'),
+      promises  = _.map(items, item => 
                       new Promise( resolve => {
-                        // don't hide the selected category label
-                        if( category && 
-                            category !== 'all' && 
-                            category === b.getAttribute('data-category') ) return resolve()
-
-                        let τ = { x: `${b.clientWidth + BASE_OFFSET }px`},
+                        let τ = { x: '0px'},
                             α = { duration: _.random(240, 420),
                                   easing:   'random',
                                   complete: resolve}
-                        dom.transform(b, τ, α) }))
-  morpheus.to('filter-open')
-  menuButton.setAttribute('data-open', 0)
+                        dom.transform(item, τ, α) }))
   return Promise.all(promises) }
 
-function _initCategoryButton(ξ, morpheus) {
+function _hideFilterItems() {
+  let items   = document.querySelectorAll('#menu .filter.item'),
+      promises  = _.map(items, item => 
+                      new Promise( resolve => {
+                        let τ = { x: `${item.clientWidth + BASE_OFFSET }px`},
+                            α = { duration: _.random(240, 420),
+                                  easing:   'random',
+                                  complete: resolve}
+                        dom.transform(item, τ, α) }))
+  return Promise.all(promises) 
+}
+
+function _applyFilter() {
+  let ƒ         = filter.get(),
+      items     = document.querySelectorAll('#menu .filter.item'),
+      promises  = _.map(items, item => 
+                      new Promise( resolve => {
+                        // don't hide the selected category label
+                        if( ƒ && ƒ === item.getAttribute('data-category') ) return resolve()
+
+                        let τ = { x: `${item.clientWidth + BASE_OFFSET }px`},
+                            α = { duration: _.random(240, 420),
+                                  easing:   'random',
+                                  complete: resolve}
+                        dom.transform(item, τ, α) }))
+  return Promise.all(promises) 
+
+  // return new Promise(resolve => resolve())
+}
+
+function _initMenuItem(ξ, clickFn) {
   let id = ξ.getAttribute('id')
-  if(!id) { 
-    id = util.guid('i-')
-    ξ.setAttribute('id', id) }
-  util.addEvent(ξ, 'click', () => {
-    let grid        = document.getElementById('grid'),
-        gridFilter  = grid.getAttribute('data-filter'),
-        category    = ξ.getAttribute('data-category')
-    if(gridFilter && category === gridFilter) {
-      _hideFilters(morpheus)
-      filter('all') } 
-    else {
-      _hideFilters(morpheus, category)
-      filter(category) }})}
+  
+  // we need an id on the menu item
+  // if it hasn't got one: make one
+  if(!id) { id = util.guid('i-')
+            ξ.setAttribute('id', id) }
 
-function _initFilterMenuButton() {
-  let button        = document.getElementById('filter-btn'),
-      morphOptions  = { iconId:   'filter-open', 
-                        duration: 400, 
-                        rotation: 'none' }, 
-      morpheus      = new SVGMorpheus('#menu-icon', morphOptions) 
+  util.addEvent(ξ, 'click', clickFn)
+}
 
-  // toggle filter menu on click
-  util.addEvent(button, 'click', () => {
-    let Φ = button.getAttribute('data-open') === '0'
-    if(Φ) _showFilters(morpheus)
-    else _hideFilters(morpheus) 
-  })
+function _initTocButton() {
+  return new Promise( resolve => {
+    let button        = document.getElementById('toc-btn'),
+        morphOptions  = { iconId:   'menu-closed', 
+                          duration: 400, 
+                          rotation: 'none' }, 
+        morpheus      = new SVGMorpheus('#menu-icon', morphOptions),
+        show          = () => { button.setAttribute('data-open', 1)
+                                morpheus.to('menu-open')
+                                _showFilter()
+                              },
+        hide          = () => { button.setAttribute('data-open', 0)
+                                morpheus.to('menu-closed')
+                                _applyFilter()
+                              },
+        toggle        = () => button.getAttribute('data-open') === '1' ?
+                                hide() : show() 
 
-  // hide initially
-  // button.style.transform = 'translateX(100%)'
+    // toggle filter menu on click
+    util.addEvent(button, 'click', toggle)
 
-  // make pattern
-  pattern.make(button)
+    // hide initially
+    // button.style.transform = 'translateX(100%)'
 
-  return morpheus }
+    // make pattern
+    pattern.make(button)
 
-function _initFilters() {
-  let ƒ = document.getElementById('filters'),
-      β = document.getElementById('filter-btn'),
-      ε = ƒ.querySelectorAll('.category.button'),
-      μ = _initFilterMenuButton()
+    // resolve the show, hide & toggle functions
+    resolve({show, hide, toggle}) })}
 
-  _.each(ε, ξ => _initCategoryButton(ξ, μ))
+function _initItems(toc) {
+  // init filter items
+  let filterItems = document.querySelectorAll('#menu .filter.item'),
+      filterFn    = item =>
+                      () => {
+                        filter.set(item.getAttribute('data-category'))
+                        toc.hide() }
 
-  return _hideFilters(μ)
-    .then( () => {
-      _.delay(() => {
-        anime({ targets:    β,
-                translateX: 0,
-                duration:   400,
-                easing:     _.sample(EASINGS)
-                // update:     () => gradient.updateMask(β.getAttribute('id')) 
-              })
-      }, 1000)
-    })
+  _.each(filterItems, filterItem => {
+    dom.transform(filterItem, { x: `${filterItem.clientWidth + BASE_OFFSET }px`})
+    util.addEvent(filterItem, 'click', filterFn(filterItem)) })
+
   }
 
 
 function init() {
+  console.log('initializing menu')
   return new Promise(resolve => {
     _.delay(() => {
       let m = document.getElementById('menu')
       if(!m) {resolve(); return}
 
-      _initFilters()
+      _initTocButton()
+        .then(toc => _initItems(toc))
         .then(() => { 
            anime( { targets:  m,
                     opacity:  1,
