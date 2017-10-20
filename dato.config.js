@@ -47,9 +47,6 @@ function _articleContent(item) {
           palette = item.image.url({ w: 800, palette: 'json', colors: '4' }),
           caption = item.caption,
           size    = item.size
-
-      console.log('', item.image.width, item.image.height, item.image.width/item.image.height, ratio)
-
       return { image: { id, url, ratio, tiny, info, palette, caption, size }}}
 
   if(type === 'article_factsheet') 
