@@ -7,7 +7,7 @@ import util     from './common/util'
 import pattern  from './common/pattern'
 import images   from './article/images'
 import menu     from './article/menu'
-import infinite from './article/infinite-scroll'
+// import infinite from './article/infinite-scroll'
 
 
 const LAYER_TOKEN   = 'pk.eyJ1IjoibG93aSIsImEiOiJjaXpyZnYwMHUwMDI2MnFzN21wNm1zeGF2In0.t4FHMAzcW-5SMIfKneu3YQ'
@@ -37,7 +37,7 @@ function init() {
   menu.init()
   pattern.init()
 
-  infinite.init()
+  // infinite.init()
   
 
   
