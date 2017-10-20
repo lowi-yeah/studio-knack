@@ -34,6 +34,12 @@
       </feMerge>
     </filter> 
 
+    <filter id="shadow-1" x="-50%" y="-50%" width="200%" height="200%">
+      <feOffset result="offOut" in="SourceAlpha" dx="4" dy="4" />
+      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="2" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter> 
+
     <filter id="inset-shadow-1" x="-50%" y="-50%" width="200%" height="200%">
       <feComponentTransfer in=SourceAlpha>
         <feFuncA type="table" tableValues="1 0" />

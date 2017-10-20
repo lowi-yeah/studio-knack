@@ -1,18 +1,18 @@
 import anime              from 'animejs'
 import {scaleLinear,
-        scaleSequential,
-        interpolateWarm } from 'd3-scale'
+        scaleSequential } from 'd3-scale'
+import {cubehelix}        from 'd3-color'
 import {interpolateCubehelix,
-        interpolateLab}   from 'd3-interpolate'
+        interpolateCubehelixLong,
+        interpolateHslLong,
+        interpolateRgb,
+        interpolateLab,
+        interpolateHsl}   from 'd3-interpolate'
 import noise              from '../lib/noise'
 import util               from './util'
 
 const XMLNS   = 'http://www.w3.org/2000/svg',
       XLINKNS = 'http://www.w3.org/1999/xlink'
-
-const EASINGS     = ['linear'],
-      STOP_COLORS = ['#ffff00', '#ff00ff', '#00ffff']
-
 
 function _alphaCoordinates(α) {
   α = α * (Math.PI / 180)
@@ -26,19 +26,22 @@ function _animate() {
   noise.seed(Math.random())
   let gradient  = document.getElementById('rainbow-gradient'),
       [s0, s1]  = gradient.querySelectorAll('stop'),
-      startTime = performance.now(),
-      // colorΣ    = scaleSequential(interpolateCubehelix('#ffff00', '#ff00ff', '#00ffff')),
-      colorΣ    = scaleSequential(interpolateLab('#ffff00', '#ff00ff', '#00ffff')),
+      offset    = _.now() * Math.random(),
+      colorΣ    = scaleSequential()
+                    .domain([-1, 1])
+                    .interpolator(interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))),
       rotationΣ = scaleLinear()
                     .domain([-1, 1])
                     .rangeRound([0, 360]),
-      τ, c0, c1, α,
+      τ, c0, c1, η0, η1, α,
       update    = () => { 
-                          τ   = (performance.now() - startTime) 
-                          c0  = colorΣ((noise.simplex2(0, τ / 40000) + 1)/2)
-                          c1  = colorΣ((noise.simplex2(1, τ / 40000) + 1)/2)
-                          α   = _alphaCoordinates(rotationΣ(noise.simplex2(2, τ / 60000)))
+                          τ   = (_.now() - offset) 
+                          η0  = noise.simplex2(0, τ / 20000)
+                          η1  = noise.simplex2(42, τ / 20000)
+                          c0  = colorΣ(η0)
+                          c1  = colorΣ(η1)
 
+                          α   = _alphaCoordinates(rotationΣ(noise.simplex2(2, τ / 60000)))
                           gradient.setAttribute('x1', α.x1) 
                           gradient.setAttribute('x2', α.x2) 
                           gradient.setAttribute('y1', α.y1) 
@@ -46,11 +49,9 @@ function _animate() {
 
                           s0.setAttribute('stop-color', c0) 
                           s1.setAttribute('stop-color', c1) 
-                          // s0.setAttribute('stop-color', '#000000') 
-                          // s1.setAttribute('stop-color', '#ffffff') 
                         }
   update()
-  util.startAnimation(8, update)
+  util.startAnimation(12, update)
 }
 
 

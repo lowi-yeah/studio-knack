@@ -12,8 +12,7 @@ function _urls(attribute) {
             .value() }
 
 function init() {
-
-  console.log('loading article images')
+  // console.log('loading article images')
   let ιUrls   = _urls('data-image-url'),
       // pUrls   = _urls('data-image-palette'),
       // iUrls   = _urls('data-image-info'),
@@ -35,7 +34,6 @@ function init() {
     ηι += 1
     if(ηι === (ιUrls.length + pUrls.length + iUrls.length)) {
       _.delay( () => {
-        console.log('image worker finished')
         ιWorker.terminate() // Terminate the worker
         ιWorker = null }, 2000)}
     } 

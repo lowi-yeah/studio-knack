@@ -31,7 +31,6 @@ function make(item) {
 }
 
 function _makeSvg(item) {
-
   let svg   = document.createElementNS(XMLNS, 'svg'),
       rect  = document.createElementNS(XMLNS, 'rect'),
       watch = item.classList.contains('watch')
@@ -54,7 +53,6 @@ function _makeSvg(item) {
   item.appendChild(svg)
 
   make(svg) 
-
   if(watch) util.addEvent(window, 'scroll', () => update(svg))
 }
 
@@ -64,9 +62,14 @@ function update(item) {
       use       = pattern.querySelector('use'),
       β         = util.boundingBox(item),
       scale     = dom.getScale(item)
+
+  use.setAttribute('x', `${β.x - β.x/scale}`)
   use.setAttribute('y', `${β.y - β.y/scale}`)
   use.setAttribute('height',`${window.innerHeight/scale}px`)
-  pattern.setAttribute('y', `${-β.y}px`) }
+
+  pattern.setAttribute('x', `${-β.x}px`) 
+  pattern.setAttribute('y', `${-β.y}px`) 
+}
 
 function init() {
   let patternItems = document.querySelectorAll('.pattern')
