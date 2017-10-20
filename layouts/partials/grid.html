@@ -1,8 +1,7 @@
-{{ $paginator := .Paginate (where .Data.Pages "Type" "article") }}
 
 <div class="grid-wrap">
   <div id="grid" class="main grid">
-    {{ range $paginator.Pages }}
+    {{ range (where .Data.Pages "Type" "article") }}
       <section 
         class="grid-item"
         data-visible="1"

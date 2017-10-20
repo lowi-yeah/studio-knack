@@ -1,4 +1,5 @@
-baseURL = "/"
+baseurl = "/"
+Paginate = 1
 
 # datocms:start
 languageCode = "en"
