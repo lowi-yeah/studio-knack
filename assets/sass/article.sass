@@ -166,13 +166,16 @@ article.single
     z-index: 4
 
 #back-btn
-  $btn-height: 2rem
-  margin-top: 0.5rem
+  $btn-height: 2.25rem
+  margin-top: 1rem
   margin-right: 0
+  width: $btn-height
   height: $btn-height
   padding: 0
   pointer-events: all
   background: transparent
+  display: flex
+  justify-content: center
 
   +z-depth-4dp()
   +z-depth-transition()
@@ -181,12 +184,10 @@ article.single
     +z-depth-focus()
 
   .icon
+    flex: 1 0 auto
+    width: 100%
     height: $btn-height
     line-height: $btn-height
     color: $black
-  span
-    margin-left: -1.25rem
-    margin-right: 0.5rem
-    margin-top: 0.15rem
-    color: $black
-
+    margin: 0
+    padding-right: 0.25rem
