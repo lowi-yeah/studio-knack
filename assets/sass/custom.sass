@@ -40,6 +40,14 @@ a:not(.button)
     &:before
       height: 100%
 
+.button
+  +z-depth-transition()
+  +z-depth-4dp()
+  border: none
+  font-weight: 700
+
+  &:hover, &:focus, &:active
+    +z-depth-focus()
 
 #debug
   border: 1px solid $red

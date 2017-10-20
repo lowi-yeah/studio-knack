@@ -749,7 +749,8 @@ function _update() {
 
           util.addEvent(content, 'mouseleave', event => {
             over = false
-            hide() })}})})
+            _.delay(hide, 200) 
+          })}})})
 
     // adjust the top padding an position of the first item
     // so we have a realtive consistent first impression upon opening the page
