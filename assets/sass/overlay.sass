@@ -17,20 +17,6 @@ svg#overlay
   display: none
 
 .overlay
-  foreignObject
-    pointer-events: none
-    
-    .overlay-frame
-      transition: opacity 0.24s linear
-      opacity: 0
-    
-    &.active
-      cursor: pointer
-      pointer-events: all
-
-      .overlay-frame
-        opacity: 1
-
   .bg
     opacity: 0
     transition: opacity 0.42s linear

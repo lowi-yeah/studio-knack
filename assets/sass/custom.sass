@@ -15,7 +15,7 @@ body
 
 $a-color: $black
 
-a
+a:not(.button)
   color: $a-color
   text-decoration: none
   border-bottom: 1px dashed lighten($a-color, 15%)
@@ -40,6 +40,14 @@ a
     &:before
       height: 100%
 
+.button
+  +z-depth-transition()
+  +z-depth-4dp()
+  border: none
+  font-weight: 700
+
+  &:hover, &:focus, &:active
+    +z-depth-focus()
 
 #debug
   border: 1px solid $red

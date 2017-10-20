@@ -34,9 +34,6 @@ function _aboutContent(item) {
 
 function _articleContent(item) {
   let type = item.entity.itemType.apiKey
-
-  console.log('ITEM:', item.entity.itemType.apiKey)
-
   if(type === 'article_text')  
     return { text: item.text }
 
@@ -124,34 +121,31 @@ module.exports = (dato, root, i18n) => {
       type:         'extra',
       layout:       'about' }
   });
-
-  
-  
-  root.directory('content/entry', dir => {
-    let entries = _.map(dato.entries, (entry, index) => {
-                      let frontmatter = { title:        entry.title,
-                                          images:       _.map(entry.gallery, image => 
-                                                            { return { url:     image.url({ w: 1200, auto: 'compress' }),
-                                                                       info:    image.url({ fm: 'json' }),
-                                                                       tiny:    image.url({ w: 2 }),
-                                                                       palette: image.url({ w: 800, palette: 'json', colors: '2' }) }}),
-                                          date:         entry.date,
-                                          id:           'knc-' + index,
-                                          tag:          entry.tag,
-                                          category:     entry.category,
-                                          location:     entry.location,
-                                          latlng:       entry.latlng,
-                                          size:         entry.size,
-                                          weight:       entry.date,
-                                          emphasis:     entry.emphasis,
-                                          seoMetaTags:  toHtml(entry.seoMetaTags) },
-                          content     = entry.description || '' ,
-                          post        = { frontmatter, content}
-                        return [`${entry.slug}.md`, 'yaml', post]})
-    _.each(entries, ([slug, format, post]) => {
-      dir.createPost(slug, format, post)
-    })                      
-  })
+  // root.directory('content/entry', dir => {
+  //   let entries = _.map(dato.entries, (entry, index) => {
+  //                     let frontmatter = { title:        entry.title,
+  //                                         images:       _.map(entry.gallery, image => 
+  //                                                           { return { url:     image.url({ w: 1200, auto: 'compress' }),
+  //                                                                      info:    image.url({ fm: 'json' }),
+  //                                                                      tiny:    image.url({ w: 2 }),
+  //                                                                      palette: image.url({ w: 800, palette: 'json', colors: '2' }) }}),
+  //                                         date:         entry.date,
+  //                                         id:           'knc-' + index,
+  //                                         tag:          entry.tag,
+  //                                         category:     entry.category,
+  //                                         location:     entry.location,
+  //                                         latlng:       entry.latlng,
+  //                                         size:         entry.size,
+  //                                         weight:       entry.date,
+  //                                         emphasis:     entry.emphasis,
+  //                                         seoMetaTags:  toHtml(entry.seoMetaTags) },
+  //                         content     = entry.description || '' ,
+  //                         post        = { frontmatter, content}
+  //                       return [`${entry.slug}.md`, 'yaml', post]})
+  //   _.each(entries, ([slug, format, post]) => {
+  //     dir.createPost(slug, format, post)
+  //   })                      
+  // })
 
   // Articles
   // ————————————————————————————————
