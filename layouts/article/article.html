@@ -11,16 +11,15 @@
   
   {{ partial "article/menu.html" . }}
 
-  <article class="single">
-  
-    
-    <div  class="worker image" 
+  <div id="hero-image-frame"> 
+    <div  class="worker image blurred" 
           id="hero-image" 
           style="background-image: url({{ .Params.image.tiny }})"
           data-image-palette="{{ .Params.image.palette }}"
-          data-image-url="{{ .Params.image.url }}" 
-          ></div>
-  
+          data-image-url="{{ .Params.image.url }}" ></div>
+  </div>
+
+  <article class="single">
     <section class="hero">
       <div class="hero-body">
         <div class="container">
@@ -30,7 +29,7 @@
         </div>
       </div>
     </section>
-  
+    
     <section>
       <div class="container is-fluid">
         <div  class="grid-wrap">

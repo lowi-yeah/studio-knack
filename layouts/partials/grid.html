@@ -1,7 +1,7 @@
 
 <div class="grid-wrap">
   <div id="grid" class="main grid">
-    {{ range (where .Data.Pages "Type" "article") }}
+    {{ range (where .Data.Pages "Type" "in" (slice "architecture" "design" "studio")) }}
       <section 
         class="grid-item"
         data-visible="1"

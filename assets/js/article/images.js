@@ -27,9 +27,10 @@ function init() {
     let {ι, id, τ} = event.data,
         item       = document.getElementById(id)
 
-    // if(τ === 'palette') _.defer(() => item.setAttribute('data-luminance', ι.average_luminance))
-    if(τ === 'image') _.defer(() => item.style.backgroundImage = ι)
-    // if(τ === 'info') console.log('got info', id, ι)
+    if(τ === 'image') 
+      _.defer(() => {
+        item.style.backgroundImage = ι
+        item.classList.remove('blurred')})
 
     ηι += 1
     if(ηι === (ιUrls.length + pUrls.length + iUrls.length)) {

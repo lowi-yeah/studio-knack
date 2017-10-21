@@ -4,29 +4,37 @@ import {scalePow}     from 'd3-scale'
 import {randomNormal} from 'd3-random'
 
 
-const EASINGS = ['linear', 'easeInOutCubic', 'easeInOutSine']
-
-// function _scroll(ƒs) { 
-//   _.each(ƒs, ƒ => ƒ(window.scrollY))
-//  }
-
-function _offsetFn(ʀζ) {
+function _offsetFn() {
+  let ʀc = randomNormal(window.innerHeight * .32, 1),
+      ʀt = randomNormal(window.innerHeight * .24, 1)
+        
   return (item) => {
     let δ   = 100,
         μ   = (item.clientHeight + window.innerHeight),
-        ϕζ  = ʀζ(),
-        σ   = scalePow()
+
+        c   = item.querySelector('.content'),
+        ϕc  = ʀc(),
+        σc  = scalePow()
                 // .domain( [-0.38 * β.height, 0.618 * μ, μ + β.height])
                 .domain( [1.2 * μ, 0.38 * μ, -0.2 * μ])
-                .rangeRound( [ϕζ, 0, -ϕζ]),
-        ζ   = item.querySelector('.content')
-    // σ.clamp(true)
-    return offset => ζ.style.transform = `translateY(${σ(item.offsetTop + item.clientHeight - offset)}px)`}}
+                .rangeRound( [ϕc, 0, -ϕc]),
+
+        t   = item.querySelector('.text'),
+        ϕt  = ʀt(),
+        σt  = scalePow()
+                // .domain( [-0.38 * β.height, 0.618 * μ, μ + β.height])
+                .domain( [1.2 * μ, 0.38 * μ, -0.2 * μ])
+                .rangeRound( [ϕt, 0, -ϕt])
+        
+
+    return offset => {
+      c.style.transform = `translateY(${σc(item.offsetTop + item.clientHeight - offset)}px)`
+      t.style.transform = `translateY(${σt(item.offsetTop + item.clientHeight - offset)}px)`
+    }}}
 
 function init(items) {
   return new Promise( resolve => {
-    let ʀζ      = randomNormal(window.innerHeight * .32, 1),
-        ƒs      = _.map(items, _offsetFn(ʀζ)),
+    let ƒs      = _.map(items, _offsetFn()),
         offset  = 0,
         changed = false
     
@@ -37,12 +45,9 @@ function init(items) {
     util.startAnimation(15, () => {
       if(!changed) return
       changed = false
-      _.each(ƒs, ƒ => ƒ(offset))
-    })
-
-    _.defer(() => {
-      // _.each(ƒs, ƒ => ƒ(offset))
-      resolve() }) }) }
+      _.each(ƒs, ƒ => ƒ(offset)) })
+    
+    resolve() })}
 
 
 export default {init}
