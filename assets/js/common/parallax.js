@@ -2,6 +2,7 @@ import anime          from 'animejs'
 import util           from './util'
 import {scalePow}     from 'd3-scale'
 import {randomNormal} from 'd3-random'
+import isMobile       from 'ismobilejs'
 
 
 function _offsetFn() {
@@ -33,21 +34,22 @@ function _offsetFn() {
     }}}
 
 function init(items) {
-  return new Promise( resolve => {
-    let ƒs      = _.map(items, _offsetFn()),
-        offset  = 0,
-        changed = false
-    
-    util.addEvent(window, 'scroll', () => {
-      changed = true
-      offset  = window.scrollY })
-    
-    util.startAnimation(15, () => {
-      if(!changed) return
+
+  // do not use parallax on mobile devices
+  if(isMobile.any) return
+
+  let ƒs      = _.map(items, _offsetFn()),
+      offset  = 0,
       changed = false
-      _.each(ƒs, ƒ => ƒ(offset)) })
-    
-    resolve() })}
+  
+  util.addEvent(window, 'scroll', () => {
+    changed = true
+    offset  = window.scrollY })
+  
+  util.startAnimation(24, () => {
+    if(!changed) return
+    changed = false
+    _.each(ƒs, ƒ => ƒ(offset)) })}
 
 
 export default {init}

@@ -13,27 +13,23 @@ import curtain  from './common/curtain'
 
 function _href(e) {
   if(!e) return
-  if(e.tagName.match(/body/gi)) return null
-  let location = e.getAttribute('href')
-  if(location) return location
-  else return _href(e.parentElement)}
+  if(e.tagName.match(/body/gi)) return {href: null}
+  let href    = e.getAttribute('href'),
+      target  = e.getAttribute('target')
+  
+  if(href && target) return {href, target}
+  if(href && !target) return {href}
+  return _href(e.parentElement)}
 
 // capture all a#href clicks
 window.onclick = e => { 
-  let location = _href(e.target)
-  if(location) {
+  let {href, target} = _href(e.target)
+  if(href) {
+    if(target && target === '_blank') return 
     e.preventDefault()
-
-    curtain.close()
-      .then(() => {
-        // console.log('location', location)
-        window.location = location
-      })
-    // if( location === '/about') _about(() => window.location = location)
-    // _transitionTo()
+    curtain.close().then(() => window.location = href)
   }}
 
 
-window.curtainPromise = gradient.init()
+window.dawnPromise = gradient.init()
                           .then(logo.init)
-                          .then(curtain.open())

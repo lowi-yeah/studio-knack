@@ -23,9 +23,9 @@ function set(filter) {
   let items     = document.querySelectorAll('.grid-item'),
       filtered  = _.filter(items, ι => 
                     {
-                      console.log('item', ι.getAttribute('data-category'))
+                      console.log('item', ι.getAttribute('data-type'))
                       console.log('currentFilter', filter)
-                      return (ι.getAttribute('data-category') !== filter) && filter !== 'all' 
+                      return (ι.getAttribute('data-type') !== filter) && filter !== 'all' 
                     }),
       remaining = _.difference(items, filtered)
 

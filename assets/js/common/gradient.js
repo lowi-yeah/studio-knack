@@ -50,8 +50,8 @@ function _animate() {
                           s0.setAttribute('stop-color', c0) 
                           s1.setAttribute('stop-color', c1) 
                         }
-  update()
-  util.startAnimation(12, update)
+  _.defer(update)
+  // util.startAnimation(15, update)
 }
 
 

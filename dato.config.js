@@ -5,6 +5,16 @@ let _         = require('lodash'),
 
 let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
 
+
+function _guid(prefix) {
+  prefix = `${prefix}-` || ''
+  let s4 = () =>  Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1)
+  // return prefix + s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() 
+  return prefix + s4() + s4() + '-' + s4() + s4() }
+
+
 // This function helps transforming structures
 // —eg. [{ tagName: 'meta', attributes: { name: 'description', content: 'foobar' } }]—
 // into proper HTML tags: <meta name="description" content="foobar" />
@@ -14,9 +24,11 @@ function _toHtml(tags) {
           .join('') }
 
 function _image(image) {
-  return {  url:   image.url({ w: 1200, auto: 'compress' }),
-            ratio: image.width/image.height,
-            tiny:  image.url({ w: 16 }) }}
+  return {  url:    image.url({ w: 1200, auto: 'compress' }),
+            id:     _guid('i'),
+            ratio:  ratioΣ(image.width/image.height),
+            tiny:   image.url({ w: 16 }) }}
+
 
 function _aboutContent(item) {
   let type = item.entity.itemType.name
@@ -34,46 +46,79 @@ function _aboutContent(item) {
               description:  item.description}}}}
 
 function _projectContent(item) {
-  let type = item.entity.itemType.apiKey
-  if(type === 'text_block')  
+  let contentType = item.entity.itemType.apiKey
+  if(contentType === 'text_block')  
     return { text: item.content }
 
-  if(type === 'image_block') {  
+  if(contentType === 'image_block') {  
       if(!item.image) return null
-
       let ι = _image(item.image)
       ι.id      = 'i-' + item.image.url().match(/\d{5,}/)[0]
       ι.caption = item.caption
       ι.size    = item.size
-
       return { image: ι}}
 
-  if(type === 'statistic_block') 
-    return { facts: {
-              timeline: item.entity.timeline,
-              status:   item.entity.status,
-              location: { text: item.entity.location,
-                          coordinates: item.entity.map },
-              topology: item.entity.topology,
-              size:     item.entity.size,
-              client:   item.entity.client }}
+   if(contentType === 'gallery_block') { 
+    return { gallery: item.images.map(item => _image(item)) } 
 
-   if(type === 'gallery_block') { 
-    return { gallery: item.gallery.map(item => item.url({ w: 1200, auto: 'compress' })) } }
-}
+  } }
+
+function _projectBase(project, index, options) {
+  return {title:        project.title,
+          label:        project.label,
+          image:        _image(project.coverImage),
+          seoMetaTags:  _toHtml(project.seoMetaTags),
+          type:         options.type,
+          id:           options.prefix + '-' + index,
+          // content is being written into the frontmatter instead of the content section of the post
+          content:      _.compact(project.content.map(item => _projectContent(item))) }}
+
+function _mapLink(text, coordinates) {
+  let p = { api:        1,  
+            map_action: 'map',
+            // basemap:    'terrain',
+            zoom:       14,
+            center:     `${coordinates.latitude},${coordinates.longitude}` },
+      s = _.map(p, (v, k) => `${k}=${v}`).join('&')
+  return `[${text}](https://www.google.com/maps/@?${s})` }
+
+function _projectStats(project, type) {
+  let stats = {}
+
+  if(type === 'architecture') 
+    stats =  {timeline: project.timeline,
+              status:   project.status,
+              topology: project.topology,
+              client:   project.client }
+
+  if(type === 'design') 
+    stats =  {timeline:   project.timeline,
+              status:     project.status,
+              discipline: project.discipline,
+              client:     project.client }
+
+  // remove unset values
+  stats = _.reduce(stats, (ρ, v, k) => {
+              if(v) ρ[k] = v
+              return ρ }, {})
+
+  // location needs special treatment, as two fields (location & map)
+  // are being lumped together
+  if(project.location) {
+    stats.location = { text: project.location }
+    if (project.map) { 
+      stats.location = _.merge(stats.location, project.map)
+      stats.location.href = _mapLink(project.location, project.map) }}
+
+  // if none of the stats fields is set, return null
+  if(_.isEmpty(stats)) return null
+  return { stats } }
 
 function _projects(datoProjects, options) {
-  options = _.defaults(options, { layout: 'project',
-                                  prefix: 'knck'})
   return _.map(datoProjects, (project, index) => {
-            let frontmatter = { title:        project.title,
-                                label:        project.label,
-                                image:        _image(project.coverImage),
-                                seoMetaTags:  _toHtml(project.seoMetaTags),
-                                layout:       options.layout,
-                                id:           options.prefix + '-' + index,
-                                // content is being written into the frontmatter instead of the content section of the post
-                                content:      _.compact(project.content.map(item => _projectContent(item))) },
+            let base        = _projectBase(project, index, options),
+                stats       = _projectStats(project, options.type),
+                frontmatter = _.merge(base, stats)
                 content     = '',
                 post        = {frontmatter, content}
               return [`${project.slug}.md`, 'yaml', post] })}
@@ -145,7 +190,8 @@ module.exports = (dato, root, i18n) => {
   // Architecture
   // ————————————————————————————————
   root.directory('content/architecture', dir => {
-    let options   = { prefix: 'knck-a'},
+    let options   = { type: 'architecture',
+                      prefix: 'knck-a'},
         projects  = _projects(dato.architectures, options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
   })
@@ -153,7 +199,8 @@ module.exports = (dato, root, i18n) => {
   // Design
   // ————————————————————————————————
   root.directory('content/design', dir => {
-    let options   = { prefix: 'knck-d'},
+    let options   = { type: 'design',
+                      prefix: 'knck-d'},
         projects  = _projects(dato.designs, options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
   })
@@ -161,7 +208,7 @@ module.exports = (dato, root, i18n) => {
   // Studio
   // ————————————————————————————————
   root.directory('content/studio', dir => {
-    let options   = { layout: 'studio',
+    let options   = { type: 'studio',
                       prefix: 'knck-s'}
         projects  = _projects(dato.studios, options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))

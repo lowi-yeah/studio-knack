@@ -10,6 +10,7 @@ import util       from './common/util'
 import gradient   from './common/gradient'
 import overlay    from './common/overlay'
 import pattern    from './common/pattern'
+import curtain  from './common/curtain'
 
 let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
     EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
@@ -17,25 +18,17 @@ let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
 
 function init() {
   console.log('ready!')
-  console.log('device',  util.getDevice(window.innerWidth))
   images.init()  
   pattern.init()
+  menu.init()
+  overlay.init()
+  document.getElementById('footer').style.display = 'flex'
   
-  window.curtainPromise
+  window.dawnPromise
     .then(layout.init)
     .then(logo.begin)
     .then(layout.show)
-    .then(menu.init)
-    .then(overlay.init)
-    .then(() => document.getElementById('footer').style.display = 'flex')
-    
-
-  
-  // logo.begin()
-
-  //   .then( menu.init )
-  //   .then( layout.update )
-
+    .then(curtain.open)
 }
 
 document.addEventListener('DOMContentLoaded', init)

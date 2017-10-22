@@ -2,8 +2,7 @@ import anime    from 'animejs'
 import pattern  from './pattern'
 import util     from './util'
 
-
-const REMOVE_ON_SCROLL = false
+const REMOVE_ON_SCROLL = true
 
 let rect = document.querySelector('svg.overlay .bg'),
       text

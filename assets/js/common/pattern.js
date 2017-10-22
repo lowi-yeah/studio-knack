@@ -63,7 +63,7 @@ function update(item) {
       β         = util.boundingBox(item),
       scale     = dom.getScale(item)
 
-  use.setAttribute('x', `${β.x - β.x/scale}`)
+  // use.setAttribute('x', `${β.x - β.x/scale}`)
   use.setAttribute('y', `${β.y - β.y/scale}`)
   use.setAttribute('height',`${window.innerHeight/scale}px`)
 

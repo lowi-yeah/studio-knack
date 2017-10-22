@@ -2009,7 +2009,7 @@ find-up@^1.0.0:
     path-exists "^2.0.0"
     pinkie-promise "^2.0.0"
 
-fizzy-ui-utils@^2.0.0, fizzy-ui-utils@^2.0.4, fizzy-ui-utils@^2.0.5:
+fizzy-ui-utils@^2.0.0, fizzy-ui-utils@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/fizzy-ui-utils/-/fizzy-ui-utils-2.0.5.tgz#d72debc74d2c9d272dbcbb7b001707897f6c3210"
   dependencies:
@@ -2177,7 +2177,7 @@ get-pixels@^3.3.0:
     request "^2.44.0"
     through "^2.3.4"
 
-get-size@^2.0.0, get-size@^2.0.2, get-size@~2.0.2:
+get-size@^2.0.2, get-size@~2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/get-size/-/get-size-2.0.2.tgz#555ea98ab8732e0c021e9e23e2219adcbe398e98"
 
@@ -2678,23 +2678,6 @@ isobject@^2.0.0:
   dependencies:
     isarray "1.0.0"
 
-isotope-layout@^3.0.0, isotope-layout@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/isotope-layout/-/isotope-layout-3.0.4.tgz#f3ed8d15f8cfb3850b11777f1ca76e0a8bb5b73a"
-  dependencies:
-    desandro-matches-selector "^2.0.0"
-    fizzy-ui-utils "^2.0.4"
-    get-size "^2.0.0"
-    masonry-layout "^4.1.0"
-    outlayer "^2.1.0"
-
-isotope-packery@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/isotope-packery/-/isotope-packery-2.0.0.tgz#5dfd2f5802e2172b904fed460d34281d60db2235"
-  dependencies:
-    isotope-layout "^3.0.0"
-    packery "^2.0.0"
-
 isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
@@ -3004,13 +2987,6 @@ macaddress@^0.2.8:
 map-obj@^1.0.0, map-obj@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
-
-masonry-layout@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/masonry-layout/-/masonry-layout-4.2.0.tgz#43835c6b6e0d72eff2c31a118c8000cccc4ab965"
-  dependencies:
-    get-size "^2.0.2"
-    outlayer "^2.1.0"
 
 masonry@^0.0.2:
   version "0.0.2"
@@ -3453,7 +3429,7 @@ osenv@0:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-outlayer@^2.0.0, outlayer@^2.1.0:
+outlayer@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/outlayer/-/outlayer-2.1.0.tgz#83b7beefc19becd3278c8ade988d268788d6f93d"
   dependencies:
@@ -3469,7 +3445,7 @@ output-file-sync@^1.1.2:
     mkdirp "^0.5.1"
     object-assign "^4.1.0"
 
-packery@^2.0.0, packery@^2.1.1:
+packery@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/packery/-/packery-2.1.1.tgz#ec3711e96562b5ae206641e06854f899064a1b55"
   dependencies:
@@ -4391,6 +4367,10 @@ slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
 
+slick-carousel@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/slick-carousel/-/slick-carousel-1.8.1.tgz#a4bfb29014887bb66ce528b90bd0cda262cc8f8d"
+
 sntp@1.x.x:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/sntp/-/sntp-1.0.9.tgz#6541184cc90aeea6c6e7b35e2659082443c66198"
@@ -4689,6 +4669,10 @@ timers-browserify@^2.0.2:
 tiny-inflate@^1.0.0, tiny-inflate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/tiny-inflate/-/tiny-inflate-1.0.2.tgz#93d9decffc8805bd57eae4310f0b745e9b6fb3a7"
+
+tiny-slider@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/tiny-slider/-/tiny-slider-2.2.4.tgz#ef61e5485dd58df949e85de6cfeb818832e07ba8"
 
 tmp@0.0.29:
   version "0.0.29"

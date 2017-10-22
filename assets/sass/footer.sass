@@ -1,8 +1,10 @@
 footer#footer
-  background: transparent
+  background: $white
+  position: relative
+  z-index: 3
   width: 100vw
   padding-bottom: 1.5rem
-  border-top: 1px solid $grey-light
+  // border-top: 1px solid $grey-light
   display: flex
 
   ul
@@ -17,6 +19,9 @@ footer#footer
   li 
     flex: 0 0 auto
     margin-right: 0.5rem
+
+    +mobile 
+      margin-bottom: 0.5rem
 
     &:last-child
       margin-right: 0

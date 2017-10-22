@@ -13,25 +13,30 @@ function _urls(attribute) {
 
 function init() {
   // console.log('worker: loading images')
-  let ιUrls   = _urls('data-image-url'),
-      // pUrls   = _urls('data-image-palette'),
-      pUrls   = [],
-      ιWorker = new ImageWorker(),
-      ηι      = 0
+  let urls   = _urls('data-image-url'),
+      worker = new ImageWorker()
 
-  let debug = false
+  worker.onmessage = function (event) {
+    let {ι, id} = event.data,
+        image    = document.querySelector(`#${id} .image`)
 
-  ιWorker.onmessage = function (event) {
-    let {ι, id, τ} = event.data
-    if(τ === 'image')
-      document.querySelector(`#${id} .image`).style.backgroundImage = ι
+     // update the image
+    _.defer(() => { image.style.backgroundImage = ι
+                    image.classList.remove('blurred')})
 
-    ηι += 1
-    if(ηι === (ιUrls.length + pUrls.length)) {
-      ιWorker.terminate() // Terminate the worker
-      ιWorker = null }} 
+    // remove the head of the urls
+    urls = _.tail(urls)
+
+     // if the url list is empty, we're done and terminate the worker
+    if(_.isEmpty(urls)) 
+      _.defer( () => {worker.terminate() // Terminate the worker
+                      worker = null })
+
+    // if there's more, tell the worker 
+    else _.defer( () => worker.postMessage(_.first(urls))) } 
       
-  ιWorker.postMessage(_.concat(ιUrls, pUrls)) // send urls to worker
+  // send first url to worker
+  if(!_.isEmpty(urls)) worker.postMessage(_.first(urls)) 
 }
 
 export default { init }

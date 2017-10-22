@@ -4,8 +4,8 @@
   </button> 
 
    <div class="items"> 
-    {{ range .Site.Data.settings.filters  }} 
-      <button id="{{ . }}-menu" data-category="{{ . }}" class="filter item pattern button"> 
+    {{ range (slice "architecture" "design" "studio")  }} 
+      <button id="{{ . }}-menu" data-type="{{ . }}" class="filter item pattern button"> 
         {{.}} 
       </button> 
     {{ end }} 

@@ -5,12 +5,26 @@
 
 $hero-height: calc(100vh - 10rem)
 
+#logo-frame
+  z-index: 4
 
-#articles 
-  // border: 1px solid $red
-  position: relative
+#menu
+  align-items: flex-start
+  margin-top: 0
+  z-index: 5
+
+#project
+  display: flex
+  flex-direction: column
+
+#articles
+
+footer#footer.footer
+  z-index: 2
+  +z-depth-2dp-inset
 
 #hero-image-frame
+  z-index: 0
   position: fixed
   top: 0
   left: 0
@@ -28,7 +42,7 @@ $hero-height: calc(100vh - 10rem)
 article.single
   flex: 1 0 auto
   position: relative
-  z-index: 2
+  z-index: 3
   background: $white
   padding-bottom: 12rem
   display: flex
@@ -187,11 +201,6 @@ article.single
           font-size: $size-small
           margin-top: 0.25rem
 
-#articles
-  #menu
-    align-items: flex-start
-    margin-top: 0
-    z-index: 4
 
 #back-btn
   $btn-height: 2.25rem

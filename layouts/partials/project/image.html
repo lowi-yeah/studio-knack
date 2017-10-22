@@ -1,0 +1,14 @@
+<div  class="image block"
+      data-ratio="{{ .ratio }}"
+      data-size="{{ .size }}">
+  <div class="image-frame">
+    <div  class="worker image blurred" 
+          id="{{ .id }}"
+          style="background-image: url({{ .tiny }})"
+          data-image-url="{{ .url }}" ></div>
+  </div>
+  {{ with .caption }}
+    <div class="caption"> {{ . | markdownify }} </div>
+  {{ end }}
+    
+</div>
