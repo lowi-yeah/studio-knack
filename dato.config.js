@@ -3,17 +3,32 @@ let _         = require('lodash'),
     getPixels = require('get-pixels'),
     d3        = require('d3-scale')
 
+let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
 
-var ratioΣ = d3.scaleQuantize()
-                .domain([0.5, 2])
-                .range([0.5, 1, 2])
+
+function _guid(prefix) {
+  prefix = `${prefix}-` || ''
+  let s4 = () =>  Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1)
+  // return prefix + s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() 
+  return prefix + s4() + s4() + '-' + s4() + s4() }
+
 
 // This function helps transforming structures
 // —eg. [{ tagName: 'meta', attributes: { name: 'description', content: 'foobar' } }]—
 // into proper HTML tags: <meta name="description" content="foobar" />
-const toHtml = (tags) => (
-  tags.map(({ tagName, attributes, content }) => (
-    htmlTag(tagName, attributes, content) )).join(''))
+function _toHtml(tags) {
+  return tags
+          .map(({ tagName, attributes, content }) => htmlTag(tagName, attributes, content))
+          .join('') }
+
+function _image(image) {
+  return {  url:    image.url({ w: 1200, auto: 'compress' }),
+            id:     _guid('i'),
+            ratio:  ratioΣ(image.width/image.height),
+            tiny:   image.url({ w: 16 }) }}
+
 
 function _aboutContent(item) {
   let type = item.entity.itemType.name
@@ -30,33 +45,83 @@ function _aboutContent(item) {
               role:         item.role,
               description:  item.description}}}}
 
-function _articleContent(item) {
-  let type = item.entity.itemType.apiKey
+function _projectContent(item) {
+  let contentType = item.entity.itemType.apiKey
+  if(contentType === 'text_block')  
+    return { text: item.content }
 
-  console.log('ITEM:', item.entity.itemType.apiKey)
-
-  if(type === 'article_text')  
-    return { text: item.text }
-
-  if(type === 'article_image') {  
+  if(contentType === 'image_block') {  
       if(!item.image) return null
-      let url   = item.image.url({ w: 1200, auto: 'compress' }),
-          ratio = ratioΣ(item.image.width/item.image.height)
-      return { image: { url, ratio }}}
+      let ι = _image(item.image)
+      ι.id      = 'i-' + item.image.url().match(/\d{5,}/)[0]
+      ι.caption = item.caption
+      ι.size    = item.size
+      return { image: ι}}
 
-  if(type === 'article_factsheet') 
-    return { facts: {
-              timeline: item.entity.timeline,
-              status:   item.entity.status,
-              location: { text: item.entity.location,
-                          coordinates: item.entity.map },
-              topology: item.entity.topology,
-              size:     item.entity.size,
-              client:   item.entity.client }}
+   if(contentType === 'gallery_block') { 
+    return { gallery: item.images.map(item => _image(item)) } 
 
-   if(type === 'gallery') { 
-    return { gallery: item.gallery.map(item => item.url({ w: 800, auto: 'compress' })) } }
-}
+  } }
+
+function _projectBase(project, index, options) {
+  return {title:        project.title,
+          label:        project.label,
+          image:        _image(project.coverImage),
+          seoMetaTags:  _toHtml(project.seoMetaTags),
+          type:         options.type,
+          id:           options.prefix + '-' + index,
+          // content is being written into the frontmatter instead of the content section of the post
+          content:      _.compact(project.content.map(item => _projectContent(item))) }}
+
+function _mapLink(text, coordinates) {
+  let p = { api:        1,  
+            map_action: 'map',
+            // basemap:    'terrain',
+            zoom:       14,
+            center:     `${coordinates.latitude},${coordinates.longitude}` },
+      s = _.map(p, (v, k) => `${k}=${v}`).join('&')
+  return `[${text}](https://www.google.com/maps/@?${s})` }
+
+function _projectStats(project, type) {
+  let stats = {}
+
+  if(type === 'architecture') 
+    stats =  {timeline: project.timeline,
+              status:   project.status,
+              topology: project.topology,
+              client:   project.client }
+
+  if(type === 'design') 
+    stats =  {timeline:   project.timeline,
+              status:     project.status,
+              discipline: project.discipline,
+              client:     project.client }
+
+  // remove unset values
+  stats = _.reduce(stats, (ρ, v, k) => {
+              if(v) ρ[k] = v
+              return ρ }, {})
+
+  // location needs special treatment, as two fields (location & map)
+  // are being lumped together
+  if(project.location) {
+    stats.location = { text: project.location }
+    if (project.map) { 
+      stats.location = _.merge(stats.location, project.map)
+      stats.location.href = _mapLink(project.location, project.map) }}
+
+  // if none of the stats fields is set, return null
+  if(_.isEmpty(stats)) return null
+  return { stats } }
+
+function _projects(datoProjects, options) {
+  return _.map(datoProjects, (project, index) => {
+            let base        = _projectBase(project, index, options),
+                stats       = _projectStats(project, options.type),
+                frontmatter = _.merge(base, stats)
+                content     = '',
+                post        = {frontmatter, content}
+              return [`${project.slug}.md`, 'yaml', post] })}
 
 // Arguments that will receive the mapping function:
 //
@@ -79,92 +144,112 @@ module.exports = (dato, root, i18n) => {
     root.addToDataFile(file, 'toml', {title:        dato.site.globalSeo.siteName,
                                       languageCode: i18n.locale })})
 
-  // Categories
-  // ————————————————————————————————  
-  // load the categories and put them into the config
-  // categories are the validation-values of entry > category
-  // var categoryId = '53589',
-  //     categories = dato.entitiesRepo.entities.field[categoryId].validators.enum.values;
+  
+  // Global & SEO
+  // ————————————————————————————————
 
-  var categories = ['architecture', 'design', 'studio']
+  // @obacht! no i18n yet
+  let settings  = {},
+      imageBase = 'https://www.datocms-assets.com',
+      globalSeo = _(dato.site.globalSeo.value).values().first(),
+      metaTags  = [ { tagName:    'meta',
+                      attributes: { name:    'description',
+                                    content: globalSeo.fallbackSeo.description }},
+                    { tagName:    'meta',
+                      attributes: { property: 'og:title',
+                                    content: globalSeo.siteName }},
+                    { tagName:    'meta',
+                      attributes: { property: 'og:description',
+                                    content: globalSeo.fallbackSeo.description }},
+                    { tagName:    'meta',
+                      attributes: { property: 'og:image',
+                                    content: imageBase + globalSeo.fallbackSeo.image.path }},
+                    { tagName:    'meta',
+                      attributes: { property: 'og:url',
+                                    content: globalSeo.facebookPageUrl }},
+                     { tagName:    'meta',
+                      attributes: { property: 'og:site_name',
+                                    content: globalSeo.siteName }},
+                    { tagName:    'meta',
+                      attributes: { property: 'twitter:card',
+                                    content: 'summary_large_image' }},
+                    { tagName:    'meta',
+                      attributes: { property: 'twitter:image:alt',
+                                    content: globalSeo.siteName }},
+                    { tagName:    'meta',
+                      attributes: { property: 'twitter:site',
+                                    content: globalSeo.twitterAccount }} ]
 
-  // Create a YAML data file to store global data about the site
-  root.createDataFile('data/settings.yml', 'yaml', {
-    name:             dato.site.globalSeo.siteName,
-    language:         dato.site.locales[0],
-    intro:            dato.home.introText,
-    copyright:        dato.home.copyright,
-    // iterate over   all the `social_profile` item types
-    socialProfiles:   dato.socialProfiles.map( profile => {
-                      return {type: profile.profileType.toLowerCase().replace(/ +/, '-'),
-                              url: profile.url }}),
-    faviconMetaTags:  toHtml(dato.site.faviconMetaTags),
-    seoMetaTags:      toHtml(dato.home.seoMetaTags),
-    filters:          categories })
+  settings.faviconMetaTags  = _toHtml(dato.site.faviconMetaTags)
+  settings.seoMetaTags      = _toHtml(metaTags)
+  settings.title            = globalSeo.siteName
 
+  root.createDataFile('data/settings.yml', 'yaml', settings)
+
+
+  // Architecture
+  // ————————————————————————————————
+  root.directory('content/architecture', dir => {
+    let options   = { type: 'architecture',
+                      prefix: 'knck-a'},
+        projects  = _projects(dato.architectures, options)
+    _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+  })
+
+  // Design
+  // ————————————————————————————————
+  root.directory('content/design', dir => {
+    let options   = { type: 'design',
+                      prefix: 'knck-d'},
+        projects  = _projects(dato.designs, options)
+    _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+  })
+
+  // Studio
+  // ————————————————————————————————
+  root.directory('content/studio', dir => {
+    let options   = { type: 'studio',
+                      prefix: 'knck-s'}
+        projects  = _projects(dato.studios, options)
+    _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+  })
+
+  
   // Create a markdown file with content coming from the `about_page` item
   // type stored in DatoCMS
-  root.createPost(`content/about.md`, 'yaml', {
-    frontmatter: {
-      title:        dato.aboutPage.title,
-      images:       dato.aboutPage.gallery.map(item => item.url({ w: 800, auto: 'compress' })),
-      content:      dato.aboutPage.content.map(item => _aboutContent(item)),
-      seoMetaTags:  toHtml(dato.aboutPage.seoMetaTags),
-      type:         'extra',
-      layout:       'about' }
-  });
-
-  
-  
-  root.directory('content/entry', dir => {
-    let entries = _.map(dato.entries, (entry, index) => {
-                      let frontmatter = { title:        entry.title,
-                                          images:       _.map(entry.gallery, image => 
-                                                            { return { url:     image.url({ w: 800, auto: 'compress' }),
-                                                                       info:    image.url({ fm: 'json' }),
-                                                                       tiny:    image.url({ w: 2 }),
-                                                                       palette: image.url({ w: 800, palette: 'json', colors: '2' }) }}),
-                                          date:         entry.date,
-                                          id:           'knc-' + index,
-                                          tag:          entry.tag,
-                                          category:     entry.category,
-                                          location:     entry.location,
-                                          latlng:       entry.latlng,
-                                          size:         entry.size,
-                                          weight:       entry.date,
-                                          emphasis:     entry.emphasis,
-                                          seoMetaTags:  toHtml(entry.seoMetaTags) },
-                          content     = entry.description || '' ,
-                          post        = { frontmatter, content}
-                        return [`${entry.slug}.md`, 'yaml', post]})
-    _.each(entries, ([slug, format, post]) => {
-      dir.createPost(slug, format, post)
-    })                      
-  })
+  // root.createPost(`content/about.md`, 'yaml', {
+  //   frontmatter: {
+  //     title:        dato.aboutPage.title,
+  //     images:       dato.aboutPage.gallery.map(item => item.url({ w: 800, auto: 'compress' })),
+  //     content:      dato.aboutPage.content.map(item => _aboutContent(item)),
+  //     seoMetaTags:  _toHtml(dato.aboutPage.seoMetaTags),
+  //     type:         'extra',
+  //     layout:       'about' }
+  // });
 
   // Articles
   // ————————————————————————————————
-  root.directory('content/article', dir => {
-    let articles  = _.map(dato.articles, (article, index) => {
+  // root.directory('content/article', dir => {
+  //   let articles  = _.map(dato.articles, (article, index) => {
 
-                      // console.log('## article')
-                      // console.log(article.content)
+  //                     // console.log('## article')
+  //                     // console.log(article.content)
 
-                      let αContent    = _.compact(article.content.map(item => _articleContent(item))), 
-                          frontmatter = { title:        article.title,
-                                          label:        article.label,
-                                          category:     article.category,
-                                          image:        { url:      article.heroImage.url({ w: 800, auto: 'compress' }),
-                                                          info:     article.heroImage.url({ fm: 'json' }),
-                                                          tiny:     article.heroImage.url({ w: 2 }),
-                                                          palette:  article.heroImage.url({ w: 800, palette: 'json', colors: '2' }) },
-                                          // seoMetaTags:  toHtml(dato.aboutPage.seoMetaTags),
-                                          layout:       'article',
-                                          id:           'knc-' + index,
-                                          content:      αContent },
-                          content     = '',
-                          post        = {frontmatter, content}
-                        return [`${article.slug}.md`, 'yaml', post]})
-    _.each(articles, ([slug, format, post]) => dir.createPost(slug, format, post))})
+  //                     let αContent    = _.compact(article.content.map(item => _articleContent(item))), 
+  //                         frontmatter = { title:        article.title,
+  //                                         label:        article.label,
+  //                                         category:     article.category,
+  //                                         image:        { url:      article.heroImage.url({ w: 800, auto: 'compress' }),
+  //                                                         info:     article.heroImage.url({ fm: 'json' }),
+  //                                                         tiny:     article.heroImage.url({ w: 2 }),
+  //                                                         palette:  article.heroImage.url({ w: 800, palette: 'json', colors: '2' }) },
+  //                                         // seoMetaTags:  _toHtml(dato.aboutPage.seoMetaTags),
+  //                                         layout:       'article',
+  //                                         id:           'knc-' + index,
+  //                                         content:      αContent },
+  //                         content     = '',
+  //                         post        = {frontmatter, content}
+  //                       return [`${article.slug}.md`, 'yaml', post]})
+  //   _.each(articles, ([slug, format, post]) => dir.createPost(slug, format, post))})
 
 }

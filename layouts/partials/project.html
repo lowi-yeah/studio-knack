@@ -1,0 +1,65 @@
+{{ partial "intro.html" . }}
+
+
+
+<div id="project">
+
+  {{ partial "curtain.svg" . }}
+  {{ partial "gradient.svg" . }}
+  {{ partial "project/logo.svg" . }}
+  {{ partial "overlay.svg" . }}
+    
+  <script src="/assets/dawn.js"></script>
+  
+  {{ partial "project/menu.html" . }}
+
+  <div id="hero-frame"> 
+  <div  class="worker image blurred" 
+        id="hero-image"
+        style="background-image: url({{ .Params.image.tiny }})"
+        data-image-palette="{{ .Params.image.palette }}"
+        data-image-url="{{ .Params.image.url }}" ></div>
+  </div>
+  
+  <article class="project detail">
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title is-1">
+           {{ .Title }}
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    {{ with .Params.stats }}
+      {{ partial "project/stats" . }}
+    {{ end }}
+    
+    <section class="content container is-fluid">
+      <div class="frame">
+        {{ range .Params.content }}
+      
+          {{ with .image }}
+            {{ partial "project/image" . }}
+          {{ end }}
+      
+          {{ with .text }}
+            {{ partial "project/text" . }}
+          {{ end }}
+      
+          {{ with .gallery }}
+            {{ partial "project/gallery" . }}
+          {{ end }}
+      
+        {{ end }}
+      </div>
+    </section>
+    <!-- <a class="next" href="/page/2/">next</a> -->
+  </article>
+  
+  <script src="/assets/article.js"></script>
+
+  {{ partial "footer" . }}
+</div>
+{{ partial "outro" . }}

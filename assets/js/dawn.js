@@ -1,7 +1,7 @@
 import _        from 'lodash'
-import anime    from 'animejs'
-import gradient from './gradient'
-import logo     from './logo'
+import logo     from './common/logo'
+import gradient from './common/gradient'
+import curtain  from './common/curtain'
 
 // Element.prototype.remove = function() {
 //     this.parentElement.removeChild(this) }
@@ -10,40 +10,26 @@ import logo     from './logo'
 //     for(var i = this.length - 1; i >= 0; i--) {
 //         if(this[i] && this[i].parentElement) this[i].parentElement.removeChild(this[i]) } }
 
-let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
-    EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine']
 
-function _offset(δ) {
-  switch(δ){
-    case 'left':    return -window.innerWidth
-    case 'right':   return  window.innerWidth
-    case 'top':     return -window.innerHeight
-    case 'bottom':  return  window.innerHeight }}
+function _href(e) {
+  if(!e) return
+  if(e.tagName.match(/body/gi)) return {href: null}
+  let href    = e.getAttribute('href'),
+      target  = e.getAttribute('target')
+  
+  if(href && target) return {href, target}
+  if(href && !target) return {href}
+  return _href(e.parentElement)}
 
-function _openCurtain() {
-  console.log('_openCurtain')
-  let ρ = new Promise( resolve => {
-                          let α = { targets: '#curtain',
-                                    // duration: _.random(2000, 3200),
-                                    duration: 200,
-                                    delay:    400,
-                                    easing:   _.sample(EASINGS),
-                                    complete: resolve },
-                              δ = _.sample(DIRECTIONS)
-                          if(δ === 'left' || δ === 'right')  α.width  = 0
-                          if(δ === 'top'  || δ === 'bottom') α.height = 0
-                          anime(α)}),
+// capture all a#href clicks
+window.onclick = e => { 
+  let {href, target} = _href(e.target)
+  if(href) {
+    if(target && target === '_blank') return 
+    e.preventDefault()
+    curtain.close().then(() => window.location = href)
+  }}
 
-      ϑ = _.map(document.querySelectorAll('rect.gradient'), gradient => 
-              new Promise( resolve => 
-                              anime({ targets: gradient,
-                                      duration: _.random(1600, 2000),
-                                      // opacity:  _.random(0.12, 0.81, true),
-                                      opacity:  1,
-                                      easing:   EASINGS[Math.floor(Math.random() * EASINGS.length)],
-                                      complete: resolve})))
-  return Promise.all(_.concat(ϑ, ρ))}
 
-window.curtainPromise = gradient.init()
+window.dawnPromise = gradient.init()
                           .then(logo.init)
-                          .then(_openCurtain)

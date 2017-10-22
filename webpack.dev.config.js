@@ -4,16 +4,13 @@ const extractSass       = new ExtractTextPlugin('all.css')
 
 module.exports = {
   entry: {
-    all:      __dirname + '/assets/js/index.js',
+    index:    __dirname + '/assets/js/index.js',
     dawn:     __dirname + '/assets/js/dawn.js',
     article:  __dirname + '/assets/js/article.js'
   },
-    
   resolve: {
     root: __dirname + '/assets/js',
-    alias: {
-      'masonry': 'masonry-layout',
-      'isotope': 'isotope-layout' } },
+    alias: {} },
   output: {
     path: __dirname + '/public/assets',
     filename: '[name].js',

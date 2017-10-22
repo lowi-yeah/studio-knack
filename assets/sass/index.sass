@@ -3,8 +3,6 @@
 // bulma variables
 @import "../../node_modules/bulma/sass/utilities/initial-variables"
 
-// @import "../../node_modules/leaflet/dist/leaflet.css"
-
 // custom variables
 @import "./variables/fonts"
 @import "./variables/colors"
@@ -21,7 +19,7 @@
 @import "./menu"
 @import "./slider"
 @import "./svg"
-@import "./article"
+@import "./project"
 @import "./about"
 @import "./overlay"
 @import "./logo"
@@ -30,11 +28,22 @@
 
 
 *
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0,0,0,0)
+  -webkit-tap-highlight-color: transparent
   outline: none
 
 *:hover, *:focus, *:active
   outline: none
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0,0,0,0)§
+  -webkit-tap-highlight-color: transparent
+
+// html
+//   overflow: hidden
+//   width: 100%
+
+// body
+//   height: 100%
+//   position: fixed /* prevent overscroll bounce*/
+//   overflow-y: scroll
+//   -webkit-overflow-scrolling: touch /* iOS velocity scrolling */
+//   width: 100%                    

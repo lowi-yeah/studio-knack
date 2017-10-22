@@ -1,5 +1,4 @@
 import _              from 'lodash'
-import Isotope        from 'isotope'
 import isMobile       from 'ismobilejs'
 import anime          from 'animejs'
 import initSlider     from './init-slider'
@@ -46,11 +45,11 @@ function init() {
   _.defer(() => initSlider('#about .slider'))
 
 
-  let isotope   = new Isotope( '.about.grid', { itemSelector: '.grid-item',
-                                                layoutMode:   'fitRows'})
+  // let isotope   = new Isotope( '.about.grid', { itemSelector: '.grid-item',
+  //                                               layoutMode:   'fitRows'})
 
-  console.log('_initAbout')
-  console.log('isotope', isotope)
+  // console.log('_initAbout')
+  // console.log('isotope', isotope)
 
     // // initialize the existing grid items. then re-layout
     // _.each(isotope.items, item => {

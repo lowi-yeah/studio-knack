@@ -2,10 +2,10 @@ import {randomNormal}   from 'd3-random'
 import anime            from 'animejs'
 import {scaleLinear, 
         scaleQuantize}  from 'd3-scale'
-import parallax         from './parallax'
-import util             from './util'
-import gradient         from './gradient'
-import overlay          from './overlay'
+import parallax         from '../common/parallax'
+import util             from '../common/util'
+import gradient         from '../common/gradient'
+import overlay          from '../common/overlay'
 
 const NUM_COLUMNS = 24
 const ȣ = randomNormal(0, 0.5)
@@ -603,9 +603,6 @@ function _update() {
   if(!grid) return
 
   let items = document.querySelectorAll('.grid-item')
-
-  console.log('_update! items', items)
-
   return _hideGrid()
     .then( () => _gridResize(items))
 
@@ -714,16 +711,8 @@ function _update() {
     // click & hover
     .then( () => {
 
-      // we neet to work around some issue with the hovers:
-      // below we attach enter- & leave-handlers to the .content of the item 
-      // (which has nothing to do with the overlay)
-      // but we need pointer events in the foreignt object (which lives in the overlay)
-      // alas, if we have pointer-events and activete the hover, the mouse leave
-      // attached to the content will be immediately triggered.
-      // what a conundrum…
       let overlayId,
           over        = false,
-          foreign     = document.querySelector('.overlay foreignObject'),
           isMobile    = util.isMobile(),
             
           show        = item => _.delay(() => { 
@@ -745,12 +734,6 @@ function _update() {
                             overlay.set(item)
                             overlayId = item.getAttribute('id') }}
 
-      if(!isMobile) {
-        util.addEvent(foreign, 'mouseenter', () => over = true)  
-        util.addEvent(foreign, 'mouseleave', () => {
-          over = false
-          hide() })}
-
       _.each(items, item => {
         let content = item.querySelector('.content')
               
@@ -763,7 +746,8 @@ function _update() {
 
           util.addEvent(content, 'mouseleave', event => {
             over = false
-            hide() })}})})
+            _.delay(hide, 200) 
+          })}})})
 
     // adjust the top padding an position of the first item
     // so we have a realtive consistent first impression upon opening the page

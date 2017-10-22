@@ -4,15 +4,13 @@ const extractSass       = new ExtractTextPlugin('all.css')
 
 module.exports = {
   entry: {
-    all:      __dirname + '/assets/js/index.js',
+    index:    __dirname + '/assets/js/index.js',
     dawn:     __dirname + '/assets/js/dawn.js',
     article:  __dirname + '/assets/js/article.js'
   },
   resolve: {
     root: __dirname + '/assets/js',
-    alias: {
-      'masonry': 'masonry-layout',
-      'isotope': 'isotope-layout' } },
+    alias: {} },
   output: {
     path: __dirname + '/public/assets',
     filename: '[name].js',
@@ -20,6 +18,8 @@ module.exports = {
   },
   module: {
     loaders: [
+      { test: /\.css$/, loader: "style-loader!css-loader" },
+      
       { test: /.*\.sass$/,
         loader: extractSass.extract(['css', 'postcss-loader', 'sass', 'import-glob'])},
       
@@ -29,7 +29,7 @@ module.exports = {
         query: { presets: ['es2015'] }},
 
       // images
-      // { test: /\.(jpe?g|png|gif|svg)$/i, loader: "file-loader?name=/images/[name].[ext]"},
+      { test: /\.(jpe?g|png|gif|svg)$/i, loader: "file-loader?name=/images/[name].[ext]"},
       
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url-loader?limit=65000&mimetype=application/font-woff&name=/assets/fonts/[name].[ext]' },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url-loader?limit=65000&mimetype=application/font-woff2&name=/assets/fonts/[name].[ext]' },

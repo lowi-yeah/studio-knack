@@ -1,11 +1,12 @@
 import {select}     from 'd3-selection'
 import anime        from 'animejs'
-import SVGMorpheus  from './lib/svg-morpheus'
-import util         from './util'
+import SVGMorpheus  from '../lib/svg-morpheus'
+import util         from '../common/util'
+import gradient     from '../common/gradient'
+import pattern      from '../common/pattern'
+import dom          from '../common/dom'
 import filter       from './filter'
-import gradient from './gradient'
-import pattern  from './pattern'
-import dom      from './dom'
+
 
 
 const EASINGS     = ['linear', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
@@ -39,8 +40,8 @@ function _applyFilter() {
       items     = document.querySelectorAll('#menu .filter.item'),
       promises  = _.map(items, item => 
                       new Promise( resolve => {
-                        // don't hide the selected category label
-                        if( ƒ && ƒ === item.getAttribute('data-category') ) return resolve()
+                        // don't hide the selected type label
+                        if( ƒ && ƒ === item.getAttribute('data-type') ) return resolve()
 
                         let τ = { x: `${item.clientWidth + BASE_OFFSET }px`},
                             α = { duration: _.random(240, 420),
@@ -98,7 +99,7 @@ function _initItems(toc) {
   let filterItems = document.querySelectorAll('#menu .filter.item'),
       filterFn    = item =>
                       () => {
-                        filter.set(item.getAttribute('data-category'))
+                        filter.set(item.getAttribute('data-type'))
                         toc.hide() }
 
   _.each(filterItems, filterItem => {

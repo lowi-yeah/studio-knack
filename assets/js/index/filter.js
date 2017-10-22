@@ -1,7 +1,8 @@
 import anime  from 'animejs'
-import util   from './util'
+import util   from '../common/util'
+import logo   from '../common/logo'
 import layout from './layout'
-import logo   from './logo'
+
 let EASINGS = ['linear', 'easeInOutQuad',
  'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 
@@ -22,9 +23,9 @@ function set(filter) {
   let items     = document.querySelectorAll('.grid-item'),
       filtered  = _.filter(items, ι => 
                     {
-                      console.log('item', ι.getAttribute('data-category'))
+                      console.log('item', ι.getAttribute('data-type'))
                       console.log('currentFilter', filter)
-                      return (ι.getAttribute('data-category') !== filter) && filter !== 'all' 
+                      return (ι.getAttribute('data-type') !== filter) && filter !== 'all' 
                     }),
       remaining = _.difference(items, filtered)
 

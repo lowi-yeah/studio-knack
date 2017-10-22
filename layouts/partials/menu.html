@@ -3,16 +3,12 @@
     {{ partial "menu-icon.svg" . }}  
   </button> 
 
-  <div class="items">
-    {{ range .Site.Data.settings.filters  }}
-      <button id="{{ . }}-menu" data-category="{{ . }}" class="filter item pattern button">
-        {{.}}
-      </button>
-    {{ end }}
-  </div>
-  <!-- <div id="search" class="entry">
-    <button id="toc-btn"><i class="material">search</i></button>
-    <input class="input" type="text" placeholder="Primary input">
-  </div> -->
+   <div class="items"> 
+    {{ range (slice "architecture" "design" "studio")  }} 
+      <button id="{{ . }}-menu" data-type="{{ . }}" class="filter item pattern button"> 
+        {{.}} 
+      </button> 
+    {{ end }} 
+  </div> 
 </div>
 

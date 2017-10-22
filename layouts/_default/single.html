@@ -1,27 +1,4 @@
-{{ partial "header.html" . }}
-
-{{ partial "curtain.svg" . }}
-{{ partial "gradient.svg" . }}
-{{ partial "logo.svg" . }}
-<script src="/assets/dawn.js"></script>
-
-<article class="single">
-  
-  <div class="hero-image" style="background-image: url({{ .Params.image.tiny }})"></div>
-
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container">
-        <h1 class="title">
-         {{ .Title }}
-        </h1>
-      </div>
-    </div>
-  </section>
-  
-
-</article>
-
-{{ partial "footer.html" . }}
+{{ partial "intro.html" . }}
+{{ partial "outro.html" . }}
 
 
