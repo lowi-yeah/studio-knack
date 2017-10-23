@@ -23,7 +23,7 @@ function init() {
     // update the image
     image.classList.remove('blurred')
     if(bg) image.style.backgroundImage = ι
-    else image.setAttribute('src', ι)
+    else images.setAttribute('src', ι)
 
     // remove the head of the urls
     urls = _.tail(urls)
