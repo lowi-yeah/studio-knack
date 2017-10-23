@@ -43,10 +43,12 @@ function mimetype(url) {
 self.addEventListener('message', function(e) {
   let δ = e.data
   request.image(δ.url).then( ι => {
+    console.log('δ.bg', δ.bg)
         var encoded = base64Encode(ι),
             μ       = mimetype(δ.url),
-            image   = `url(data:image/${μ};base64,${encoded})`
-        self.postMessage( { ι: image, id: δ.id })})
+            image   = `data:image/${μ};base64,${encoded}`
+        if(δ.bg) image = `url(${image})`
+        self.postMessage( { ι: image, id: δ.id, bg: δ.bg })})
 }, false)
 
 

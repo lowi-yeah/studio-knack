@@ -7,6 +7,7 @@ function _urls(attribute) {
             .map(i => {
               if( !i.getAttribute(attribute) ) return
               return {id:   i.getAttribute('id'),
+                      bg:   i.tagName !== 'IMG',
                       url:  i.getAttribute(attribute)} })
             .compact()
             .value() }
@@ -16,12 +17,13 @@ function init() {
       worker = new ImageWorker()
 
   worker.onmessage = function (event) {
-    let {ι, id} = event.data,
-        item    = document.getElementById(id)
+    let {ι, id, bg} = event.data,
+        image        = document.getElementById(id)
 
     // update the image
-    _.defer(() => { item.style.backgroundImage = ι
-                    item.classList.remove('blurred')})
+    image.classList.remove('blurred')
+    if(bg) image.style.backgroundImage = ι
+    else image.setAttribute('src', ι)
 
     // remove the head of the urls
     urls = _.tail(urls)
