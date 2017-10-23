@@ -24,23 +24,23 @@ function _toHtml(tags) {
           .join('') }
 
 function _image(image) {
-  return {  url:    image.url({ w: 1200, auto: 'compress' }),
+  let ratio   = ratioΣ(image.width/image.height),
+      width   = 1200,
+      height  = width / ratio
+  return {  url:    image.url({ w: width, h: height, auto: 'compress' }),
             id:     _guid('i'),
             ratio:  ratioΣ(image.width/image.height),
-            tiny:   image.url({ w: 16 }) }}
-
+            tiny:   image.url({ w: width/100, h: height/100, auto: 'compress' }) }}
 
 function _aboutContent(item) {
   let type = item.entity.itemType.name
 
   if(type === 'text')   return {text: item.text}
   if(type === 'image') { 
-    return {image: { url:   item.image.url({ w: 800, auto: 'compress' }),
-                     ratio: item.image.width/item.image.height }}}
+    return {image: _image(item.image)}}
   if(type === 'teammember') { 
     return {teammember: {
-              image:        { url:   item.image.url({ w: 800, auto: 'compress' }),
-                              ratio: item.image.width/item.image.height },
+              image:        _image(item.image),
               name:         item.name,
               role:         item.role,
               description:  item.description}}}}
@@ -53,7 +53,6 @@ function _projectContent(item) {
   if(contentType === 'image_block') {  
       if(!item.image) return null
       let ι = _image(item.image)
-      ι.id      = 'i-' + item.image.url().match(/\d{5,}/)[0]
       ι.caption = item.caption
       ι.size    = item.size
       return { image: ι}}
