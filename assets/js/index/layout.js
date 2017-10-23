@@ -564,12 +564,11 @@ function _id(item) {
 function _ids(items) {
   return _.map(items, ι => _id(ι.ϑ))}
 
-function _clear() {
-  return new Promise( (resolve, reject) => {
-    var grid = document.getElementById('grid')
-    while (grid.firstChild) grid.removeChild(grid.firstChild)
-    resolve() }) }
-
+// function _clearGrid() {
+//   return new Promise( (resolve, reject) => {
+//     var grid = document.getElementById('grid')
+//     while (grid.firstChild) grid.removeChild(grid.firstChild)
+//     resolve() }) }
 
 function _hideGrid() {
   return new Promise( resolve => {
@@ -578,9 +577,7 @@ function _hideGrid() {
             opacity:  0,
             duration: 240 + Math.random() * 320,
             easing:   _.sample(EASINGS),
-            complete: resolve})}
-
-    )}
+            complete: resolve})})}
 
 function _showGrid() {
   return new Promise( resolve => {
@@ -593,11 +590,6 @@ function _showGrid() {
             easing:   _.sample(EASINGS),
             complete: resolve})})}
 
-function _linearGradient(angle, hex) {
-  return `${util.getCssValuePrefix()}linear-gradient(${angle}deg, ${hex}, rgba(0, 0, 0, 0))`
-}
-
-
 function _update() {
   let grid = document.getElementById('grid')
   if(!grid) return
@@ -605,10 +597,9 @@ function _update() {
   let items = document.querySelectorAll('.grid-item')
   return _hideGrid()
     .then( () => _gridResize(items))
-
     .then( () => scroll(0, 0))
 
-    // attach the geighbour data to each item
+    // attach the neighbour data to each item
     .then( () => 
           _.each(items, item => {
             let itemsAbove = _itemsAbove(item),
@@ -675,8 +666,8 @@ function _update() {
       }))
 
     // set image shadow
-    .then( () =>  _.each(items, item => {
-      item.querySelector('.content').setAttribute(_.sample(SHADOWS), 1)}) )
+    // .then( () =>  _.each(items, item => {
+    //   item.querySelector('.content').setAttribute(_.sample(SHADOWS), 1)}) )
 
     // resize the text
     .then( () =>  _.each(items, item => {

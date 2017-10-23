@@ -1,7 +1,6 @@
 let _         = require('lodash'),
     htmlTag   = require('html-tag'),
-    getPixels = require('get-pixels'),
-    d3        = require('d3-scale')
+    getPixels = require('get-pixels')
 
 let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
 

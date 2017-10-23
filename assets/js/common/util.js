@@ -80,9 +80,9 @@ function getCssValuePrefix() {
 
 function boundingBox(item) {
   let β = item.getBoundingClientRect()
-  return { x:       β.left,
+  return { x:       (β.x || β.left),
            width:   β.width,
-           y:       β.top,
+           y:       (β.y || β.top),
            height:  β.height }}
 
 function extent(item) {
