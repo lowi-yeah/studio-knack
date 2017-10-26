@@ -33,12 +33,6 @@ function init() {
     .then(()  => grid.init(gridOptions))
     .then(Φ   => filter.init(Φ))
     .then(Φ   => overlay.init(Φ))
-    .catch(
-        // Log the rejection reason
-       (reason) => {
-            console.log(`rejection: ${reason}`)
-            curtain.open()
-        })
     .then(curtain.open)
     
 }

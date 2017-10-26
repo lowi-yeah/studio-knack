@@ -42,7 +42,7 @@ function init(Φ) {
   if(REMOVE_ON_SCROLL)
     util.addEvent(window, 'scroll', remove)
   else {
-    util.addEvent(window, 'scroll', update )
+    util.addEvent(window, 'scroll', _update )
   }
 }
 
