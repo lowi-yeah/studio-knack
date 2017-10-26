@@ -67,7 +67,7 @@
 
 // generate 'auto' columns
 @mixin columns($count: 12) {
-  $col: "auto ";
+  $col: "1fr ";
   $cols: "";
   @for $i from 0 to $count {
     $cols: $cols + $col;

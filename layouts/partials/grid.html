@@ -1,35 +1,35 @@
 
 <div class="grid-wrap">
   <div id="grid" class="main grid">
-    {{ range (where .Data.Pages "Type" "in" (slice "architecture" "design" "studio")) }}
+    {{ range (where .Data.Pages "Type" "in" .Params.conentTypes) }}
       <section 
         class="grid-item"
         data-visible="1"
         {{ with .Params.id }}             id="{{ . }}"                  {{ end }} 
         {{ with .Title }}                 data-caption="{{ . }}"        {{ end }} 
-        {{ with .Params.emphasis }}       data-emphasis="{{ . }}"       {{ end }}
         {{ with .Params.type }}           data-type="{{ . }}"           {{ end }} 
         {{ with .Params.image.url }}      data-image-url="{{ . }}"      {{ end }} 
-        {{ with .Params.image.palette }}  data-image-palette="{{ . }}"  {{ end }} 
         >
-        <div class="content">
-          <div class="image-frame">
-            <div class="image blurred" style="background-image: url({{ .Params.image.tiny }})"></div>
-          </div>
-          
-          <div class="overlay"> 
-            <div class="title is-3"> {{ .Title }} </div>
-            <a href="{{ .Permalink }}" class="button"> more > </a>
-          </div>
-          
+        <div class="frame">
+          <div class="content">
+            <div class="image-frame">
+              <div class="image blurred" style="background-image: url({{ .Params.image.tiny }})"></div>
+            </div>
+          </div>  
+          <div class="caption-frame"> 
+            <div class="caption"> 
+              <div class="title is-3"> {{ .Title }} </div>
+              <a href="{{ .Permalink }}" class="button"> more > </a>
+            </div>
+            </div>
         </div>  
        
-
-        <div class="text">
-          <div class="text-frame">
-            <span>{{ .Params.label }}</span>
+        {{ with .Params.label }}
+          <div class="label">
+            <span>{{ . }}</span>
           </div>
-        </div>
+        {{ end }}
+
       </section>
     {{ end }}
   </div>

@@ -1,41 +1,29 @@
 import anime  from 'animejs'
 import util   from '../common/util'
 import logo   from '../common/logo'
-import layout from './layout'
+import grid   from '../layout/grid'
 
 let EASINGS = ['linear', 'easeInOutQuad',
  'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
 
-function get() { return document.getElementById('grid').getAttribute('data-filter') }
+function get(Φ) { return Φ.filter }
 
-function set(filter) {
-  let currentFilter = get()
-  if(currentFilter && filter === currentFilter) filter = 'all'
+function set(Φ, filter) {
+  // reset if we apply the current filter agian
+  if(Φ.filtered && Φ.filtered === filter) filter = 'all'
+  Φ.filtered = filter
 
-  if(filter === 'all')
-    document.getElementById('grid').setAttribute('data-filter', filter)
-  else
-    document.getElementById('grid').setAttribute('data-filter', filter)
+  // // filter the grid items
+  // let filtered  = _.filter(Φ, φ => (φ.type !== filter) && filter !== 'all' ),
+  //     remaining = _.difference(Φ, filtered)
 
-  console.log('set', filter)
+  // console.log('filtered', filtered)
+  // console.log('remaining', remaining)
 
-  // filter the grid items
-  let items     = document.querySelectorAll('.grid-item'),
-      filtered  = _.filter(items, ι => 
-                    {
-                      console.log('item', ι.getAttribute('data-type'))
-                      console.log('currentFilter', filter)
-                      return (ι.getAttribute('data-type') !== filter) && filter !== 'all' 
-                    }),
-      remaining = _.difference(items, filtered)
-
-  console.log('filtered', filtered)
-  console.log('remaining', remaining)
-
-  _.each(filtered,  ι => ι.setAttribute('data-visible', 0))
-  _.each(remaining, ι => ι.setAttribute('data-visible', 1))
+  // _.each(filtered,  φ => .setAttribute('data-visible', 0))
+  // _.each(remaining, φ => .setAttribute('data-visible', 1))
   
-  layout.update() 
+  grid.update() 
 
 
   // let text = category === 'all' ? '' : category
@@ -43,5 +31,12 @@ function set(filter) {
   return filter
 }
 
+function init(Φ) {
+  console.log('init filter', Φ)
+  this.set = _.partial(set, Φ)
+  this.get = _.partial(get, Φ)
+  return Φ
+}
 
-export default { set, get }
+
+export default { init, get }

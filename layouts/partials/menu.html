@@ -2,12 +2,11 @@
   <button id="toc-btn" class="pattern button"> 
     {{ partial "menu-icon.svg" . }}  
   </button> 
-
-   <div class="items"> 
-    {{ range (slice "architecture" "design" "studio")  }} 
-      <button id="{{ . }}-menu" data-type="{{ . }}" class="filter item pattern button"> 
-        {{.}} 
-      </button> 
+  <div class="items"> 
+    {{ range .Params.menu }} 
+      <a href="{{.href}}" id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item pattern button"> 
+        {{.text}} 
+      </a> 
     {{ end }} 
   </div> 
 </div>

@@ -44,4 +44,9 @@ function getScale(ε) {
     return σ }
   else return 1 }
 
-export default { transform, getScale }
+function getElement(ε) {
+  if(_.isString(ε)) return document.querySelector(ε)
+  else return ε
+}
+
+export default { transform, getScale, getElement }

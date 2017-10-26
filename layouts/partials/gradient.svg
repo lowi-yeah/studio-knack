@@ -35,9 +35,14 @@
     </filter> 
 
     <filter id="shadow-1" x="-50%" y="-50%" width="200%" height="200%">
-      <feOffset result="offOut" in="SourceAlpha" dx="4" dy="4" />
+      <feOffset result="offOut" in="SourceAlpha" dx="0" dy="1" />
       <feGaussianBlur result="blurOut" in="offOut" stdDeviation="2" />
-      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+      <feColorMatrix  type="matrix" in="blurOut" result="matrixOut"
+                      values="1 0 0 0 0 
+                              0 1 0 0 0 
+                              0 0 1 0 0 
+                              0 0 0 0.4 0"/>
+      <feBlend in="SourceGraphic" in2="matrixOut" mode="normal" />
     </filter> 
 
     <filter id="inset-shadow-1" x="-50%" y="-50%" width="200%" height="200%">

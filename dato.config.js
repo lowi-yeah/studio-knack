@@ -1,7 +1,6 @@
 let _         = require('lodash'),
     htmlTag   = require('html-tag'),
-    getPixels = require('get-pixels'),
-    d3        = require('d3-scale')
+    getPixels = require('get-pixels')
 
 let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
 
@@ -122,6 +121,39 @@ function _projects(datoProjects, options) {
                 post        = {frontmatter, content}
               return [`${project.slug}.md`, 'yaml', post] })}
 
+function _index(options) {
+  let conentTypes = {conentTypes: [options.type]},
+      menu        = {menu:
+                          _(['architecture', 'design', 'studio'])
+                            .without(options.type)
+                            .reduce((ρ, τ) => { 
+                              ρ[τ] = {id:   τ,
+                                      text: τ,
+                                      href: `/${τ}`}
+                              return ρ}, {home: { id:   'home',
+                                                  text: 'everything',
+                                                  href: '/'}})
+                            },
+
+      // conentTypes: ["architecture", "design", "studio"]
+      // menu: 
+      //   - id:   "architecture"
+      //     text: "architecture"
+      //     href: "/architecture"
+        
+      //   - id:   "design"
+      //     text: "design"
+      //     href: "/design"
+      //   - id:   "studio"
+      //     text: "studio"
+      //     href: "/studio"
+
+      frontmatter = _.merge(conentTypes, menu),
+      content     = '',
+      post        = {frontmatter, content}
+  return { slug: `_index.md`, format: 'yaml', post }
+}
+
 // Arguments that will receive the mapping function:
 //
 // * dato:  lets you easily access any content stored in your DatoCMS administrative area
@@ -191,8 +223,12 @@ module.exports = (dato, root, i18n) => {
   root.directory('content/architecture', dir => {
     let options   = { type: 'architecture',
                       prefix: 'knck-a'},
-        projects  = _projects(dato.architectures, options)
+        projects  = _projects(dato.architectures, options),
+        index     = _index(options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+    // console.log('architecture index', index)
+    console.log('index.post', index.post.frontmatter)
+    dir.createPost(index.slug, index.format, index.post)
   })
 
   // Design
@@ -200,8 +236,10 @@ module.exports = (dato, root, i18n) => {
   root.directory('content/design', dir => {
     let options   = { type: 'design',
                       prefix: 'knck-d'},
-        projects  = _projects(dato.designs, options)
+        projects  = _projects(dato.designs, options),
+        index     = _index(options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+    // dir.createPost(index.slug, index.format, index.post)
   })
 
   // Studio
@@ -209,11 +247,12 @@ module.exports = (dato, root, i18n) => {
   root.directory('content/studio', dir => {
     let options   = { type: 'studio',
                       prefix: 'knck-s'}
-        projects  = _projects(dato.studios, options)
+        projects  = _projects(dato.studios, options),
+        index     = _index(options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+    // dir.createPost(index.slug, index.format, index.post)
   })
 
-  
   // Create a markdown file with content coming from the `about_page` item
   // type stored in DatoCMS
   // root.createPost(`content/about.md`, 'yaml', {
