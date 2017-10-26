@@ -127,27 +127,11 @@ function _index(options) {
                           _(['architecture', 'design', 'studio'])
                             .without(options.type)
                             .reduce((ρ, τ) => { 
-                              ρ[τ] = {id:   τ,
-                                      text: τ,
-                                      href: `/${τ}`}
-                              return ρ}, {home: { id:   'home',
-                                                  text: 'everything',
-                                                  href: '/'}})
-                            },
-
-      // conentTypes: ["architecture", "design", "studio"]
-      // menu: 
-      //   - id:   "architecture"
-      //     text: "architecture"
-      //     href: "/architecture"
-        
-      //   - id:   "design"
-      //     text: "design"
-      //     href: "/design"
-      //   - id:   "studio"
-      //     text: "studio"
-      //     href: "/studio"
-
+                              ρ[`${options.prefix}-${τ}`] = { id:   τ,
+                                                              text: τ,
+                                                              href: `/${τ}`}
+                              return ρ}, {})
+                            }
       frontmatter = _.merge(conentTypes, menu),
       content     = '',
       post        = {frontmatter, content}
