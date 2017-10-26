@@ -226,8 +226,6 @@ module.exports = (dato, root, i18n) => {
         projects  = _projects(dato.architectures, options),
         index     = _index(options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
-    // console.log('architecture index', index)
-    console.log('index.post', index.post.frontmatter)
     dir.createPost(index.slug, index.format, index.post)
   })
 
@@ -239,7 +237,7 @@ module.exports = (dato, root, i18n) => {
         projects  = _projects(dato.designs, options),
         index     = _index(options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
-    // dir.createPost(index.slug, index.format, index.post)
+    dir.createPost(index.slug, index.format, index.post)
   })
 
   // Studio
@@ -250,7 +248,7 @@ module.exports = (dato, root, i18n) => {
         projects  = _projects(dato.studios, options),
         index     = _index(options)
     _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
-    // dir.createPost(index.slug, index.format, index.post)
+    dir.createPost(index.slug, index.format, index.post)
   })
 
   // Create a markdown file with content coming from the `about_page` item
