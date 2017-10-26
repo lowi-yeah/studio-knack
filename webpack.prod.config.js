@@ -47,7 +47,8 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       compress: { warnings: false },
       comments: false,
-    })  ],
+    })  
+    ],
    worker: {
     output: {
       filename: "/hash.worker.js",

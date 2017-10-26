@@ -76,16 +76,12 @@ function _reset(gridStyle) {
 }
 
 function pack(Φ, gridStyle) {
-
-
   let startτ = performance.now()
   return new Promise(resolve => {
     let Λ = _reset(gridStyle),
         x = _.random(0, gridStyle.numCols-1), 
         y = 0,
         f = Φ.filtered
-
-  console.log('pack! Φ', f)
 
     _.reduce(Φ, (ρ, φ) => _place(φ, ρ), {Λ, x, y, f})
     // _ascii(Λ, 128, gridStyle.numCols)

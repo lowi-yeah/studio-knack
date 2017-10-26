@@ -34,6 +34,7 @@ function init() {
     .then(Φ   => filter.init(Φ))
     .then(Φ   => overlay.init(Φ))
     .then(curtain.open)
+    .catch( (reason) => console.log(`rejection: ${reason}`))
     
 }
 

@@ -72,6 +72,7 @@ function _attachEventHandlers(Φ) {
 
 function init(options) {
   console.log('initializing grid')
+  console.log('options', util.pretty(options))
   let self = this
   return new Promise( (resolve, reject) => {
 
@@ -83,11 +84,15 @@ function init(options) {
     // get the grid container
     let container = dom.getElement(options.container)
 
+    console.log('grid container:', container)
+
     // if it ain't there: reject
     if(!container) reject('no grid')
 
     let items     = document.querySelectorAll(options.items),
         gridStyle = _gridStyle(container)
+
+    console.log('container items:', items)
 
     cells.init(items, gridStyle)
       .then(Φ => packing.pack(Φ, gridStyle))
