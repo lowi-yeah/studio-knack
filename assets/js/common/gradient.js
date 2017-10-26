@@ -36,8 +36,8 @@ function _animate() {
       τ, c0, c1, η0, η1, α,
       update    = () => { 
                           τ   = (_.now() - offset) 
-                          η0  = noise.simplex2(0, τ / 20000)
-                          η1  = noise.simplex2(42, τ / 20000)
+                          η0  = noise.simplex2(0,  τ / 80000)
+                          η1  = noise.simplex2(42, τ / 80000)
                           c0  = colorΣ(η0)
                           c1  = colorΣ(η1)
 
@@ -51,7 +51,8 @@ function _animate() {
                           s1.setAttribute('stop-color', c1) 
                         }
   _.defer(update)
-  // util.startAnimation(15, update)
+  console.log('animating gradient')
+  util.startAnimation(4, update)
 }
 
 

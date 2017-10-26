@@ -1,7 +1,9 @@
-import dom  from '../common/dom'
-import util from '../common/util'
-
-import cells from './cells'
+import dom      from '../common/dom'
+import util     from '../common/util'
+import overlay  from '../common/overlay'
+import parallax from '../common/parallax'
+import cells    from './cells'
+import packing  from './bin-packing'
 
 // retrieves the style properties required for calclulating the layout
 function _gridStyle(grid) {
@@ -10,99 +12,95 @@ function _gridStyle(grid) {
       rowHeight = parseFloat(rowStyle),
       colStyle  = style.getPropertyValue('grid-template-columns'),
       numCols   = colStyle.split(' ').length,
-      colWidth  = parseFloat(colStyle.split(' ')[0])
-  return { rowHeight, numCols, colWidth } }
+      colWidth  = parseFloat(colStyle.split(' ')[0]),
+      gridWidth = parseFloat(style.width)
 
-function _cellStyle(cell) {
-  let style     = window.getComputedStyle(cell,null),
-      colStart  = style.gridColumnStart,
-      colEnd    = style.gridColumnEnd
-  // return { rowHeight, numCols, colWidth } 
+  return { rowHeight, numCols, colWidth, gridWidth } }
 
-  console.log('cell', cell.getAttribute('id'))
-  console.log('colStart', colStart)
-  console.log('colEnd', colEnd)
-  return style
-}
-
-// create line segments from the items by means of their neighbour information
-// function _lineup(Φ) {
-//   let _next = φ => φ.neighbours.right ? φ.neighbours.right.η : null
-//   return new Promise( resolve => 
-//     resolve(_.reduce(Φ, (ρ, φ) => {
-//               if(!φ.neighbours.left) {
-//                 let ℓ = [φ],
-//                     η = _next(φ)
-//                 while(η) {
-//                   console.log('n', η)
-//                   ℓ.push(η)
-//                   η = _next(η) }
-//                 ρ.push(ℓ) }
-//               return ρ }, [])))}
-
-// function _distributeLines(ℒ, {numCols}) {
-//   let w = window.innerWidth,
-//       ȴ = console.log('numCols', numCols),
-//       ρ = _.map(ℒ, ℓ => 
-//             new Promise( resolve => {
-//               console.log('line', ℓ)
-//               let n         = _.size(ℓ),
-//                   lineWidth = _.reduce(ℓ, (ρ, φ) => ρ += φ.colSpan, 0),
-//                   remainder = numCols - lineWidth
-//               console.log('numCols', numCols)
-//               console.log('lineWidth', lineWidth)
-//               console.log('remainder', remainder)
-
-//               resolve()
-//             })) 
-//   return Promise.all(ρ) }
-
-function _distribute(Φ) {
-  console.log('_distribute')
-
-  _(Φ)
-    // filter the cells that do not have a right neighbour
-    .filter(φ => _.isNil(φ.neighbours.right))
-    .map(φ => 
-      new Promise( resolve => {
-      console.log('φ', φ)
-      let style = _cellStyle(φ.item)
-
-
-      resolve()
-
-      }))
-    .value()
-}
 
 function show() {
   console.log('show grid')
 }
 
-function update() {
-  console.log('update grid')
+function update(Φ, gridStyle) {
+  console.log('update grid', Φ)
+  console.log('gridStyle', gridStyle)
+  cells.visibility(Φ)
+    .then(Φ => packing.pack(Φ, gridStyle))
+    .then(Φ => cells.jiggle(Φ, gridStyle))
+    .then(Φ => cells.labels(Φ, gridStyle))
+    .then(Φ => cells.update(Φ, gridStyle))
 }
+
+// mouse event handlers for grid item hovers
+// dunno where else to put them
+function _attachEventHandlers(Φ) {
+  let overlayId,
+      over        = false,
+      isMobile    = util.isMobile(),
+        
+      show        = φ => _.delay(() => { 
+                                if(!over) return
+                                overlayId = φ.id
+                                overlay.set(φ) }, 200),
+      hide        = () => _.delay(() => {
+                              if(over) return
+                              overlayId = undefined
+                              overlay.remove()  
+                            }, 200),
+      toggle      = φ => {     
+                      if(φ.id === overlayId) {
+                        overlay.remove() 
+                        overlayId = undefined }
+                      else {
+                        overlay.set(φ)
+                        overlayId = φ.id }}
+
+  _.each(Φ, φ => {
+    if(isMobile)
+      util.addEvent(φ.frame, 'click', () => toggle(φ))
+    else {
+      util.addEvent(φ.frame, 'mouseenter', event => {
+        over = true
+        show(φ) }) 
+
+      util.addEvent(φ.frame, 'mouseleave', event => {
+        over = false
+        _.delay(hide, 200) 
+      })}})
+  return Φ }
 
 function init(options) {
   console.log('initializing grid')
+  let self = this
+  return new Promise( (resolve, reject) => {
 
-  // initialize the options
-  options = options || {}
-  options = _.defaults(options, { container:  '#grid',
-                                  items:      '.grid-item'})
+    // initialize the options
+    options = options || {}
+    options = _.defaults(options, { container:  '#grid',
+                                    items:      '.grid-item'})
+  
+    // get the grid container
+    let container = dom.getElement(options.container)
 
-  // get the grid container
-  let container = dom.getElement(options.container),
-      items     = document.querySelectorAll(options.items),
-      gridStyle = _gridStyle(container)
-  // check whether the grid container exists. exit if it doesn't
-  if(!grid) {
-    console.warn(`grid container '${options.container}' ain't there. Returning…`)
-    return }
+    // if it ain't there: reject
+    if(!container) reject('no grid')
 
-  cells.place(items, {gridStyle})
-    .then(Φ => _distribute(Φ))
-    // .then(ℒ => _distributeLines(ℒ, gridStyle))
+    let items     = document.querySelectorAll(options.items),
+        gridStyle = _gridStyle(container)
+
+    cells.init(items, gridStyle)
+      .then(Φ => packing.pack(Φ, gridStyle))
+      .then(Φ => cells.jiggle(Φ, gridStyle))
+      .then(Φ => cells.labels(Φ, gridStyle))
+      .then(Φ => cells.update(Φ, gridStyle))
+      .then(Φ => _attachEventHandlers(Φ))
+      .then(Φ => parallax.init(Φ))
+      .then(Φ => { self.update = _.partial(update, Φ, gridStyle); return Φ})
+      .then(Φ => resolve(Φ))
+  })
+
+  
 }
 
-export default { init, update, show }
+export default { init, show }

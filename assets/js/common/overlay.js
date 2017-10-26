@@ -2,24 +2,33 @@ import anime    from 'animejs'
 import pattern  from './pattern'
 import util     from './util'
 
-const REMOVE_ON_SCROLL = true
+// const REMOVE_ON_SCROLL = true
+const REMOVE_ON_SCROLL = false
 
 let rect = document.querySelector('svg.overlay .bg'),
-      text
+    caption
 
-let itemId, β, Δ
+let itemId, β, Δ,
+    overlayα,
+    overlayδ 
 
 function _update() {
   if(!β) return
+  overlayδ = _.debounce(() => {
+    let Δη = window.scrollY,
+    δ  = Δ - Δη
+    β.y += δ
+    Δ = Δη
+    
+    overlayα = anime( { targets:  rect, 
+                        y:        β.y,
+                        duration: 400,
+                        easing:   'easeOutQuad',
+                        complete: () => {overlayα = null
+                                         overlayδ = null }})}, 400) }
 
-  let Δη = window.scrollY,
-      δ  = Δ - Δη
-  β.y += δ
-  rect.setAttribute('y', β.y)
-  Δ = Δη
-}
-
-function init() {
+function init(Φ) {
+  console.log('init overlay')
   let overlay = document.getElementById('overlay')
   if(!overlay) return
   
@@ -32,19 +41,19 @@ function init() {
   // huge boon for performance
   if(REMOVE_ON_SCROLL)
     util.addEvent(window, 'scroll', remove)
-  else 
-    util.addEvent(window, 'scroll', _update) 
+  else {
+    util.addEvent(window, 'scroll', update )
+  }
 }
 
 function remove() {
   if(!itemId) return
   rect.classList.remove('active')
-  text.classList.remove('active') 
+  caption.classList.remove('active') 
   itemId = null
   β      = null }
 
-function set(item) {
-
+function set(φ) {
   // animation flag:
   // If there is an item currently set, animate the bg rectangle to the new item.
   // If there is no current item, that means the bg is invisible and will appear shortly,
@@ -54,16 +63,24 @@ function set(item) {
   // if there is a current item, call remove to get rid of the overlays
   if(itemId) remove()
 
+  // if overlayα ⋁ overlayδ are set, 
+  // it means that a scroll update is waiting to happen/currently happening
+  // abort before continuing
+  if(overlayδ) {
+    console.log('overlayδ', overlayδ.cancel)
+    overlayδ.cancel(); overlayδ = null }
+  if(overlayα) {overlayα.pause();  overlayα = null }
+
   // update selection
-  text    = item.querySelector('.overlay')
+  caption = φ.caption
 
   // calculate bounds
-  β       = util.boundingBox(item)
+  β       = util.boundingBox(φ.item)
 
   Δ       = window.scrollY
-  itemId  = item.getAttribute('id')
+  itemId  = φ.id
   rect.classList.add('active')
-  text.classList.add('active')
+  caption.classList.add('active')
 
   // set the background rectangle
   if(doAnimate) 

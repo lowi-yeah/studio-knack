@@ -1,6 +1,7 @@
 import {randomNormal}   from 'd3-random'
 import {scaleQuantize,
         scaleLinear}    from 'd3-scale'
+import isMobile         from 'ismobilejs'
 
 import dom        from '../common/dom'
 import util       from '../common/util'
@@ -34,14 +35,18 @@ const MIN = Number.MIN_SAFE_INTEGER,
 
       // the maximum and minimum colspans for an elment
       // depending on the number of columns in the layou
-      S   = { 1: {min: 1, max: 1}, // one column
-              2: {min: 1, max: 2},
-              3: {min: 1, max: 2},
-              4: {min: 2, max: 3},
-              5: {min: 2, max: 3},
-              6: {min: 3, max: 6},
-              // 7: {min: 3, max: 6},
-              8: {min: 3, max: 5} },
+      S   = { 1:  {min: 1, max: 1}, // one column
+              // 2:  {min: 1, max: 2},
+              // 3:  {min: 2, max: 3},
+              4:  {min: 2, max: 3},
+              // 5:  {min: 2, max: 3},
+              6:  {min: 3, max: 4},
+              // 7:  {min: 3, max: 6},
+              8:  {min: 3, max: 5},
+              // 9:  {min: 2, max: 6},
+              // 10: {min: 2, max: 6},
+              // 11: {min: 2, max: 6},
+              12: {min: 2, max: 6} },
       // aspect ratios
       R   = { portrait: 1/1.618,
               square: 1,
@@ -88,7 +93,7 @@ function _setRatio(Φ, {numCols}) {
                   let r = Σ(φ.colSpan)
                   φ.ratio = r
                   φ.item.setAttribute('data-ratio', r)
-                  _.defer(resolve)})) 
+                  resolve()})) 
   return Promise.all(ρ)}
 
 // (randomly) set the col-spans of each item
@@ -103,7 +108,10 @@ function _setColspan(Φ, {numCols}) {
                         c = _.max([minSpan, c])
                         c = _.min([maxSpan, c])
                         φ.colSpan = c
-                        φ.item.style['grid-column'] = `span ${c}`
+                        φ.item.style['grid-column-start'] = '1'
+                        φ.item.style['grid-column-end']   = `${c + 1}`
+                        φ.item.style['grid-row-start']    = '1'
+                        φ.item.style['grid-row-end']      = '2'
                         _.defer(resolve)})) 
   return Promise.all(ρ)}
 
@@ -120,8 +128,6 @@ function _setPadding(Φ, {numCols}) {
                             l = _.random(δ, true)
 
                         φ.content.style.width = `${w}px`
-                        φ.content.style.background = `#ffff00`
-
                         φ.item.style.paddingTop     = `${t}px`
                         φ.item.style.paddingBottom  = `${b}px`
                         φ.item.style.paddingLeft    = `${l}px`
@@ -134,9 +140,22 @@ function _height(φ, rowHeight) {
   let β = util.boundingBox(φ.item),
       r = R[φ.ratio],
       h = β.width / r,
-      y = Math.round(h/rowHeight)
-  φ.rowSpan = y
-  φ.item.style['grid-row'] = `span ${y}`
+      s = Math.round(h/rowHeight),
+      t = _.random(1, 4),
+      b = _.random(3, 5)
+
+  if(isMobile.phone) {
+    φ.paddingTop    = 1 * rowHeight
+    φ.paddingBottom = 3 * rowHeight
+    φ.paddingLeft   = 16
+    φ.paddingRight  = 16 } 
+  else {
+    φ.paddingTop    = t * rowHeight
+    φ.paddingBottom = b * rowHeight
+    φ.paddingLeft   = _.random(24, 0.125 * β.width)
+    φ.paddingRight  = _.random(24, 0.125 * β.width) }
+  φ.rowSpan = t + s + b
+  φ.item.style['grid-row-end'] = `${t + s + b}`
 }
 
 function _setHeight(Φ, {rowHeight}) {
@@ -169,36 +188,200 @@ function _calculateBounds(Φ) {
             new Promise( resolve => {
               φ.itemExtent    = util.extent(φ.item)
               φ.contentExtent = util.extent(φ.content)
-              φ.itemBox       = util.boundingBox(φ.item)
-              φ.contentBox    = util.boundingBox(φ.content)
+              φ.itemBox       = util.extent(φ.item)
+              φ.contentBox    = util.extent(φ.content)
               resolve() })) 
   return Promise.all(ρ)}
 
-function _findNeighbours(Φ) {
-  let ρ = _.map(Φ, φ => 
-            new Promise( resolve => {
-              φ.neighbours = neighbours.all(φ, Φ)
-              _.defer(resolve) })) 
-  return Promise.all(ρ)
+function jiggle(Φ, {numCols}) {
+  return new Promise( resolve => {
+    _(Φ)
+      .map(φ => {
+        φ.neighbours = neighbours.all(φ, Φ)
+        return φ })
+      .shuffle()
+      .each(φ => {
+        // jiggle sideways
+        // get the distances to either the neighbour or the grid edege
+        let δLeft   = φ.neighbours.left ? 
+                        φ.neighbours.left.δ :
+                        φ.colStart-1,
+            δRight  = φ.neighbours.right ? 
+                        φ.neighbours.right.δ :
+                        (numCols + 1 - (φ.colStart + φ.colSpan)),
+            δ       = _.random(-δLeft, δRight)
+
+        φ.colStart += δ
+      })
+    resolve(Φ)
+  })
+}
+
+function _calculateWhitespace(φ, gridStyle) {
+  let above = φ.paddingTop,
+      below = φ.paddingBottom - φ.caption.clientHeight,
+      left  = φ.paddingLeft,
+      right = φ.paddingRight,
+      η,labelPosition, labelHeight, labelWidth
+
+  if(φ.neighbours.above) {
+    above += φ.neighbours.above.δ
+    η = _(φ.neighbours.above.η)
+          .map(n => {return {η: n, δ: n.paddingBottom}})
+          .sortBy(n => n.δ)
+          .first().η
+
+    if(η.labelPosition && η.labelPosition === 'below') {
+      labelHeight = parseFloat(η.label.style.height)
+      above += (η.paddingBottom - labelHeight)
+    } else above += η.paddingBottom }
+
+  if(φ.neighbours.below) {
+    below += φ.neighbours.below.δ
+    η = _(φ.neighbours.below.η)
+          .map(n => {return {η: n, δ: n.paddingTop}})
+          .sortBy(n => n.δ)
+          .first().η
+
+    if(η.labelPosition && η.labelPosition === 'above') {
+      labelHeight = parseFloat(η.label.style.height)
+      below += (η.paddingTop - labelHeight)
+    } else below += η.paddingTop
+  }
+
+  if(φ.neighbours.left) {
+    left += φ.neighbours.left.δ
+    η = _(φ.neighbours.left.η)
+          .map(n => {return {η: n, δ: n.paddingRight}})
+          .sortBy(n => n.δ)
+          .first().η
+    if(η.labelPosition && η.labelPosition === 'right') {
+      labelWidth = parseFloat(η.label.style.width)
+      left += (η.paddingRight - labelWidth)
+    } else left += η.paddingRight }
+  else left += (φ.colStart-1) * gridStyle.colWidth
+
+  if(φ.neighbours.right) {
+    right += φ.neighbours.right.δ
+    η = _(φ.neighbours.right.η)
+          .map(n => {return {η: n, δ: n.paddingLeft}})
+          .sortBy(n => n.δ)
+          .first().η
+    if(η.labelPosition && η.labelPosition === 'left') {
+      labelWidth = parseFloat(η.label.style.width)
+      right += (η.paddingLeft - labelWidth)
+    } else right += η.paddingLeft }
+  else right += (gridStyle.numCols + 1 - (φ.colStart + φ.colSpan)) * gridStyle.colWidth
+
+  return {above, right, below, left}}
+
+function labels(Φ, gridStyle) {
+  return new Promise( resolve => {
+    _(Φ)
+      .each(φ => {
+        if(!φ.label) return 
+            // calculate the whitespace in all directions
+        let whitespace      = _calculateWhitespace(φ, gridStyle),
+            // pick the direction with the largest delta
+            {δ, direction}  = _.reduce(whitespace, (ρ, delta, dir) => {
+                                  if(delta > ρ.δ) {
+                                    ρ.δ = delta
+                                    ρ.direction = dir }
+                                  return ρ }, {δ: 0, direction: null}),
+            frameβ          = util.boundingBox(φ.frame),
+            contentβ        = util.boundingBox(φ.content),
+            imageβ          = util.boundingBox(φ.image),
+            labelβ          = util.boundingBox(φ.label),
+            offset
+
+        switch(direction) {
+      
+          case 'above': 
+            offset = φ.paddingTop - δ
+            φ.label.style.transform   = `translateY(${offset}px)`
+            φ.label.style.height      = `${δ * 0.618}px`
+            φ.labelPosition           = 'above'
+            break
+
+          case 'below': 
+            let contentHeight = (φ.rowSpan * gridStyle.rowHeight) - (φ.paddingTop + φ.paddingBottom),
+                captionHeight = φ.caption.clientHeight
+
+            offset = φ.paddingTop + contentHeight + captionHeight
+            φ.label.style.transform   = `translateY(${offset}px)`
+            φ.label.style.height      = `${δ * 0.618}px`
+            φ.labelPosition           = 'below'
+            break
+
+          case 'right': 
+            φ.label.style.width         = `${δ}px`
+            φ.label.style.height        = `${frameβ.height * 0.618}px`
+            φ.label.style.transform     = `translateX(${frameβ.width - φ.paddingRight}px)`
+            φ.labelPosition             = 'right'
+            break
+
+          case 'left': 
+            φ.label.style.width         = `${δ}px`
+            φ.label.style.height        = `${frameβ.height * 0.618}px`
+            φ.label.style.transform     = `translateX(${-δ + φ.paddingLeft}px)`
+            φ.labelPosition             = 'left'
+            break
+        }
+      })
+    resolve(Φ)
+  })
+}
+
+function visibility(Φ) {
+  let filter = Φ.filtered || 'all'
+  return new Promise( resolve => {
+    _(Φ).each(φ => {
+      console.log('φ.type:', φ.type, 'filter:', filter, 'show:', (φ.type === filter || filter === 'all'))
+      if(φ.type === filter || filter === 'all')
+        φ.item.classList.remove('hidden')
+      else
+        φ.item.classList.add('hidden') })
+    resolve(Φ)
+  })
 }
 
 
-function place(items, {gridStyle}) {
+function init(items, gridStyle) {
   let Φ = _.map(items, item => { 
-              let id = item.getAttribute('id'),
-                  content = item.querySelector('.content')
-              return { item, id, content }})
+              let id      = item.getAttribute('id'),
+                  frame   = item.querySelector('.frame'),
+                  content = item.querySelector('.content'),
+                  caption = item.querySelector('.caption-frame'),
+                  label   = item.querySelector('.label'),
+                  image   = item.querySelector('.image-frame'),
+                  type    = item.getAttribute('data-type')
+              return { item, id, frame, content, caption, label, image, type }})
   return  new Promise( resolve => 
                 _setColspan(Φ, gridStyle)                 // assign a with to each item
                   .then(() => _setRatio(Φ, gridStyle))    // pick an aspect-ratio
                   .then(() => _setHeight(Φ, gridStyle))   // set the height based on width & ratio
                   .then(() => _readjustToScreenHeight(Φ, gridStyle)) // set to landscape if the item is heigher than the screen
-                  .then(() => _setPadding(Φ, gridStyle))  // add some padding
-                  .then(() => _calculateBounds(Φ))        // attach extent information
-                  .then(() => _findNeighbours(Φ))         // attach neighbour information
-                  .then(() => resolve(Φ)))}              
+                  .then(() => resolve(Φ)))}
 
-export default { place }
+function update(Φ, gridStyle) {
+  let ρ = _.map(Φ, φ => 
+    new Promise( resolve => {
+      if(_.isNumber(φ.colStart)) {
+        φ.item.style['grid-column-start'] = `${φ.colStart}`
+        φ.item.style['grid-column-end']   = `${φ.colStart + φ.colSpan}`
+        φ.item.style['grid-row-start']    = `${φ.rowStart}`
+        φ.item.style['grid-row-end']      = `${φ.rowStart + φ.rowSpan}`
+        φ.item.style['paddingTop']     = `${(φ.paddingTop)}px`
+        φ.item.style['paddingBottom']  = `${(φ.paddingBottom)}px`
+        φ.item.style['paddingRight']   = `${φ.paddingRight}px`
+        φ.item.style['paddingLeft']    = `${φ.paddingLeft}px`
+
+        _.defer(resolve) }
+      else resolve() }) )
+  return new Promise(resolve => 
+    Promise.all(ρ).then(() => resolve(Φ))) }
+
+export default { init, jiggle, labels, update, visibility }
 
 
 

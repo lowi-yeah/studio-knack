@@ -104,7 +104,8 @@ function _initItems(toc) {
 
   _.each(filterItems, filterItem => {
     dom.transform(filterItem, { x: `${filterItem.clientWidth + BASE_OFFSET }px`})
-    util.addEvent(filterItem, 'click', filterFn(filterItem)) })
+    // util.addEvent(filterItem, 'click', filterFn(filterItem)) 
+  })
 
   }
 
