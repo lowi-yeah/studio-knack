@@ -1,4 +1,5 @@
 import anime              from 'animejs'
+import Cookie             from 'js-cookie'
 import {scaleLinear,
         scaleSequential } from 'd3-scale'
 import {cubehelix}        from 'd3-color'
@@ -14,6 +15,8 @@ import util               from './util'
 const XMLNS   = 'http://www.w3.org/2000/svg',
       XLINKNS = 'http://www.w3.org/1999/xlink'
 
+let seed
+
 function _alphaCoordinates(α) {
   α = α * (Math.PI / 180)
   return {
@@ -23,10 +26,10 @@ function _alphaCoordinates(α) {
     'y2': Math.round(50 + Math.cos(α + Math.PI) * 50) + '%' }}
 
 function _animate() {
-  noise.seed(Math.random())
+  noise.seed(seed)
   let gradient  = document.getElementById('rainbow-gradient'),
       [s0, s1]  = gradient.querySelectorAll('stop'),
-      offset    = _.now() * Math.random(),
+      offset    = 0,
       colorΣ    = scaleSequential()
                     .domain([-1, 1])
                     .interpolator(interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))),
@@ -51,15 +54,20 @@ function _animate() {
                           s1.setAttribute('stop-color', c1) 
                         }
   _.defer(update)
-  console.log('animating gradient')
   util.startAnimation(4, update)
 }
 
 
 function init() {
   console.log('init gradient')
-  
   return new Promise( resolve => {
+    seed = parseFloat(Cookie.get('noise-seed'))
+    // console.log('seed', seed)
+    if(!_.isNumber(seed)) {
+      seed = Math.random()  
+      console.log('cookie seed!', seed)
+      Cookie.set('noise-seed', seed) }
+
     let γ = document.getElementById('gradient'),
         ℓ = γ.querySelectorAll('linearGradient'),
         δ = { x1: '0%', y1: '0%', x2: '0%', y2: '100%'}

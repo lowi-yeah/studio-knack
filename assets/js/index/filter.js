@@ -27,7 +27,6 @@ function set(Φ, filter) {
 
 
   // let text = category === 'all' ? '' : category
-  // logo.setText(text)
   return filter
 }
 

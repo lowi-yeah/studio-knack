@@ -41,19 +41,16 @@ function setText(text) {
   document.querySelector('#logo-frame > text').textContent = text
 }
 
-function begin() {
+function begin(text) {
   return new Promise( resolve => {
         console.log('logo begin')
-        // viewbox of the logo svg is: '0 0 320 134.9'
-        // the goal is a logo height of 72(?)
-        // so the the scale
-  
-        // let ω = { x: 16, y: 16, σ: (72/134.9) },
-        //     τ = { x: `${ω.x}px`, y: `${ω.y}px`, σ: ω.σ },
-        //     α = { duration: 1400,
-        //           easing:   'random',
-        //           complete: resolve}
-        // dom.transform(logo, τ, α) 
+
+        let listWrap = document.querySelector('.list-wrap')
+        if(listWrap) {
+          let type = listWrap.getAttribute('data-type')
+          document.querySelector('#logo-frame > text').textContent = type
+        }
+        
 
         resolve()
       

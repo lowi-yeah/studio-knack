@@ -1,15 +1,18 @@
 {{ partial "intro" . }}
-{{ partial "whiteout" . }}
-{{ partial "gradient.svg" . }}
-<!-- {{ partial "logo.svg" . }} -->
-{{ partial "curtain.svg" . }}
-{{ partial "overlay.svg" . }}
-<script src="/assets/dawn.js"></script>
 
-{{ partial "menu" . }}
-{{ partial "grid" . }}
-{{ partial "footer" . }}
-
-<script src="/assets/index.js"></script>
+<div class="list-wrap" data-type="{{.Params.type }}">
+  {{ partial "whiteout" . }}
+  {{ partial "gradient.svg" . }}
+  {{ partial "logo.svg" . }}
+  {{ partial "curtain.svg" . }}
+  {{ partial "overlay.svg" . }}
+  <script src="/assets/dawn.js"></script>
+  
+  {{ partial "menu" . }}
+  {{ partial "grid" . }}
+  {{ partial "footer" . }}
+  
+  <script src="/assets/index.js"></script>
+</div>
 
 {{ partial "outro.html" . }}

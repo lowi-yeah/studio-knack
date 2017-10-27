@@ -29,10 +29,14 @@ window.onclick = e => {
     e.preventDefault()
     curtain.close().then(Δ => {
       Cookie.set('curtain-direction', Δ)
-      window.location = href})
+      window.location = href
+    })
   }}
 
 
 window.dawnPromise = gradient.init()
-                          // .then(logo.init)
-                          .then(() => document.getElementById('whiteout').style.display = 'none')
+                          .then(logo.init)
+                          .then(() => {
+                            document.getElementById('whiteout').classList.add('invisible')
+                            document.getElementById('rainbow').classList.remove('invisible')
+                          })

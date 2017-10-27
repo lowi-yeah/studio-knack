@@ -2,6 +2,16 @@
   
   html {
     background: #ffffff;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  * {
+    box-sizing: inherit;  
+  }
+  *:before, *:after {
+    box-sizing: inherit;  
   }
   
   body {
@@ -29,6 +39,12 @@
     background: #ffffff;
     z-index: 1024;
     pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+  }
+
+  #whiteout.invisible {
+    opacity:0;
   }
 
   #curtain-frame {
@@ -41,6 +57,18 @@
     width: 100vw;
     height: 100vh;
   }
+
+  #gradients.bg {
+    fill: #ffff00
+  }
+
+  #rainbow {
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  #rainbow.invisible {
+    opacity:0;
+  }
   
-  /*.grid-wrap { opacity: 0; }*/
 </style>

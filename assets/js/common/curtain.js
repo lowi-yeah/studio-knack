@@ -10,61 +10,63 @@ let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
     OUT_EASINGS = ['easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine'],
     OPENING_DELAY = 200,
     FADE_DELAY    = 400,
-    FADE_DURATION = 800
+    FADE_DURATION = 600
 
 function open() {
-  console.log('TA DA!')
+  console.log('WTF!')
+  let ρ =  new Promise( resolve => {
+      console.log('TA DA!')
 
-  let δ = _.random(800, 1600),
-      Δ = Cookie.get('curtain-direction')
-  Cookie.remove('curtain-direction')
+      let δ = 620,
+          // δ = _.random(800, 1600),
+          Δ = Cookie.get('curtain-direction')
+      Cookie.remove('curtain-direction')
+      
+        if(!Δ) Δ = _.sample(DIRECTIONS)
+        Δ = OPPOSITES[Δ]
+      
+        console.log('bar')
+            console.log('foo')
+      let α = { targets: '#curtain',
+                duration: δ,
+                delay:    0,
+                easing:   'linear',
+                complete: resolve }
+      if(Δ === 'left')  { 
+        α.width       = 0
+        α.translateX  = 0}
 
-  if(!Δ) Δ = _.sample(DIRECTIONS)
-  Δ = OPPOSITES[Δ]
-  
-  let ρ = new Promise( resolve => {
-                          let α = { targets: '#curtain',
-                                    duration: δ,
-                                    delay:    FADE_DELAY + OPENING_DELAY,
-                                    easing:   _.sample(OUT_EASINGS),
-                                    complete: resolve }
-                          if(Δ === 'left')  { 
-                            α.width       = 0
-                            α.translateX  = 0}
+      if(Δ === 'right') { 
+        α.width       = 0; 
+        α.translateX  = window.innerWidth}
 
-                          if(Δ === 'right') { 
-                            α.width       = 0; 
-                            α.translateX  = window.innerWidth}
+      if(Δ === 'top')   { 
+        α.height      = 0
+        α.translateY  = 0}
 
-                          if(Δ === 'top')   { 
-                            α.height      = 0
-                            α.translateY  = 0}
+      if(Δ === 'bottom'){ 
+        α.height      = 0
+        α.translateY  = window.innerHeight}
 
-                          if(Δ === 'bottom'){ 
-                            α.height      = 0
-                            α.translateY  = window.innerHeight}
+      anime(α) })
 
-                          anime(α)}),
-      ζ = new Promise( resolve => 
-                          anime({ targets: '#rainbow',
-                                  duration: FADE_DURATION,
-                                  delay: FADE_DELAY,
-                                  opacity:  1,
-                                  easing:   _.sample(OUT_EASINGS),
-                                  complete: resolve}))
-  return Promise.all(_.concat(ρ, ζ))
-}
+  return ρ
+
+  }
 
 function close() {
   console.log('closing curtain')
   let Δ,
-      δ = _.random(800, 1600),
+      δ = 620,
       ρ = new Promise( resolve => {
-                          let curtain = document.getElementById('curtain'),
+                          let curtain   = document.getElementById('curtain'),
+                              whiteout  = document.getElementById('whiteout'),
                               α = { targets: curtain,
                                     duration: δ,
-                                    easing:   _.sample(OUT_EASINGS),
-                                    complete: resolve }
+                                    easing:   'linear',
+                                    complete: () => {
+                                                  whiteout.classList.remove('invisible')
+                                                  _.delay(() => resolve(), 320) }}
                           Δ = _.sample(DIRECTIONS)
 
                           if(Δ === 'left') {
@@ -92,17 +94,9 @@ function close() {
                             curtain.style.transform = `translateX(0) translateY(${window.innerHeight}px)`
                             α.height      = window.innerHeight
                             α.translateY  = 0 }
-                          anime(α)}),
-
-      ϑ = new Promise( resolve => 
-                          anime({ targets: '#rainbow',
-                                  duration: FADE_DURATION,
-                                  delay: δ - FADE_DURATION,
-                                  opacity:  0,
-                                  easing:   _.sample(OUT_EASINGS),
-                                  complete: resolve}))
-
-  return Promise.all(_.concat(ϑ, ρ)).then(() => Δ)}
+                          anime(α)})
+  return ρ.then(() => Δ) 
+}
 
 
 export default { open, close}

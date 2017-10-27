@@ -121,8 +121,14 @@ function _projects(datoProjects, options) {
                 post        = {frontmatter, content}
               return [`${project.slug}.md`, 'yaml', post] })}
 
+function _title(str) {
+  return str.replace(/\b\S/g, function(t) { return t.toUpperCase() });
+}
+
+
 function _index(options) {
-  let conentTypes = {conentTypes: [options.type]},
+  let type        = {type: _title(options.type)},
+      conentTypes = {conentTypes: [options.type]},
       menu        = {menu:
                           _(['architecture', 'design', 'studio'])
                             .without(options.type)
@@ -132,7 +138,7 @@ function _index(options) {
                                                               href: `/${τ}`}
                               return ρ}, {})
                             }
-      frontmatter = _.merge(conentTypes, menu),
+      frontmatter = _.merge(type, conentTypes, menu),
       content     = '',
       post        = {frontmatter, content}
   return { slug: `_index.md`, format: 'yaml', post }

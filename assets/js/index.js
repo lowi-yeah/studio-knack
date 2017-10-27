@@ -29,11 +29,12 @@ function init() {
   
   window.dawnPromise
     // .then(layout.init)
-    // .then(logo.begin)
+    .then(()  => logo.begin())
     .then(()  => grid.init(gridOptions))
     .then(Φ   => filter.init(Φ))
     .then(Φ   => overlay.init(Φ))
     .then(curtain.open)
+    .then((resule) => console.log('done', resule))
     .catch( (reason) => console.log(`rejection: ${reason}`))
     
 }
