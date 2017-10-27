@@ -7,15 +7,17 @@ import packing  from './bin-packing'
 
 // retrieves the style properties required for calclulating the layout
 function _gridStyle(grid) {
-  let style     = window.getComputedStyle(grid,null),
-      rowStyle  = style.getPropertyValue('grid-auto-rows'),
-      rowHeight = parseFloat(rowStyle),
-      colStyle  = style.getPropertyValue('grid-template-columns'),
-      numCols   = colStyle.split(' ').length,
-      colWidth  = parseFloat(colStyle.split(' ')[0]),
-      gridWidth = parseFloat(style.width)
-
-  return { rowHeight, numCols, colWidth, gridWidth } }
+  return new Promise( resolve => {
+    let style     = window.getComputedStyle(grid,null)
+    // we need some extra delay for the style to load completely
+    _.delay( () => {
+      let rowStyle  = style.getPropertyValue('grid-auto-rows'),
+          rowHeight = parseFloat(rowStyle) || 48,
+          colStyle  = style.getPropertyValue('grid-template-columns'),
+          numCols   = colStyle.split(' ').length,
+          colWidth  = parseFloat(colStyle.split(' ')[0]),
+          gridWidth = parseFloat(style.width)
+      resolve({ rowHeight, numCols, colWidth, gridWidth } )}, 200)})}
 
 
 function show() {
@@ -72,7 +74,6 @@ function _attachEventHandlers(Φ) {
 
 function init(options) {
   console.log('initializing grid')
-  console.log('options', util.pretty(options))
   let self = this
   return new Promise( (resolve, reject) => {
 
@@ -83,26 +84,23 @@ function init(options) {
   
     // get the grid container
     let container = dom.getElement(options.container)
-
-    console.log('grid container:', container)
-
     // if it ain't there: reject
     if(!container) reject('no grid')
 
-    let items     = document.querySelectorAll(options.items),
-        gridStyle = _gridStyle(container)
+    let items     = document.querySelectorAll(options.items)
 
-    console.log('container items:', items)
-
-    cells.init(items, gridStyle)
-      .then(Φ => packing.pack(Φ, gridStyle))
-      .then(Φ => cells.jiggle(Φ, gridStyle))
-      .then(Φ => cells.labels(Φ, gridStyle))
-      .then(Φ => cells.update(Φ, gridStyle))
-      .then(Φ => _attachEventHandlers(Φ))
-      .then(Φ => parallax.init(Φ))
-      .then(Φ => { self.update = _.partial(update, Φ, gridStyle); return Φ})
-      .then(Φ => resolve(Φ))
+    _gridStyle(container)
+      .then(gridStyle => {
+        cells.init(items, gridStyle)
+          .then(Φ => packing.pack(Φ, gridStyle))
+          .then(Φ => cells.jiggle(Φ, gridStyle))
+          .then(Φ => cells.labels(Φ, gridStyle))
+          .then(Φ => cells.update(Φ, gridStyle))
+          .then(Φ => _attachEventHandlers(Φ))
+          .then(Φ => parallax.init(Φ))
+          .then(Φ => { self.update = _.partial(update, Φ, gridStyle); return Φ})
+          .then(Φ => resolve(Φ))
+      })
   })
 
   

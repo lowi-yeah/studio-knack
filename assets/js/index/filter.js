@@ -32,7 +32,6 @@ function set(Φ, filter) {
 }
 
 function init(Φ) {
-  console.log('init filter', Φ)
   this.set = _.partial(set, Φ)
   this.get = _.partial(get, Φ)
   return Φ

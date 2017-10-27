@@ -23,9 +23,9 @@ const MIN = Number.MIN_SAFE_INTEGER,
       MAX = Number.MAX_SAFE_INTEGER,
 
       // probabilities for each layout
-      Z   = numCols => {  if(numCols <= 2) return { portrait:  [MIN, MIN-1],
-                                                    square:    [MIN-1, 0],
-                                                    landscape: [0, MAX] } //no portarait
+      Z   = numCols => {  if(numCols <= 2) return { portrait:  [MIN, MIN-1],  //no portarait
+                                                    square:    [MIN-1, 0],    //no square
+                                                    landscape: [0, MAX] }
                           // Cumulative from mean (0 to Z)
                           // ƒ(0.43) =  Φ(0.43) - ½ = 0.16640
                           // @see: https://en.wikipedia.org/wiki/Standard_normal_table
@@ -52,12 +52,22 @@ const MIN = Number.MIN_SAFE_INTEGER,
               square: 1,
               landscape: 1.618}
 
-function show() {
-  console.log('show grid')
+function _inspect(φ) {
+  console.log('φ', φ.id)
+  console.log('\trowStart:', φ.rowStart)
+  console.log('\trowSpan:', φ.rowSpan)
+  console.log('\tcolStart:', φ.colStart)
+  console.log('\tcolSpan:', φ.colSpan)
+  console.log('\tpaddingTop:', φ.paddingTop)
+  console.log('\tpaddingRight:', φ.paddingRight)
+  console.log('\tpaddingBottom:', φ.paddingBottom)
+  console.log('\tpaddingLeft:', φ.paddingLeft)
+  console.log('\tratio:', φ.ratio)
+  console.log('\ttype:', φ.type)
 }
 
-function update() {
-  console.log('update grid')
+function show() {
+  console.log('show grid')
 }
 
 // (randomly) set the width/height ratio of each item
@@ -103,7 +113,7 @@ function _setColspan(Φ, {numCols}) {
       minSpan = S[numCols].min,
       maxSpan = S[numCols].max,
       ρ       = _.map(Φ, φ => 
-                  new Promise( resolve => {
+                  new Promise( resolve => _.defer(()=> {
                         let c = Math.round(ȣ())
                         c = _.max([minSpan, c])
                         c = _.min([maxSpan, c])
@@ -112,74 +122,52 @@ function _setColspan(Φ, {numCols}) {
                         φ.item.style['grid-column-end']   = `${c + 1}`
                         φ.item.style['grid-row-start']    = '1'
                         φ.item.style['grid-row-end']      = '2'
-                        _.defer(resolve)})) 
-  return Promise.all(ρ)}
-
-// (randomly) add some padding to an element
-function _setPadding(Φ, {numCols}) {
-  let ρ       = _.map(Φ, φ => 
-                  new Promise( resolve => {
-                        let β = util.boundingBox(φ.item),
-                            t = _.random(24, β.height * 0.2), // some random top…
-                            b = _.random(24, β.height * 0.2), // …and bottom padding
-                            h = β.height - (b + t),             // the remaining height
-                            w = h * R[φ.ratio],                 // the resulting width
-                            δ = β.width - w,
-                            l = _.random(δ, true)
-
-                        φ.content.style.width = `${w}px`
-                        φ.item.style.paddingTop     = `${t}px`
-                        φ.item.style.paddingBottom  = `${b}px`
-                        φ.item.style.paddingLeft    = `${l}px`
-                        _.defer(resolve)})) 
+                        resolve() }))) 
   return Promise.all(ρ)}
 
 // set the width & height of each item
 // based on the viewport width and the calculated colspan & ratio values
 function _height(φ, rowHeight) {
-  let β = util.boundingBox(φ.item),
-      r = R[φ.ratio],
-      h = β.width / r,
-      s = Math.round(h/rowHeight),
-      t = _.random(1, 4),
-      b = _.random(3, 5)
+  return new Promise(resolve => 
+    _.defer(() => {
+      let β = util.boundingBox(φ.item),
+          r = R[φ.ratio],
+          h = β.width / r,
+          s = Math.round(h/rowHeight),
+          t = _.random(1, 4),
+          b = _.random(3, 5)
+      if(isMobile.phone) {
+        φ.paddingTop    = 1 * rowHeight
+        φ.paddingBottom = 3 * rowHeight
+        φ.paddingLeft   = 16
+        φ.paddingRight  = 16 } 
+      else {
+        φ.paddingTop    = t * rowHeight
+        φ.paddingBottom = b * rowHeight
+        φ.paddingLeft   = _.random(24, 0.125 * β.width)
+        φ.paddingRight  = _.random(24, 0.125 * β.width) }
+      φ.rowSpan = t + s + b
+      φ.item.style['grid-row-end'] = `${t + s + b}`
 
-  if(isMobile.phone) {
-    φ.paddingTop    = 1 * rowHeight
-    φ.paddingBottom = 3 * rowHeight
-    φ.paddingLeft   = 16
-    φ.paddingRight  = 16 } 
-  else {
-    φ.paddingTop    = t * rowHeight
-    φ.paddingBottom = b * rowHeight
-    φ.paddingLeft   = _.random(24, 0.125 * β.width)
-    φ.paddingRight  = _.random(24, 0.125 * β.width) }
-  φ.rowSpan = t + s + b
-  φ.item.style['grid-row-end'] = `${t + s + b}`
-}
+// _inspect(φ)
+
+      resolve() }))}
 
 function _setHeight(Φ, {rowHeight}) {
-  let ρ = _.map(Φ, φ => 
-            new Promise( resolve => {
-              _height(φ, rowHeight)
-              _.defer(resolve)})) 
+  let ρ = _.map(Φ, φ => _height(φ, rowHeight))
   return Promise.all(ρ)}
 
 function _readjustToScreenHeight(Φ, {rowHeight}) {
   let h = window.innerHeight,
       ρ = _.map(Φ, φ => 
-            new Promise( resolve => {
+            new Promise( resolve => _.defer(() => {
               let β = util.boundingBox(φ.item)
               if(β.height > window.innerHeight * 0.81) {
                 φ.ratio = 'landscape'
                 φ.item.setAttribute('data-ratio', 'landscape')
-                _.defer(() => {
-                  _height(φ, rowHeight)
-                  resolve()
-                })
-              } 
-              else resolve()
-            })) 
+                _height(φ, rowHeight)
+                resolve() } 
+              else resolve() }))) 
   return Promise.all(ρ)
 }
 
@@ -365,19 +353,19 @@ function init(items, gridStyle) {
 
 function update(Φ, gridStyle) {
   let ρ = _.map(Φ, φ => 
-    new Promise( resolve => {
-      if(_.isNumber(φ.colStart)) {
-        φ.item.style['grid-column-start'] = `${φ.colStart}`
-        φ.item.style['grid-column-end']   = `${φ.colStart + φ.colSpan}`
-        φ.item.style['grid-row-start']    = `${φ.rowStart}`
-        φ.item.style['grid-row-end']      = `${φ.rowStart + φ.rowSpan}`
-        φ.item.style['paddingTop']     = `${(φ.paddingTop)}px`
-        φ.item.style['paddingBottom']  = `${(φ.paddingBottom)}px`
-        φ.item.style['paddingRight']   = `${φ.paddingRight}px`
-        φ.item.style['paddingLeft']    = `${φ.paddingLeft}px`
-
-        _.defer(resolve) }
-      else resolve() }) )
+    new Promise( (resolve, reject) => 
+      _.defer(() => {
+        if(_.isNumber(φ.colStart)) {
+          φ.item.style['grid-column-start'] = `${φ.colStart}`
+          φ.item.style['grid-column-end']   = `${φ.colStart + φ.colSpan}`
+          φ.item.style['grid-row-start']    = `${φ.rowStart}`
+          φ.item.style['grid-row-end']      = `${φ.rowStart + φ.rowSpan}`
+          φ.item.style['paddingTop']     = `${(φ.paddingTop)}px`
+          φ.item.style['paddingBottom']  = `${(φ.paddingBottom)}px`
+          φ.item.style['paddingRight']   = `${φ.paddingRight}px`
+          φ.item.style['paddingLeft']    = `${φ.paddingLeft}px`
+          resolve()}
+      else reject(`φ.colStart ain't a number: ${φ.colStart}`) })))
   return new Promise(resolve => 
     Promise.all(ρ).then(() => resolve(Φ))) }
 

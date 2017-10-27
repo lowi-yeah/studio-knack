@@ -27,7 +27,6 @@ function _resize(logo) {
 }
 
 function init() {
-  console.log('init logo')
   let logo      = document.getElementById('logo'),
       texts     = document.querySelectorAll('#logo-frame .subtext'),
       transform = _resize(logo)

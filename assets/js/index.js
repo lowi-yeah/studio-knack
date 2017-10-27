@@ -29,7 +29,7 @@ function init() {
   
   window.dawnPromise
     // .then(layout.init)
-    .then(logo.begin)
+    // .then(logo.begin)
     .then(()  => grid.init(gridOptions))
     .then(Φ   => filter.init(Φ))
     .then(Φ   => overlay.init(Φ))
