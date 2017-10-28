@@ -13,20 +13,17 @@ let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
     FADE_DURATION = 600
 
 function open() {
-  console.log('WTF!')
   let ρ =  new Promise( resolve => {
-      console.log('TA DA!')
-
       let δ = 620,
           // δ = _.random(800, 1600),
           Δ = Cookie.get('curtain-direction')
+
+      // remove the cookie after opening so that by the next close a new random direction will be chosen
       Cookie.remove('curtain-direction')
       
         if(!Δ) Δ = _.sample(DIRECTIONS)
         Δ = OPPOSITES[Δ]
       
-        console.log('bar')
-            console.log('foo')
       let α = { targets: '#curtain',
                 duration: δ,
                 delay:    0,

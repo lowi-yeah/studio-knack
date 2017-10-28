@@ -3,7 +3,7 @@
     {{ partial "menu-icon.svg" . }}  
   </button> 
   <div class="items"> 
-    {{ range .Params.menu }} 
+    {{ range sort .Params.menu "index"}} 
       <a href="{{.href}}" id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item pattern button"> 
         {{.text}} 
       </a> 

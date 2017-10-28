@@ -13,6 +13,9 @@ import gradient   from './common/gradient'
 import overlay    from './common/overlay'
 import pattern    from './common/pattern'
 import curtain    from './common/curtain'
+import search     from './common/search'
+
+let Worker = require('worker-loader!./lib/knack.worker.js')
 
 let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
     EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
@@ -22,9 +25,15 @@ let gridOptions = { container:  '#grid',
 
 function init() {
   console.log('ready!')
-  images.init()  
+  let worker = new Worker()
+  images.init(worker)
+    .then(worker => search.init(worker))
+    .then(worker => {
+      search.search('design')
+      worker.terminate()})
   pattern.init()
   menu.init()
+
   // document.getElementById('footer').style.display = 'flex'
   
   window.dawnPromise
@@ -34,7 +43,6 @@ function init() {
     .then(Φ   => filter.init(Φ))
     .then(Φ   => overlay.init(Φ))
     .then(curtain.open)
-    .then((resule) => console.log('done', resule))
     .catch( (reason) => console.log(`rejection: ${reason}`))
     
 }

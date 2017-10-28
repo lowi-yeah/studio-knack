@@ -1,12 +1,13 @@
 import util from '../common/util'
-let ImageWorker   = require('worker-loader!../workers/image-worker.js')
+let Worker = require('worker-loader!../lib/knack.worker.js')
 
 function _urls(attribute) {
   let images = document.querySelectorAll('.worker.image')
   return _(images)
             .map(i => {
               if( !i.getAttribute(attribute) ) return
-              return {id:   i.getAttribute('id'),
+              return {type: 'image',
+                      id:   i.getAttribute('id'),
                       bg:   i.tagName !== 'IMG',
                       url:  i.getAttribute(attribute)} })
             .compact()
@@ -14,7 +15,7 @@ function _urls(attribute) {
 
 function init() {
   let urls   = _urls('data-image-url'),
-      worker = new ImageWorker()
+      worker = new Worker()
 
   worker.onmessage = function (event) {
     let {ι, id, bg} = event.data,
