@@ -5,7 +5,6 @@ import isMobile         from 'ismobilejs'
 
 import dom        from '../common/dom'
 import util       from '../common/util'
-import neighbours from './neighbours'
 
       // Z = { '1': [MIN, MAX],
       //       '2': [MIN, 0, MAX],
@@ -52,20 +51,6 @@ const MIN = Number.MIN_SAFE_INTEGER,
               square: 1,
               landscape: 1.618}
 
-function _inspect(φ) {
-  console.log('φ', φ.id)
-  console.log('\trowStart:', φ.rowStart)
-  console.log('\trowSpan:', φ.rowSpan)
-  console.log('\tcolStart:', φ.colStart)
-  console.log('\tcolSpan:', φ.colSpan)
-  console.log('\tpaddingTop:', φ.paddingTop)
-  console.log('\tpaddingRight:', φ.paddingRight)
-  console.log('\tpaddingBottom:', φ.paddingBottom)
-  console.log('\tpaddingLeft:', φ.paddingLeft)
-  console.log('\tratio:', φ.ratio)
-  console.log('\ttype:', φ.type)
-}
-
 function show() {
   console.log('show grid')
 }
@@ -77,8 +62,8 @@ function show() {
 function _setRatio(Φ, {numCols}) {
       // a linear scale used for offsetting the means of the dstandard deviations below
   let μΣ  = scaleLinear()
-            .domain([0, numCols-1])
-            .range([-1,2]),
+              .domain([0, numCols-1])
+              .range([-1,2]),
 
       // ȣ is a collection of random normal distribution functions
       // one for each possible colspan
@@ -148,9 +133,6 @@ function _height(φ, rowHeight) {
         φ.paddingRight  = _.random(24, 0.125 * β.width) }
       φ.rowSpan = t + s + b
       φ.item.style['grid-row-end'] = `${t + s + b}`
-
-// _inspect(φ)
-
       resolve() }))}
 
 function _setHeight(Φ, {rowHeight}) {
@@ -168,25 +150,11 @@ function _readjustToScreenHeight(Φ, {rowHeight}) {
                 _height(φ, rowHeight)
                 resolve() } 
               else resolve() }))) 
-  return Promise.all(ρ)
-}
-
-function _calculateBounds(Φ) {
-  let ρ = _.map(Φ, φ => 
-            new Promise( resolve => {
-              φ.itemExtent    = util.extent(φ.item)
-              φ.contentExtent = util.extent(φ.content)
-              φ.itemBox       = util.extent(φ.item)
-              φ.contentBox    = util.extent(φ.content)
-              resolve() })) 
-  return Promise.all(ρ)}
+  return Promise.all(ρ) }
 
 function jiggle(Φ, {numCols}) {
   return new Promise( resolve => {
     _(Φ)
-      .map(φ => {
-        φ.neighbours = neighbours.all(φ, Φ)
-        return φ })
       .shuffle()
       .each(φ => {
         // jiggle sideways
@@ -196,14 +164,11 @@ function jiggle(Φ, {numCols}) {
                         φ.colStart-1,
             δRight  = φ.neighbours.right ? 
                         φ.neighbours.right.δ :
-                        (numCols + 1 - (φ.colStart + φ.colSpan)),
+                        (numCols - (φ.colStart + φ.colSpan)),
             δ       = _.random(-δLeft, δRight)
 
-        φ.colStart += δ
-      })
-    resolve(Φ)
-  })
-}
+        φ.colStart += δ })
+    resolve(Φ) })}
 
 function _calculateWhitespace(φ, gridStyle) {
   let above = φ.paddingTop,
@@ -281,7 +246,6 @@ function labels(Φ, gridStyle) {
             imageβ          = util.boundingBox(φ.image),
             labelβ          = util.boundingBox(φ.label),
             offset
-
         switch(direction) {
       
           case 'above': 
@@ -320,19 +284,20 @@ function labels(Φ, gridStyle) {
   })
 }
 
-function visibility(Φ) {
+function reset(Φ, gridStyle) {
   let filter = Φ.filtered || 'all'
   return new Promise( resolve => {
     _(Φ).each(φ => {
-      console.log('φ.type:', φ.type, 'filter:', filter, 'show:', (φ.type === filter || filter === 'all'))
-      if(φ.type === filter || filter === 'all')
-        φ.item.classList.remove('hidden')
-      else
-        φ.item.classList.add('hidden') })
+      if(φ.type === filter || filter === 'all') φ.hidden = false
+      else φ.hidden = true})
     resolve(Φ)
-  })
-}
 
+    // _setColspan(Φ, gridStyle)
+    //   .then(() => _setRatio(Φ, gridStyle))    // pick an aspect-ratio
+    //   .then(() => _setHeight(Φ, gridStyle))   // set the height based on width & ratio
+    //   .then(() => _readjustToScreenHeight(Φ, gridStyle)) // set to landscape if the item is heigher than the screen
+    //   .then(() => resolve(Φ))
+  })}
 
 function init(items, gridStyle) {
   let Φ = _.map(items, item => { 
@@ -355,21 +320,28 @@ function update(Φ, gridStyle) {
   let ρ = _.map(Φ, φ => 
     new Promise( (resolve, reject) => 
       _.defer(() => {
-        if(_.isNumber(φ.colStart)) {
+        if(φ.hidden) {
+          φ.item.style.display    = 'none'
+          φ.item.style.visibility = 'hidden'
+          resolve() }
+        else if(_.isNumber(φ.colStart)) {
+          φ.item.style.display    = 'flex'
+          φ.item.style.visibility = 'visible'
+
           φ.item.style['grid-column-start'] = `${φ.colStart}`
           φ.item.style['grid-column-end']   = `${φ.colStart + φ.colSpan}`
           φ.item.style['grid-row-start']    = `${φ.rowStart}`
           φ.item.style['grid-row-end']      = `${φ.rowStart + φ.rowSpan}`
-          φ.item.style['paddingTop']     = `${(φ.paddingTop)}px`
-          φ.item.style['paddingBottom']  = `${(φ.paddingBottom)}px`
-          φ.item.style['paddingRight']   = `${φ.paddingRight}px`
-          φ.item.style['paddingLeft']    = `${φ.paddingLeft}px`
+          φ.item.style['paddingTop']        = `${(φ.paddingTop)}px`
+          φ.item.style['paddingBottom']     = `${(φ.paddingBottom)}px`
+          φ.item.style['paddingRight']      = `${φ.paddingRight}px`
+          φ.item.style['paddingLeft']       = `${φ.paddingLeft}px`
           resolve()}
       else reject(`φ.colStart ain't a number: ${φ.colStart}`) })))
   return new Promise(resolve => 
     Promise.all(ρ).then(() => resolve(Φ))) }
 
-export default { init, jiggle, labels, update, visibility }
+export default { init, jiggle, labels, update, reset }
 
 
 

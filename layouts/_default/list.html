@@ -1,6 +1,7 @@
 {{ partial "intro" . }}
-
-<div class="list-wrap" data-type="{{.Params.type }}">
+<div id="wrap" 
+  {{ with .Params.type }} data-type="{{ . }}" {{ end }} >
+  
   {{ partial "whiteout" . }}
   {{ partial "gradient.svg" . }}
   {{ partial "logo.svg" . }}
@@ -11,8 +12,7 @@
   {{ partial "menu" . }}
   {{ partial "grid" . }}
   {{ partial "footer" . }}
-  
-  <script src="/assets/index.js"></script>
 </div>
+<script src="/assets/index.js"></script>
 
 {{ partial "outro.html" . }}

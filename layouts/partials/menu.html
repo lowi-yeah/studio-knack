@@ -4,9 +4,9 @@
   </button> 
   <div class="items"> 
     {{ range sort .Params.menu "index"}} 
-      <a href="{{.href}}" id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item pattern button"> 
+      <button data-link="{{.href}}" id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item pattern button"> 
         {{.text}} 
-      </a> 
+      </button> 
     {{ end }} 
   </div> 
 </div>

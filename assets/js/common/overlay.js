@@ -44,7 +44,7 @@ function init(Φ) {
   else {
     util.addEvent(window, 'scroll', _update )
   }
-}
+  return Φ }
 
 function remove() {
   if(!itemId) return

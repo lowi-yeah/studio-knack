@@ -27,15 +27,12 @@ window.onclick = e => {
   if(href) {
     if(target && target === '_blank') return 
     e.preventDefault()
-    curtain.close().then(Δ => {
-      Cookie.set('curtain-direction', Δ)
+    curtain.close({toCookie: true}).then(() => {
       window.location = href
     })
   }}
 
-
 window.dawnPromise = gradient.init()
-                          .then(logo.init)
                           .then(() => {
                             document.getElementById('whiteout').classList.add('invisible')
                             document.getElementById('rainbow').classList.remove('invisible')

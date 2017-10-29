@@ -141,23 +141,29 @@ function _title(str) {
   return str.replace(/\b\S/g, function(t) { return t.toUpperCase() });
 }
 
+function _indexMenu(options) {
+  let r = {}
+  r[`${options.prefix}-home`] = { id:    'home',
+                                  index: 0,
+                                  text:  'home',
+                                  href:  'all'}
+
+  let menu = _(['architecture', 'design', 'studio'])
+                .without(options.type)
+                .reduce((ρ, τ, ι) => { 
+                  ρ[`${options.prefix}-${τ}`] = { id:     τ,
+                                                  index:  ι+1,
+                                                  text:   τ,
+                                                  href:   `${τ}`}
+                  return ρ}, r)
+  return {menu}
+}
+
 
 function _index(options) {
   let type        = {type: _title(options.type)},
       conentTypes = {conentTypes: [options.type]},
-      menu        = {menu:
-                          _(['architecture', 'design', 'studio'])
-                            .without(options.type)
-                            .reduce((ρ, τ, ι) => { 
-                              ρ[`${options.prefix}-${τ}`] = { id:     τ,
-                                                              index:  ι+1,
-                                                              text:   τ,
-                                                              href:   `/${τ}`}
-                              return ρ}, { home: {id:     'home',
-                                                  index:  0,
-                                                  text:   'home',
-                                                  href:   '/'}})
-                            }
+      menu        = _indexMenu(options),
       frontmatter = _.merge(type, conentTypes, menu),
       content     = '',
       post        = {frontmatter, content}

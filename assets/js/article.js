@@ -56,7 +56,7 @@ function init() {
   // infinite.init()
   
   window.dawnPromise
-    .then(() => curtain.open())
+    .then(() => curtain.open({}))
     .then(() => {
       document.querySelector('.project.detail').style.opacity = 1
       document.getElementById('footer').style.display = 'flex'

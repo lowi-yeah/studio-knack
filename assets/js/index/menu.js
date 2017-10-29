@@ -99,12 +99,12 @@ function _initItems(toc) {
   let filterItems = document.querySelectorAll('#menu .filter.item'),
       filterFn    = item =>
                       () => {
-                        filter.set(item.getAttribute('data-type'))
+                        filter.set(item.getAttribute('data-link'))
                         toc.hide() }
 
   _.each(filterItems, filterItem => {
     dom.transform(filterItem, { x: `${filterItem.clientWidth + BASE_OFFSET }px`})
-    // util.addEvent(filterItem, 'click', filterFn(filterItem)) 
+    util.addEvent(filterItem, 'click', filterFn(filterItem)) 
   })
 
   }

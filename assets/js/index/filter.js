@@ -1,7 +1,8 @@
-import anime  from 'animejs'
-import util   from '../common/util'
-import logo   from '../common/logo'
-import grid   from '../layout/grid'
+import anime    from 'animejs'
+import util     from '../common/util'
+import logo     from '../common/logo'
+import curtain  from '../common/curtain'
+import grid     from '../layout/grid'
 
 let EASINGS = ['linear', 'easeInOutQuad',
  'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
@@ -9,23 +10,20 @@ let EASINGS = ['linear', 'easeInOutQuad',
 function get(Φ) { return Φ.filter }
 
 function set(Φ, filter) {
-  // reset if we apply the current filter agian
+  // reset if we apply the current filter again
   if(Φ.filtered && Φ.filtered === filter) filter = 'all'
   Φ.filtered = filter
-
-  // // filter the grid items
-  // let filtered  = _.filter(Φ, φ => (φ.type !== filter) && filter !== 'all' ),
-  //     remaining = _.difference(Φ, filtered)
-
-  // console.log('filtered', filtered)
-  // console.log('remaining', remaining)
-
-  // _.each(filtered,  φ => .setAttribute('data-visible', 0))
-  // _.each(remaining, φ => .setAttribute('data-visible', 1))
+  curtain.close({toCookie: true})
+    .then(grid.update)
+    .then(() => { 
+                  console.log('history', filter)
+                  if(filter && filter !== 'all') history.pushState(null, null, `/${filter}`)
+                  else history.pushState(null, null, '/')})
+    .then(() => { if(filter && filter !== 'all') logo.setText(filter)
+                  else logo.removeText()})
+    .then(() => window.scroll(0, 0))
+    .then(() => curtain.open({fromCookie: true}))
   
-  grid.update() 
-
-
   // let text = category === 'all' ? '' : category
   return filter
 }

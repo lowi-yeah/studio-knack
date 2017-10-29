@@ -1,10 +1,9 @@
 
 <div class="grid-wrap">
   <div id="grid" class="main grid">
-    {{ range (where .Data.Pages "Type" "in" .Params.conentTypes) }}
+    {{ range (where .Data.Pages "Type" "in" .Params.conentTypes) }} 
       <section 
         class="grid-item"
-        data-visible="1"
         {{ with .Params.id }}             id="{{ . }}"                  {{ end }} 
         {{ with .Title }}                 data-caption="{{ . }}"        {{ end }} 
         {{ with .Params.type }}           data-type="{{ . }}"           {{ end }} 

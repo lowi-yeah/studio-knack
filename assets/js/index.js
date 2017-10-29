@@ -23,28 +23,33 @@ let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
 let gridOptions = { container:  '#grid',
                     items:      '.grid-item'}
 
+// function _history() {
+//   window.onpopstate = function(e) {
+//     let f = window.location.pathname.substring(1)
+//     if(f === '') f = 'all'
+//     filter.set(f)
+//   }
+// }
+
 function init() {
   console.log('ready!')
   let worker = new Worker()
   images.init(worker)
     .then(worker => search.init(worker))
-    .then(worker => {
-      search.search('design')
-      worker.terminate()})
+    .then(worker => { worker.terminate()})
   pattern.init()
   menu.init()
 
   // document.getElementById('footer').style.display = 'flex'
   
   window.dawnPromise
-    // .then(layout.init)
-    .then(()  => logo.begin())
+    .then(()  => logo.init())
     .then(()  => grid.init(gridOptions))
     .then(Φ   => filter.init(Φ))
     .then(Φ   => overlay.init(Φ))
-    .then(curtain.open)
+    // .then(_history)  
+    .then(() => curtain.open({}))
     .catch( (reason) => console.log(`rejection: ${reason}`))
-    
 }
 
 document.addEventListener('DOMContentLoaded', init)

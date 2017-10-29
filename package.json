@@ -16,13 +16,11 @@
   },
   "dependencies": {
     "animejs": "^2.0.2",
-    "bricks.js": "^1.8.0",
     "bulma": "^0.5.1",
     "cwise": "^1.0.10",
     "d3-random": "^1.1.0",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",
-    "d3-voronoi": "^1.1.2",
     "imagesloaded": "^4.1.1",
     "infinite-scroll": "^3.0.1",
     "ismobilejs": "^0.4.1",
@@ -32,7 +30,8 @@
     "lunr": "^2.1.4",
     "material-shadows": "^3.0.1",
     "ndarray": "^1.0.18",
-    "ndarray-ops": "^1.2.2"
+    "ndarray-ops": "^1.2.2",
+    "svg-path-parser": "^1.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
