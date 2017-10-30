@@ -2,12 +2,16 @@
   <button id="toc-btn" class="pattern button"> 
     {{ partial "menu-icon.svg" . }}  
   </button> 
-  <div class="items"> 
-    {{ range sort .Params.menu "index"}} 
-      <button data-link="{{.href}}" id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item pattern button"> 
-        {{.text}} 
-      </button> 
-    {{ end }} 
-  </div> 
+  <div id="sidebar" class="pattern">
+    <ul class="items"> 
+      {{ range .Params.menu}} 
+        <li id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item"  > 
+          <a data-link="{{.href}}" class="title is-2 smallcaps">
+            {{.text}} 
+          </a>
+        </li> 
+      {{ end }} 
+    </ul> 
+  </div>
 </div>
 

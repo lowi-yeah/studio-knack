@@ -171,23 +171,24 @@ function jiggle(Φ, {numCols}) {
     resolve(Φ) })}
 
 function _calculateWhitespace(φ, gridStyle) {
-  let above = φ.paddingTop,
+  let above = 0,
+      // above = φ.paddingTop,
       below = φ.paddingBottom - φ.caption.clientHeight,
       left  = φ.paddingLeft,
       right = φ.paddingRight,
       η,labelPosition, labelHeight, labelWidth
 
-  if(φ.neighbours.above) {
-    above += φ.neighbours.above.δ
-    η = _(φ.neighbours.above.η)
-          .map(n => {return {η: n, δ: n.paddingBottom}})
-          .sortBy(n => n.δ)
-          .first().η
+  // if(φ.neighbours.above) {
+  //   above += φ.neighbours.above.δ
+  //   η = _(φ.neighbours.above.η)
+  //         .map(n => {return {η: n, δ: n.paddingBottom}})
+  //         .sortBy(n => n.δ)
+  //         .first().η
 
-    if(η.labelPosition && η.labelPosition === 'below') {
-      labelHeight = parseFloat(η.label.style.height)
-      above += (η.paddingBottom - labelHeight)
-    } else above += η.paddingBottom }
+  //   if(η.labelPosition && η.labelPosition === 'below') {
+  //     labelHeight = parseFloat(η.label.style.height)
+  //     above += (η.paddingBottom - labelHeight)
+  //   } else above += η.paddingBottom }
 
   if(φ.neighbours.below) {
     below += φ.neighbours.below.δ
@@ -233,6 +234,7 @@ function labels(Φ, gridStyle) {
     _(Φ)
       .each(φ => {
         if(!φ.label) return 
+        if(φ.hidden) return 
             // calculate the whitespace in all directions
         let whitespace      = _calculateWhitespace(φ, gridStyle),
             // pick the direction with the largest delta
@@ -285,10 +287,10 @@ function labels(Φ, gridStyle) {
 }
 
 function reset(Φ, gridStyle) {
-  let filter = Φ.filtered || 'all'
+  let filter = Φ.filtered || 'index'
   return new Promise( resolve => {
     _(Φ).each(φ => {
-      if(φ.type === filter || filter === 'all') φ.hidden = false
+      if(φ.type === filter || filter === 'index') φ.hidden = false
       else φ.hidden = true})
     resolve(Φ)
 
@@ -299,16 +301,19 @@ function reset(Φ, gridStyle) {
     //   .then(() => resolve(Φ))
   })}
 
-function init(items, gridStyle) {
-  let Φ = _.map(items, item => { 
+function init(Φ, items, gridStyle) {
+  let filter = Φ.filtered || 'index',
+      Ѻ = _.map(items, item => { 
               let id      = item.getAttribute('id'),
                   frame   = item.querySelector('.frame'),
                   content = item.querySelector('.content'),
                   caption = item.querySelector('.caption-frame'),
                   label   = item.querySelector('.label'),
                   image   = item.querySelector('.image-frame'),
-                  type    = item.getAttribute('data-type')
-              return { item, id, frame, content, caption, label, image, type }})
+                  type    = item.getAttribute('data-type'),
+                  hidden  = !(type === filter || filter === 'index')
+              return { item, id, frame, content, caption, label, image, type, hidden }})
+  _.each(Ѻ, ϖ => Φ.push(ϖ))
   return  new Promise( resolve => 
                 _setColspan(Φ, gridStyle)                 // assign a with to each item
                   .then(() => _setRatio(Φ, gridStyle))    // pick an aspect-ratio

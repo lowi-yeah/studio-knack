@@ -143,21 +143,19 @@ function _title(str) {
 
 function _indexMenu(options) {
   let r = {}
-  r[`${options.prefix}-home`] = { id:    'home',
-                                  index: 0,
-                                  text:  'home',
-                                  href:  'all'}
+  // r[`${options.prefix}-${options.type}`] = { id:    options.type,
+  //                                 order: 0,
+  //                                 text:  options.type,
+  //                                 href:  options.type}
 
   let menu = _(['architecture', 'design', 'studio'])
-                .without(options.type)
                 .reduce((ρ, τ, ι) => { 
                   ρ[`${options.prefix}-${τ}`] = { id:     τ,
-                                                  index:  ι+1,
+                                                  order:  ι+1,
                                                   text:   τ,
-                                                  href:   `${τ}`}
+                                                  href:   τ}
                   return ρ}, r)
-  return {menu}
-}
+  return {menu} }
 
 
 function _index(options) {

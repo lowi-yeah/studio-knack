@@ -4,9 +4,9 @@ const extractSass       = new ExtractTextPlugin('all.css')
 
 module.exports = {
   entry: {
-    index:    __dirname + '/assets/js/index.js',
-    dawn:     __dirname + '/assets/js/dawn.js',
-    article:  __dirname + '/assets/js/article.js'
+    dawn:   __dirname + '/assets/js/dawn.js',
+    index:  __dirname + '/assets/js/index.js',
+    detail: __dirname + '/assets/js/detail.js'
   },
   resolve: {
     root: __dirname + '/assets/js',

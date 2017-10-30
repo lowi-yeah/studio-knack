@@ -27,13 +27,14 @@ function _title(str) {
 // we cannot use a simple resize, because the logo is a clipping path and
 // normal svg scaling of such paths is not supported in all browsers
 // instead, we need to parse the 'd' attribute of all strings and scale them directly
-function _resize(width, baseCommands) {
-  let σ     = width/BASEWIDTH,
-      δx    = 16,
-      δy    = 16
+function _resize(baseCommands, options) {
+  options = options || {}
+  options = _.defaults(options, { δx:16, δy: 16, width: 200})
 
-  console.log('width', width)
-  console.log('baseCommands', baseCommands)
+  let σ     = options.width/BASEWIDTH
+
+  console.log(`_resize | width: ${options.width}, σ; ${σ}, device: ${util.getDevice()}. options: ${options}`)
+  
 
   _.each(baseCommands, ζ => {
     let c = _.map(ζ.commands, command => {
@@ -41,37 +42,37 @@ function _resize(width, baseCommands) {
                 result.code = command.code
                 switch(command.code){
                   case ('C'): 
-                    result.x   = δx + (σ * command.x)
-                    result.x1  = δx + (σ * command.x1)
-                    result.x2  = δx + (σ * command.x2)
-                    result.y   = δy + (σ * command.y)
-                    result.y1  = δy + (σ * command.y1)
-                    result.y2  = δy + (σ * command.y2)
+                    result.x   = options.δx + (σ * command.x)
+                    result.x1  = options.δx + (σ * command.x1)
+                    result.x2  = options.δx + (σ * command.x2)
+                    result.y   = options.δy + (σ * command.y)
+                    result.y1  = options.δy + (σ * command.y1)
+                    result.y2  = options.δy + (σ * command.y2)
                     break
                 
                   case 'H': 
-                    result.x   = δx + (σ * command.x)
+                    result.x   = options.δx + (σ * command.x)
                     break
                 
                   case 'L': 
-                    result.x   = δx + (σ * command.x)
-                    result.y   = δy + (σ * command.y)
+                    result.x   = options.δx + (σ * command.x)
+                    result.y   = options.δy + (σ * command.y)
                     break
                 
                   case 'M': 
-                    result.x   = δx + (σ * command.x)
-                    result.y   = δy + (σ * command.y)
+                    result.x   = options.δx + (σ * command.x)
+                    result.y   = options.δy + (σ * command.y)
                     break
                 
                   case 'S': 
-                    result.x   = δx + (σ * command.x)
-                    result.x2  = δx + (σ * command.x2)
-                    result.y   = δy + (σ * command.y)
-                    result.y2  = δy + (σ * command.y2)
+                    result.x   = options.δx + (σ * command.x)
+                    result.x2  = options.δx + (σ * command.x2)
+                    result.y   = options.δy + (σ * command.y)
+                    result.y2  = options.δy + (σ * command.y2)
                     break
                 
                   case 'V': 
-                    result.y   = δy + (σ * command.y)
+                    result.y   = options.δy + (σ * command.y)
                     break
                 
                   case 'Z': break }
@@ -92,53 +93,66 @@ function _resize(width, baseCommands) {
   
 }
 
-function setText(baseCommands, text) {
+function setText(baseCommands, text, options) {
   document.getElementById('logo-sub').textContent = _title(text)
-  document
-    .getElementById('logo-rect')
-    .setAttribute('clip-path', `url(#${baseCommands.id})`)
-  _resize( 200, baseCommands )
+  document.getElementById('logo-rect').setAttribute('clip-path', `url(#${baseCommands.id})`)
+  
+  options = options || {}
+  options = _.defaults(options, { width: 200})
+  _resize( baseCommands, options )
 }
 
-function removeText(baseCommands) {
+function removeText(baseCommands, options) {
   document.getElementById('logo-sub').textContent = ''
-  document
-    .getElementById('logo-rect')
-    .setAttribute('clip-path', `url(#${baseCommands.id})`)
+  document.getElementById('logo-rect').setAttribute('clip-path', `url(#${baseCommands.id})`)
 
   // calculate the logo size
   let padding = 2 * 16,
-      button  = 48,
+      button  = 48 + 16,
       width   = _.min([window.innerWidth - padding - button, 800])
-  _resize( width, baseCommands )
+  
+  options = options || {}
+  options = _.defaults(options, { width })
+
+  _resize( baseCommands, options )
 }
 
 
 function init(text) {
   return new Promise( resolve => {
 
-    let twoLinePaths      = document.querySelectorAll('#twoline-logo path'),
-        twoLineCommands   = _.map(twoLinePaths, path => {
-                                let commands = parseSVG(path.getAttribute('d'))
-                                makeAbsolute(commands)
-                                return {path, commands}}),
-        oneLinePaths      = document.querySelectorAll('#oneline-logo path'),
-        oneLineCommands   = _.map(oneLinePaths, path => {
-                                let commands = parseSVG(path.getAttribute('d'))
-                                makeAbsolute(commands)
-                                return {path, commands}})
+    let largePaths      = document.querySelectorAll('#large-logo path'),
+        largeCommands   = _.map(largePaths, path => {
+                              let commands = parseSVG(path.getAttribute('d'))
+                              makeAbsolute(commands)
+                              return {path, commands}}),
+        smallPaths      = document.querySelectorAll('#small-logo path'),
+        smallCommands   = _.map(smallPaths, path => {
+                              let commands = parseSVG(path.getAttribute('d'))
+                              makeAbsolute(commands)
+                              return {path, commands}})
 
-    twoLineCommands.id = 'twoline-logo'
-    oneLineCommands.id = 'oneline-logo'
+    largeCommands.id = 'large-logo'
+    smallCommands.id = 'small-logo'
     
-    this.setText    = _.partial(setText, oneLineCommands)
-    this.removeText = _.partial(removeText, twoLineCommands)
+    this.setText    = _.partial(setText, smallCommands)
+    this.removeText = _.partial(removeText, largeCommands)
 
     // upon init check whether we're at the index page (render big logo),
     // or whether we're at a sub-page (render small logo with texts)
-    let pageType = document.getElementById('wrap').getAttribute('data-type')
-    if(pageType && !_.isEqual(pageType, 'index') ) setText(oneLineCommands, pageType)
-    else removeText(twoLineCommands)
+    let wrap      = document.getElementById('wrap'),
+        pageType  = wrap.getAttribute('data-type')
+    if(pageType) {
+      if(_.includes(['architecture', 'design', 'studio'], pageType) ) setText(smallCommands, pageType)
+      if(_.isEqual(pageType, 'project') ) {
+
+        // setText(smallCommands, 'wat?', { width: 128, δx:48 } )
+        removeText(smallCommands, { width: 128, δx:48 } )
+      }
+      else removeText(largeCommands)
+    }
+    
+    
     
     resolve() })}
 

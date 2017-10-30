@@ -1,12 +1,18 @@
 
 <div class="grid-wrap">
+  {{ $conentTypes := .Params.conentTypes}}
+
   <div id="grid" class="main grid">
-    {{ range (where .Data.Pages "Type" "in" .Params.conentTypes) }} 
+    {{ range (where .Site.Pages "Type" "in" (slice "architecture" "design" "studio")) }} 
       <section 
         class="grid-item"
+
         {{ with .Params.id }}             id="{{ . }}"                  {{ end }} 
         {{ with .Title }}                 data-caption="{{ . }}"        {{ end }} 
-        {{ with .Params.type }}           data-type="{{ . }}"           {{ end }} 
+        {{ with .Params.type }}   
+          data-visible="{{ in $conentTypes . }}"
+          data-type="{{ . }}"           
+        {{ end }} 
         {{ with .Params.image.url }}      data-image-url="{{ . }}"      {{ end }} >
         <div class="frame">
           <div class="content">

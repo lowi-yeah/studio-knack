@@ -86,7 +86,6 @@ function _place(φ, Φ, {Λ, x, y}) {
   φ.colStart = x+1
 
   φ.neighbours = neighbours.all(φ, Φ)
-
   return {Λ, x, y} }
 
 function pack(Φ, gridStyle) {

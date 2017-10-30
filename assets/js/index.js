@@ -5,8 +5,8 @@ import anime      from 'animejs'
 import menu       from './index/menu'
 // import layout     from './index/layout'
 import grid       from './layout/grid'
-import images     from './index/images'
 import filter     from './index/filter'
+import images     from './common/images'
 import logo       from './common/logo'
 import util       from './common/util'
 import gradient   from './common/gradient'
@@ -26,7 +26,7 @@ let gridOptions = { container:  '#grid',
 // function _history() {
 //   window.onpopstate = function(e) {
 //     let f = window.location.pathname.substring(1)
-//     if(f === '') f = 'all'
+//     if(f === '') f = 'index'
 //     filter.set(f)
 //   }
 // }
@@ -37,18 +37,19 @@ function init() {
   images.init(worker)
     .then(worker => search.init(worker))
     .then(worker => { worker.terminate()})
-  pattern.init()
-  menu.init()
+  
 
   // document.getElementById('footer').style.display = 'flex'
   
   window.dawnPromise
+    .then(()  => pattern.init())
     .then(()  => logo.init())
+    .then(()  => menu.init())
     .then(()  => grid.init(gridOptions))
     .then(Φ   => filter.init(Φ))
     .then(Φ   => overlay.init(Φ))
-    // .then(_history)  
-    .then(() => curtain.open({}))
+    .then(()  => window.scrollTo(0, 1))
+    .then(()  => curtain.open({}))
     .catch( (reason) => console.log(`rejection: ${reason}`))
 }
 

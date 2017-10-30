@@ -1,6 +1,5 @@
 
 function json(url) {
-  console.log('request. load json', url)
   return new Promise((resolve, reject) => {
     let request = new XMLHttpRequest()
     request.open('GET', url, true)
