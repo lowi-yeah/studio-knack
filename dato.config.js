@@ -142,25 +142,31 @@ function _title(str) {
 }
 
 function _indexMenu(options) {
-  let r = {}
-  // r[`${options.prefix}-${options.type}`] = { id:    options.type,
-  //                                 order: 0,
-  //                                 text:  options.type,
-  //                                 href:  options.type}
-
   let menu = _(['architecture', 'design', 'studio'])
                 .reduce((ρ, τ, ι) => { 
                   ρ[`${options.prefix}-${τ}`] = { id:     τ,
                                                   order:  ι+1,
                                                   text:   τ,
                                                   href:   τ}
-                  return ρ}, r)
+                  return ρ}, {})
   return {menu} }
 
 
 function _index(options) {
   let type        = {type: _title(options.type)},
       conentTypes = {conentTypes: [options.type]},
+      menu        = _indexMenu(options),
+      frontmatter = _.merge(type, conentTypes, menu),
+      content     = '',
+      post        = {frontmatter, content}
+  return { slug: `_index.md`, format: 'yaml', post }
+}
+
+function _mainIndex() {
+  let options   = { type: 'index',
+                    prefix: 'knck-index'},
+      type        = {type: options.type},
+      conentTypes = {conentTypes: ['architecture', 'design', 'studio']},
       menu        = _indexMenu(options),
       frontmatter = _.merge(type, conentTypes, menu),
       content     = '',
@@ -234,6 +240,12 @@ module.exports = (dato, root, i18n) => {
   // Initialize search-index
   // ————————————————————————————————  
   let searchIndex = []
+
+  // _index.md
+  // ————————————————————————————————
+  root.directory('content', dir => {
+    let mainIndex = _mainIndex()
+    dir.createPost(mainIndex.slug, mainIndex.format, mainIndex.post) })
 
   // Architecture
   // ————————————————————————————————
