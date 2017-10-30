@@ -31,10 +31,11 @@ function _resize(baseCommands, options) {
   options = options || {}
   options = _.defaults(options, { δx:16, δy: 16, width: 200})
 
-  let σ     = options.width/BASEWIDTH
-
-  console.log(`_resize | width: ${options.width}, σ; ${σ}, device: ${util.getDevice()}. options: ${options}`)
-  
+  let σ = options.width/BASEWIDTH,
+      h = σ * 809.4,
+      gridWrap = document.querySelector('.grid-wrap')
+      
+  if(gridWrap) gridWrap.style.paddingTop = `${h + 48}px`
 
   _.each(baseCommands, ζ => {
     let c = _.map(ζ.commands, command => {

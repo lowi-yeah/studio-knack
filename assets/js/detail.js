@@ -14,34 +14,6 @@ import Worker   from 'worker-loader!./lib/knack.worker.js'
 
 function init() {
 
-  // // get all links and check, whether they are internal or external
-  // // do this here instead of in the HTML, as links can be set by datoCMS/markdown
-  // // and there is no way of differentiating between external & internal links
-  // let links = document.querySelectorAll('a[href]')
-  // _.each(links, link => {
-  //   let href     = link.getAttribute('href'),
-  //       external = href.match(/https?\:\/\/.*/)
-
-  //   if(external) {
-  //     let icon = document.createElement('i')
-  //     icon.classList.add('material')
-  //     icon.classList.add('icon')
-  //     icon.innerHTML = 'exit_to_app'
-  //     link.setAttribute('target', '_blank')
-  //     link.appendChild(icon) }})
-
-  // // init the gallery blocks (if there are any…)
-  // let galleries = document.querySelectorAll('.gallery.block')
-  // _.each(galleries, gallery => {
-
-  //   let slider = lory( gallery, { slidesToScroll: 1,
-  //                                 infinite: true,
-  //                                 enableMouseEvents: true,
-  //                                 rewind: false })
-
-  //   _.delay(() => util.startAnimation(0.2, slider.next), 4000)})
-
-
   // the hero image makes nuthin' but trouble
   // pin the hero frame size, so that the dissapearence of the broswer bar on 
   // mobile devices doesn't wreak havok.
