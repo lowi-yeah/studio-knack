@@ -22,6 +22,7 @@
   background: transparent
   display: flex
   justify-content: center
+  align-self: flex-start
 
   +z-depth-4dp()
   +z-depth-transition()
@@ -56,17 +57,23 @@ article.project.detail
   background: $white
   display: flex
   flex-direction: column
+  min-height: 100vh
 
   .hero-body
     padding-bottom: 1.5rem
 
+    // +desktop
+    padding-left: 3.5rem
+
+
   section.stats
     position: relative
+    padding-left: 3.5rem
     // +z-depth-2dp-inset
     // border-bottom: 1px solid $grey-light
 
     .entries
-      padding: 1rem 1.5rem
+      padding: 1rem 1.5rem 1rem 0
       position: relative
 
     .container 
@@ -116,7 +123,6 @@ article.project.detail
 
   section.content
     margin-top: 3rem
-
 
     .frame 
       display: flex

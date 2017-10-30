@@ -8,26 +8,26 @@ let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
                     top:    'bottom' },
     IN_EASINGS  = ['easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine'],
     OUT_EASINGS = ['easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine'],
-    OPENING_DELAY = 200,
     FADE_DELAY    = 400,
-    FADE_DURATION = 600
+    FADE_DURATION = 600,
+    OPEN_CURATION = 600
 
-function open() {
-  console.log('WTF!')
+
+
+
+function open({fromCookie, toCookie}) {
+  console.log('opening curtain')
+  let Δ = fromCookie ? Cookie.get('curtain-direction') : _.sample(DIRECTIONS)
+  Δ = Δ || _.sample(DIRECTIONS)
+  Δ = OPPOSITES[Δ]
+
+  if(toCookie) Cookie.set('curtain-direction', Δ)
+  else Cookie.remove('curtain-direction')
+
   let ρ =  new Promise( resolve => {
-      console.log('TA DA!')
-
-      let δ = 620,
+      let δ = OPEN_CURATION,
           // δ = _.random(800, 1600),
-          Δ = Cookie.get('curtain-direction')
-      Cookie.remove('curtain-direction')
-      
-        if(!Δ) Δ = _.sample(DIRECTIONS)
-        Δ = OPPOSITES[Δ]
-      
-        console.log('bar')
-            console.log('foo')
-      let α = { targets: '#curtain',
+          α = { targets: '#curtain',
                 duration: δ,
                 delay:    0,
                 easing:   'linear',
@@ -50,14 +50,18 @@ function open() {
 
       anime(α) })
 
-  return ρ
+  return ρ }
 
-  }
-
-function close() {
+function close({fromCookie, toCookie}) {
   console.log('closing curtain')
-  let Δ,
-      δ = 620,
+  let Δ = fromCookie ? Cookie.get('curtain-direction') : _.sample(DIRECTIONS)
+  Δ = Δ || _.sample(DIRECTIONS)
+  // Δ = OPPOSITES[Δ]
+
+  if(toCookie) Cookie.set('curtain-direction', Δ)
+  else Cookie.remove('curtain-direction')
+
+  let δ = OPEN_CURATION,
       ρ = new Promise( resolve => {
                           let curtain   = document.getElementById('curtain'),
                               whiteout  = document.getElementById('whiteout'),
@@ -65,9 +69,10 @@ function close() {
                                     duration: δ,
                                     easing:   'linear',
                                     complete: () => {
-                                                  whiteout.classList.remove('invisible')
-                                                  _.delay(() => resolve(), 320) }}
-                          Δ = _.sample(DIRECTIONS)
+                                                  // whiteout.classList.remove('invisible')
+                                                  // _.delay(() => resolve(), 320) 
+                                                  resolve()
+                                                }}
 
                           if(Δ === 'left') {
                             curtain.setAttribute('width', 0)

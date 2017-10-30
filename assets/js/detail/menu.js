@@ -13,6 +13,7 @@ const BASE_OFFSET = 4
 function _initBackButton() {
   return new Promise( resolve => {
     let button        = document.getElementById('back-btn')
+    console.log('_initBackButton', button)
 
     // toggle filter menu on click
     // util.addEvent(button, 'click', toggle)
@@ -21,15 +22,16 @@ function _initBackButton() {
     // button.style.transform = 'translateX(100%)'
 
     // make pattern
-    pattern.make(button)
+    // pattern.make(button)
 
     // resolve the show, hide & toggle functions
     resolve() })}
 
 
 function init() {
-  console.log('initializing menu')
   return new Promise(resolve => {
+    console.log('initializing detail menu')
+
     _.delay(() => {
       let m = document.getElementById('menu')
       if(!m) {resolve(); return}

@@ -2,7 +2,7 @@ import anime              from 'animejs'
 import Cookie             from 'js-cookie'
 import {scaleLinear,
         scaleSequential } from 'd3-scale'
-import {cubehelix}        from 'd3-color'
+import {cubehelix, hsl}        from 'd3-color'
 import {interpolateCubehelix,
         interpolateCubehelixLong,
         interpolateHslLong,
@@ -33,6 +33,7 @@ function _animate() {
       colorΣ    = scaleSequential()
                     .domain([-1, 1])
                     .interpolator(interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))),
+                    // .interpolator(interpolateCubehelixLong(cubehelix(0, 1, 0.5), cubehelix(360, 1, 0.5))),
       rotationΣ = scaleLinear()
                     .domain([-1, 1])
                     .rangeRound([0, 360]),
@@ -54,7 +55,7 @@ function _animate() {
                           s1.setAttribute('stop-color', c1) 
                         }
   _.defer(update)
-  util.startAnimation(4, update)
+  util.startAnimation(24, update)
 }
 
 

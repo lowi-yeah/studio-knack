@@ -24,7 +24,7 @@ function _showFilter() {
   return Promise.all(promises) }
 
 function _hideFilterItems() {
-  let items   = document.querySelectorAll('#menu .filter.item'),
+  let sidebar = document.getElementById('sidebar'),
       promises  = _.map(items, item => 
                       new Promise( resolve => {
                         let τ = { x: `${item.clientWidth + BASE_OFFSET }px`},
@@ -35,23 +35,16 @@ function _hideFilterItems() {
   return Promise.all(promises) 
 }
 
-function _applyFilter() {
-  let ƒ         = filter.get(),
-      items     = document.querySelectorAll('#menu .filter.item'),
-      promises  = _.map(items, item => 
-                      new Promise( resolve => {
-                        // don't hide the selected type label
-                        if( ƒ && ƒ === item.getAttribute('data-type') ) return resolve()
+function _showSidebar() {
+  let sidebar = document.getElementById('sidebar')
+  sidebar.classList.remove('hidden')}
 
-                        let τ = { x: `${item.clientWidth + BASE_OFFSET }px`},
-                            α = { duration: _.random(240, 420),
-                                  easing:   'random',
-                                  complete: resolve}
-                        dom.transform(item, τ, α) }))
-  return Promise.all(promises) 
+function _hideSidebar() {
+  console.log('hide sidebar')
+  let sidebar = document.getElementById('sidebar')
+  sidebar.classList.add('hidden')
+  }
 
-  // return new Promise(resolve => resolve())
-}
 
 function _initMenuItem(ξ, clickFn) {
   let id = ξ.getAttribute('id')
@@ -73,20 +66,17 @@ function _initTocButton() {
         morpheus      = new SVGMorpheus('#menu-icon', morphOptions),
         show          = () => { button.setAttribute('data-open', 1)
                                 morpheus.to('menu-open')
-                                _showFilter()
+                                _showSidebar()
                               },
         hide          = () => { button.setAttribute('data-open', 0)
                                 morpheus.to('menu-closed')
-                                _applyFilter()
+                                _hideSidebar()
                               },
         toggle        = () => button.getAttribute('data-open') === '1' ?
                                 hide() : show() 
 
     // toggle filter menu on click
     util.addEvent(button, 'click', toggle)
-
-    // hide initially
-    // button.style.transform = 'translateX(100%)'
 
     // make pattern
     pattern.make(button)
@@ -96,19 +86,26 @@ function _initTocButton() {
 
 function _initItems(toc) {
   // init filter items
-  let filterItems = document.querySelectorAll('#menu .filter.item'),
+  let filterItems = document.querySelectorAll('#menu .filter.item > a'),
       filterFn    = item =>
                       () => {
-                        filter.set(item.getAttribute('data-type'))
+                        _.delay(() => filter.set(item.getAttribute('data-link')),420)
                         toc.hide() }
+  _.each(filterItems, filterItem => util.addEvent(filterItem, 'click', filterFn(filterItem)))}
 
-  _.each(filterItems, filterItem => {
-    dom.transform(filterItem, { x: `${filterItem.clientWidth + BASE_OFFSET }px`})
-    // util.addEvent(filterItem, 'click', filterFn(filterItem)) 
-  })
+function _initSidebar(toc){
+  let sidebar = document.getElementById('sidebar')
+  sidebar.classList.add('hidden')
+  _initItems(toc)}
 
-  }
-
+function activate(filter) {
+  // init filter items
+  let items = document.querySelectorAll('#menu .filter.item > a')
+  _.each(items, item => {
+    let link = item.getAttribute('data-link')
+    if(link === filter) item.classList.add('active')
+    else item.classList.remove('active')
+  })}
 
 function init() {
   console.log('initializing menu')
@@ -117,17 +114,20 @@ function init() {
       let m = document.getElementById('menu')
       if(!m) {resolve(); return}
 
+      let ƒ = document.getElementById('wrap')
+                .getAttribute('data-type')
+                .toLowerCase()
       _initTocButton()
-        .then(toc => _initItems(toc))
+        .then(toc => _initSidebar(toc))
+        .then(()  => activate(ƒ))
         .then(() => { 
            anime( { targets:  m,
                     opacity:  1,
                     duration: 400,
                     easing:   _.sample(EASINGS),
-                    complete: resolve
-                  })
-           })
+                    complete: resolve })})
+      
     }, 640)
   })
 }
-export default {init}
+export default {init, activate}

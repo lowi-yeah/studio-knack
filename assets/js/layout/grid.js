@@ -19,20 +19,19 @@ function _gridStyle(grid) {
           gridWidth = parseFloat(style.width)
       resolve({ rowHeight, numCols, colWidth, gridWidth } )}, 200)})}
 
-
 function show() {
   console.log('show grid')
 }
 
 function update(Φ, gridStyle) {
-  console.log('update grid', Φ)
-  console.log('gridStyle', gridStyle)
-  cells.visibility(Φ)
-    .then(Φ => packing.pack(Φ, gridStyle))
-    .then(Φ => cells.jiggle(Φ, gridStyle))
-    .then(Φ => cells.labels(Φ, gridStyle))
-    .then(Φ => cells.update(Φ, gridStyle))
-}
+  console.log('update grid')
+  return new Promise(resolve => 
+    cells.reset(Φ, gridStyle)
+      .then(Φ => packing.pack(Φ, gridStyle))
+      // .then(Φ => cells.jiggle(Φ, gridStyle))
+      .then(Φ => cells.labels(Φ, gridStyle))
+      .then(Φ => cells.update(Φ, gridStyle))
+      .then(resolve))}
 
 // mouse event handlers for grid item hovers
 // dunno where else to put them
@@ -72,6 +71,15 @@ function _attachEventHandlers(Φ) {
       })}})
   return Φ }
 
+function _attachFilter(Φ) {
+  return new Promise(resolve => {
+    let filtered  = document.getElementById('wrap')
+                      .getAttribute('data-type')
+                      .toLowerCase() || 'index'
+    console.log('attaching filter', filtered)
+    Φ.filtered = filtered 
+    resolve(Φ)})}
+
 function init(options) {
   console.log('initializing grid')
   let self = this
@@ -82,18 +90,19 @@ function init(options) {
     options = _.defaults(options, { container:  '#grid',
                                     items:      '.grid-item'})
   
-    // get the grid container
-    let container = dom.getElement(options.container)
-    // if it ain't there: reject
-    if(!container) reject('no grid')
+    let container = dom.getElement(options.container),
+        items     = document.querySelectorAll(options.items)
 
-    let items     = document.querySelectorAll(options.items)
+    // if the container ain't there: reject
+    if(!container) reject('no grid')
 
     _gridStyle(container)
       .then(gridStyle => {
-        cells.init(items, gridStyle)
+        let Φ = []
+        _attachFilter(Φ)
+          .then(Φ => cells.init(Φ, items, gridStyle))
           .then(Φ => packing.pack(Φ, gridStyle))
-          .then(Φ => cells.jiggle(Φ, gridStyle))
+          // .then(Φ => cells.jiggle(Φ, gridStyle))
           .then(Φ => cells.labels(Φ, gridStyle))
           .then(Φ => cells.update(Φ, gridStyle))
           .then(Φ => _attachEventHandlers(Φ))

@@ -44,7 +44,7 @@ function init(Φ) {
   else {
     util.addEvent(window, 'scroll', _update )
   }
-}
+  return Φ }
 
 function remove() {
   if(!itemId) return
@@ -66,9 +66,7 @@ function set(φ) {
   // if overlayα ⋁ overlayδ are set, 
   // it means that a scroll update is waiting to happen/currently happening
   // abort before continuing
-  if(overlayδ) {
-    console.log('overlayδ', overlayδ.cancel)
-    overlayδ.cancel(); overlayδ = null }
+  if(overlayδ) {overlayδ.cancel(); overlayδ = null }
   if(overlayα) {overlayα.pause();  overlayα = null }
 
   // update selection

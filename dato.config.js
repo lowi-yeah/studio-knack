@@ -1,6 +1,8 @@
 let _         = require('lodash'),
     htmlTag   = require('html-tag'),
-    getPixels = require('get-pixels')
+    getPixels = require('get-pixels'),
+    lunr      = require('lunr'),
+    fs        = require('fs')
 
 let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
 
@@ -58,7 +60,6 @@ function _projectContent(item) {
 
    if(contentType === 'gallery_block') { 
     return { gallery: item.images.map(item => _image(item)) } 
-
   } }
 
 function _projectBase(project, index, options) {
@@ -70,6 +71,20 @@ function _projectBase(project, index, options) {
           id:           options.prefix + '-' + index,
           // content is being written into the frontmatter instead of the content section of the post
           content:      _.compact(project.content.map(item => _projectContent(item))) }}
+
+function _projectSearchContent(item) {
+  let contentType = item.entity.itemType.apiKey
+  if(contentType === 'text_block')  return item.content
+  if(contentType === 'image_block') return item.caption
+  return '' }
+
+function _projectSearchBase(project, index, options) {
+  let content = _.compact(project.content.map(item => _projectSearchContent(item)))
+  return {title: project.title,
+          body: content.join(' '),
+          type: options.type,
+          slug: project.slug,
+          id:   options.prefix + '-' + index}}
 
 function _mapLink(text, coordinates) {
   let p = { api:        1,  
@@ -118,26 +133,35 @@ function _projects(datoProjects, options) {
                 stats       = _projectStats(project, options.type),
                 frontmatter = _.merge(base, stats)
                 content     = '',
-                post        = {frontmatter, content}
-              return [`${project.slug}.md`, 'yaml', post] })}
+                post        = {frontmatter, content},
+                search      = _projectSearchBase(project, index, options)
+              return { slug: `${project.slug}.md`, format: 'yaml', post, search }})}
 
 function _title(str) {
   return str.replace(/\b\S/g, function(t) { return t.toUpperCase() });
 }
 
+function _indexMenu(options) {
+  let r = {}
+  // r[`${options.prefix}-${options.type}`] = { id:    options.type,
+  //                                 order: 0,
+  //                                 text:  options.type,
+  //                                 href:  options.type}
+
+  let menu = _(['architecture', 'design', 'studio'])
+                .reduce((ρ, τ, ι) => { 
+                  ρ[`${options.prefix}-${τ}`] = { id:     τ,
+                                                  order:  ι+1,
+                                                  text:   τ,
+                                                  href:   τ}
+                  return ρ}, r)
+  return {menu} }
+
 
 function _index(options) {
   let type        = {type: _title(options.type)},
       conentTypes = {conentTypes: [options.type]},
-      menu        = {menu:
-                          _(['architecture', 'design', 'studio'])
-                            .without(options.type)
-                            .reduce((ρ, τ) => { 
-                              ρ[`${options.prefix}-${τ}`] = { id:   τ,
-                                                              text: τ,
-                                                              href: `/${τ}`}
-                              return ρ}, {})
-                            }
+      menu        = _indexMenu(options),
       frontmatter = _.merge(type, conentTypes, menu),
       content     = '',
       post        = {frontmatter, content}
@@ -206,7 +230,10 @@ module.exports = (dato, root, i18n) => {
   settings.title            = globalSeo.siteName
 
   root.createDataFile('data/settings.yml', 'yaml', settings)
-
+  
+  // Initialize search-index
+  // ————————————————————————————————  
+  let searchIndex = []
 
   // Architecture
   // ————————————————————————————————
@@ -215,7 +242,8 @@ module.exports = (dato, root, i18n) => {
                       prefix: 'knck-a'},
         projects  = _projects(dato.architectures, options),
         index     = _index(options)
-    _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+    _.each(projects, ({slug, format, post}) => dir.createPost(slug, format, post))
+    _.each(projects, ({search}) => searchIndex.push(search))
     dir.createPost(index.slug, index.format, index.post)
   })
 
@@ -226,7 +254,8 @@ module.exports = (dato, root, i18n) => {
                       prefix: 'knck-d'},
         projects  = _projects(dato.designs, options),
         index     = _index(options)
-    _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+    _.each(projects, ({slug, format, post}) => dir.createPost(slug, format, post))
+    _.each(projects, ({search}) => searchIndex.push(search))
     dir.createPost(index.slug, index.format, index.post)
   })
 
@@ -237,45 +266,27 @@ module.exports = (dato, root, i18n) => {
                       prefix: 'knck-s'}
         projects  = _projects(dato.studios, options),
         index     = _index(options)
-    _.each(projects, ([slug, format, post]) => dir.createPost(slug, format, post))
+    _.each(projects, ({slug, format, post}) => dir.createPost(slug, format, post))
+    _.each(projects, ({search}) => searchIndex.push(search))
     dir.createPost(index.slug, index.format, index.post)
   })
 
-  // Create a markdown file with content coming from the `about_page` item
-  // type stored in DatoCMS
-  // root.createPost(`content/about.md`, 'yaml', {
-  //   frontmatter: {
-  //     title:        dato.aboutPage.title,
-  //     images:       dato.aboutPage.gallery.map(item => item.url({ w: 800, auto: 'compress' })),
-  //     content:      dato.aboutPage.content.map(item => _aboutContent(item)),
-  //     seoMetaTags:  _toHtml(dato.aboutPage.seoMetaTags),
-  //     type:         'extra',
-  //     layout:       'about' }
-  // });
 
-  // Articles
-  // ————————————————————————————————
-  // root.directory('content/article', dir => {
-  //   let articles  = _.map(dato.articles, (article, index) => {
+  // build search index
+  // console.log('Lunr', lunr)
+  var idx = lunr(function () {
+              this.ref('id')
+              this.field('title')
+              this.field('type')
+              this.field('body')
+              searchIndex.forEach(function (doc) {
+                this.add(doc) }, this) })
 
-  //                     // console.log('## article')
-  //                     // console.log(article.content)
+  fs.writeFile('public/lunr-knack.json', JSON.stringify(idx, null, 2), 'utf-8', 
+      () => console.log('Search-index written to: public/lunr-knack.json'))
 
-  //                     let αContent    = _.compact(article.content.map(item => _articleContent(item))), 
-  //                         frontmatter = { title:        article.title,
-  //                                         label:        article.label,
-  //                                         category:     article.category,
-  //                                         image:        { url:      article.heroImage.url({ w: 800, auto: 'compress' }),
-  //                                                         info:     article.heroImage.url({ fm: 'json' }),
-  //                                                         tiny:     article.heroImage.url({ w: 2 }),
-  //                                                         palette:  article.heroImage.url({ w: 800, palette: 'json', colors: '2' }) },
-  //                                         // seoMetaTags:  _toHtml(dato.aboutPage.seoMetaTags),
-  //                                         layout:       'article',
-  //                                         id:           'knc-' + index,
-  //                                         content:      αContent },
-  //                         content     = '',
-  //                         post        = {frontmatter, content}
-  //                       return [`${article.slug}.md`, 'yaml', post]})
-  //   _.each(articles, ([slug, format, post]) => dir.createPost(slug, format, post))})
+
+  // l.setOutput('public/lunr-knack.json')
+  
 
 }

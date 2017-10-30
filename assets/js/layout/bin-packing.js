@@ -2,7 +2,8 @@ import ndarray  from 'ndarray'
 import cwise    from 'cwise'
 import ops      from 'ndarray-ops'
 
-import util     from '../common/util'
+import util       from '../common/util'
+import neighbours from './neighbours'
 
 function _ascii(Λ, rows, cols) {
   let slice = Λ.hi(rows, cols)
@@ -14,11 +15,25 @@ function _ascii(Λ, rows, cols) {
       let c = 'x'
       if(slice.get(i,j) === 0) c = '▯'
       if(slice.get(i,j) === 1) c = '▮'
-      
       s += `${c} `
     }
     console.log(s)
   }
+}
+
+function _inspect(φ) {
+  console.log('φ', φ.id)
+  console.log('\trowStart:',  φ.rowStart)
+  console.log('\trowSpan:',   φ.rowSpan)
+  console.log('\tcolStart:',  φ.colStart)
+  console.log('\tcolSpan:',   φ.colSpan)
+  console.log('\thidden:',    φ.hidden)
+  // console.log('\tpaddingTop:', φ.paddingTop)
+  // console.log('\tpaddingRight:', φ.paddingRight)
+  // console.log('\tpaddingBottom:', φ.paddingBottom)
+  // console.log('\tpaddingLeft:', φ.paddingLeft)
+  // console.log('\tratio:', φ.ratio)
+  // console.log('\ttype:', φ.type)
 }
 
 
@@ -30,12 +45,12 @@ let setΛ    = cwise( { args: ["array"], body: function(a) { a += 1 }}),
                        post: function()  { return this.max } })
 
 
-function _place(φ, {Λ, x, y, f}) {
+function _place(φ, Φ, {Λ, x, y}) {
 
-  // console.log('_place φ', φ)
-  // console.log('filter', f)
+  // _inspect(φ)
+  // console.log('----')
 
-  if(f && f === φ.type) return {Λ, x, y, f}
+  if(φ.hidden) return {Λ, x, y}
 
   let ς = Λ.shape,
       w = φ.colSpan,
@@ -69,23 +84,20 @@ function _place(φ, {Λ, x, y, f}) {
 
   φ.rowStart = y+1
   φ.colStart = x+1
-  return {Λ, x, y, f} }
 
-function _reset(gridStyle) {
-  return ndarray(new Uint8Array(gridStyle.numCols * 1024), [1024,gridStyle.numCols])
-}
+  φ.neighbours = neighbours.all(φ, Φ)
+  return {Λ, x, y} }
 
 function pack(Φ, gridStyle) {
-  let startτ = performance.now()
+  // let startτ = performance.now()
   return new Promise(resolve => {
-    let Λ = _reset(gridStyle),
+    let Λ = ndarray(new Uint8Array(gridStyle.numCols * 1024), [1024,gridStyle.numCols]),
         x = _.random(0, gridStyle.numCols-1), 
-        y = 0,
-        f = Φ.filtered
+        y = 0
 
-    _.reduce(Φ, (ρ, φ) => _place(φ, ρ), {Λ, x, y, f})
+    _.reduce(Φ, (ρ, φ) => _place(φ, Φ, ρ), {Λ, x, y})
     // _ascii(Λ, 128, gridStyle.numCols)
-    console.log(`packing finished. took ${Math.round(performance.now() - startτ)}ms`)
+    // console.log(`packing finished. took ${Math.round(performance.now() - startτ)}ms`)
     resolve(Φ)
   })
 }

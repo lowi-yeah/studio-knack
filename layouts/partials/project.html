@@ -1,17 +1,16 @@
 {{ partial "intro.html" . }}
 {{ partial "whiteout" . }}
 
-<div id="project">
+<div id="wrap" data-type="project">
 
   {{ partial "curtain.svg" . }}
   {{ partial "gradient.svg" . }}
   {{ partial "project/logo.svg" . }}
+  {{ partial "project/menu" . }}
   {{ partial "overlay.svg" . }}
     
   <script src="/assets/dawn.js"></script>
   
-  {{ partial "project/menu.html" . }}
-
   <div id="hero-frame"> 
   <div class="worker image blurred" 
        id="hero-image"
@@ -57,7 +56,7 @@
     <!-- <a class="next" href="/page/2/">next</a> -->
   </article>
   
-  <script src="/assets/article.js"></script>
+  <script src="/assets/detail.js"></script>
 
   {{ partial "footer" . }}
 </div>

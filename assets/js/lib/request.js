@@ -24,13 +24,13 @@ function image(url) {
     request.overrideMimeType("text/plain; charset=x-user-defined");
     // mimeType: "text/plain; charset=x-user-defined",
     
-    request.onload = function() {
+    request.onload = () => {
       if (request.status >= 200 && request.status < 400) // Success!
         resolve(request.responseText)
       else // We reached our target server, but it returned an error
-        reject(request.responseText)}
+        reject(`image request failed with status ${request.status}`)}
+    request.onerror = () => reject(`image request failed with status ${request.status}`)
 
-    request.onerror = () => reject(request)
     request.send()
   })
 }

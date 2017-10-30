@@ -2,7 +2,9 @@ import anime    from 'animejs'
 import pattern  from './pattern'
 
 
-const EASINGS = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
+const EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine'],
+      IN_EASINGS  = ['easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInSine'],
+      OUT_EASINGS = ['easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutSine']
 
 function _set(ε, τ) {
   let s = `translateX(${τ.x}) translateY(${τ.y}) scale(${τ.σ})`
@@ -22,7 +24,9 @@ function transform(ε, τ, α) {
                     complete:   α.complete}
 
     if(α.easing) {
-      if(α.easing === 'random') α.easing = _.sample(EASINGS)
+      if(α.easing === 'random')     α.easing = _.sample(EASINGS)
+      if(α.easing === 'random-out') α.easing = _.sample(OUT_EASINGS)
+      if(α.easing === 'random-in')  α.easing = _.sample(IN_EASINGS)
       options.easing = α.easing }
 
     if(α.duration) options.duration = α.duration
