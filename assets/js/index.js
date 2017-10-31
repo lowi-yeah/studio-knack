@@ -32,7 +32,8 @@ let gridOptions = { container:  '#grid',
 // }
 
 function init() {
-  console.log('ready!')
+  console.log(`ready! ${window.innerWidth} — ${util.getDevice()}`)
+
   let worker = new Worker()
   images.init(worker)
     .then(worker => search.init(worker))

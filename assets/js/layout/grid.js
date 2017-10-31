@@ -103,7 +103,7 @@ function init(options) {
           .then(Φ => cells.init(Φ, items, gridStyle))
           .then(Φ => packing.pack(Φ, gridStyle))
           // .then(Φ => cells.jiggle(Φ, gridStyle))
-          .then(Φ => cells.labels(Φ, gridStyle))
+          // .then(Φ => cells.labels(Φ, gridStyle))
           .then(Φ => cells.update(Φ, gridStyle))
           .then(Φ => _attachEventHandlers(Φ))
           .then(Φ => parallax.init(Φ))

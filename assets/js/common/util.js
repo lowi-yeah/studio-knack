@@ -41,6 +41,7 @@ function fontSize(ε) {
 
 
 function getDevice(width) {
+  width = width || window.innerWidth
   let breakpoints = { 480:  'mobile',
                       769:  'tablet',
                       1000: 'desktop',

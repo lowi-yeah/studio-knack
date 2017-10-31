@@ -22,9 +22,14 @@ const MIN = Number.MIN_SAFE_INTEGER,
       MAX = Number.MAX_SAFE_INTEGER,
 
       // probabilities for each layout
-      Z   = numCols => {  if(numCols <= 2) return { portrait:  [MIN, MIN-1],  //no portarait
-                                                    square:    [MIN-1, 0],    //no square
-                                                    landscape: [0, MAX] }
+      Z   = numCols => {  if(numCols <= 2) return { portrait:  [MIN, MIN+1],  //no portarait
+                                                    square:    [MIN+1, MIN+2],    //no square
+                                                    landscape: [MIN+2, MAX] }
+
+                          else if(numCols === 4) return { portrait:  [MIN, MIN+1],  //no portarait
+                                                          square:    [MIN+1, 0],    
+                                                          landscape: [0, MAX] }
+
                           // Cumulative from mean (0 to Z)
                           // ƒ(0.43) =  Φ(0.43) - ½ = 0.16640
                           // @see: https://en.wikipedia.org/wiki/Standard_normal_table
@@ -119,8 +124,11 @@ function _height(φ, rowHeight) {
           r = R[φ.ratio],
           h = β.width / r,
           s = Math.round(h/rowHeight),
-          t = _.random(1, 4),
-          b = _.random(3, 5)
+          // t = _.random(1, 4),
+          // b = _.random(3, 5)
+          t = 2,
+          b = 2
+
       if(isMobile.phone) {
         φ.paddingTop    = 1 * rowHeight
         φ.paddingBottom = 3 * rowHeight
@@ -311,8 +319,9 @@ function init(Φ, items, gridStyle) {
                   label   = item.querySelector('.label'),
                   image   = item.querySelector('.image-frame'),
                   type    = item.getAttribute('data-type'),
+                  title   = item.querySelector('.caption > .title').innerHTML,
                   hidden  = !(type === filter || filter === 'index')
-              return { item, id, frame, content, caption, label, image, type, hidden }})
+              return { item, id, frame, content, caption, label, image, type, hidden, title }})
   _.each(Ѻ, ϖ => Φ.push(ϖ))
   return  new Promise( resolve => 
                 _setColspan(Φ, gridStyle)                 // assign a with to each item

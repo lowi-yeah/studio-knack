@@ -3,7 +3,7 @@
   {{ $conentTypes := .Params.conentTypes}}
 
   <div id="grid" class="main grid">
-    {{ range (where .Site.Pages "Type" "in" (slice "architecture" "design" "studio")) }} 
+    {{ range first 12 (where .Site.Pages "Type" "in" (slice "architecture" "design" "studio")) }} 
       <section 
         class="grid-item"
         id="{{ .Params.id }}"
@@ -23,17 +23,18 @@
           </div>  
           <div class="caption-frame"> 
             <div class="caption"> 
-              <div class="title is-3"> {{ .Title }} </div>
+              <div class="title is-3"> {{ .Params.id }} </div>
+              <!-- <div class="title is-3"> {{ .Title }} </div> -->
               <a href="{{ .Permalink }}" class="button no-hover"> more > </a>
             </div>
             </div>
         </div>  
        
-        {{ with .Params.label }}
+       <!--  {{ with .Params.label }}
           <div class="label">
             <span>{{ . }}</span>
           </div>
-        {{ end }}
+        {{ end }} -->
 
       </section>
     {{ end }}

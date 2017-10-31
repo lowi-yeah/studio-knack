@@ -22,12 +22,24 @@ function _ascii(Λ, rows, cols) {
 }
 
 function _inspect(φ) {
-  console.log('φ', φ.id)
-  console.log('\trowStart:',  φ.rowStart)
-  console.log('\trowSpan:',   φ.rowSpan)
-  console.log('\tcolStart:',  φ.colStart)
-  console.log('\tcolSpan:',   φ.colSpan)
-  console.log('\thidden:',    φ.hidden)
+  // console.log('φ', φ.id)
+  console.log(φ.title)
+  console.log(`\t rowStart: ${φ.rowStart}, colStart: ${φ.colStart}, rowSpan: ${φ.rowSpan}, colSpan: ${φ.colSpan}`)
+  
+  let η = _(φ.neighbours)
+            .map((n, dir) => {
+              if(!n) return 
+              let ν = _.map(n.η, Ϟ => Ϟ.id).join(' ')
+              return `${dir}: ${ν} (δ: ${n.δ})`})
+            .compact()
+            .value()
+  console.log(`\t neighbours — ${η.join(' | ')}`)
+
+  // console.log('\trowStart:',  φ.rowStart)
+  // console.log('\trowSpan:',   φ.rowSpan)
+  // console.log('\tcolStart:',  φ.colStart)
+  // console.log('\tcolSpan:',   φ.colSpan)
+  // console.log('\thidden:',    φ.hidden)
   // console.log('\tpaddingTop:', φ.paddingTop)
   // console.log('\tpaddingRight:', φ.paddingRight)
   // console.log('\tpaddingBottom:', φ.paddingBottom)
@@ -45,20 +57,24 @@ let setΛ    = cwise( { args: ["array"], body: function(a) { a += 1 }}),
                        post: function()  { return this.max } })
 
 
-function _place(φ, Φ, {Λ, x, y}) {
+// update the traversal indices →↓
+function update({x, y}, ς) { 
+  x += 1
+  if(x > ς[1]) { x = 1; y += 1 }
+  return {x, y} }
 
-  // _inspect(φ)
+function _place(φ, Φ, {Λ}) {
+
   // console.log('----')
 
-  if(φ.hidden) return {Λ, x, y}
+  if(φ.hidden) return {Λ}
 
   let ς = Λ.shape,
+      ω = {x: 1, y: 1},
       w = φ.colSpan,
       h = φ.rowSpan,
       success = false,
-      candidate,
-      // update the traversal indices →↓
-      update  = () => { x += 1; if(x > ς[1]-1) { x = 0; y += 1 }}
+      candidate
 
   let dangerCounter = 0
 
@@ -70,35 +86,41 @@ function _place(φ, Φ, {Λ, x, y}) {
       break}
 
     // check if φ can fit into the current row
-    let fitRow = x + w <= ς[1]
-
-    if(!fitRow) { update(); continue }
+    let fitRow = ω.x + w <= ς[1] + 1
+    if(!fitRow) { 
+      ω = update(ω, ς)
+      continue }
     else {
-      candidate = Λ.lo(y,x).hi(h, w)
+      candidate = Λ.lo(ω.y,ω.x).hi(h, w)
       setΛ(candidate)
 
       success = maxΛ(Λ) < 2
       if(!success) { 
         unsetΛ(candidate)
-        update() } } }
+        ω = update(ω, ς) } } }
 
-  φ.rowStart = y+1
-  φ.colStart = x+1
+  φ.rowStart = ω.y
+  φ.colStart = ω.x
 
-  φ.neighbours = neighbours.all(φ, Φ)
-  return {Λ, x, y} }
+  return {Λ} }
 
 function pack(Φ, gridStyle) {
   // let startτ = performance.now()
   return new Promise(resolve => {
-    let Λ = ndarray(new Uint8Array(gridStyle.numCols * 1024), [1024,gridStyle.numCols]),
-        x = _.random(0, gridStyle.numCols-1), 
-        y = 0
+    let Λ = ndarray(new Uint8Array(gridStyle.numCols * 1024), [1024,gridStyle.numCols])
 
-    _.reduce(Φ, (ρ, φ) => _place(φ, Φ, ρ), {Λ, x, y})
+    _.reduce(Φ, (ρ, φ) => _place(φ, Φ, ρ), {Λ})
+
+    _.defer(() => {
+      _.each(Φ, φ => φ.neighbours = neighbours.all(φ, Φ))  
+      _.each(Φ, φ => _inspect(φ))  
+
+      
+      resolve(Φ)
+    })
+
     // _ascii(Λ, 128, gridStyle.numCols)
     // console.log(`packing finished. took ${Math.round(performance.now() - startτ)}ms`)
-    resolve(Φ)
   })
 }
 
