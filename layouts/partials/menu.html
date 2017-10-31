@@ -2,7 +2,7 @@
   <button id="toc-btn" class="pattern button"> 
     {{ partial "menu-icon.svg" . }}  
   </button> 
-  <div id="sidebar" class="pattern">
+  <div id="sidebar" class="pattern watch">
     <ul class="items"> 
       {{ range .Params.menu}} 
         <li id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item"  > 
@@ -11,7 +11,13 @@
           </a>
         </li> 
       {{ end }} 
+      <li id="search-menu" class="search item"> 
+        <a>
+          {{ partial "search-icon.svg" . }}  
+        </a>
+      </li> 
     </ul> 
   </div>
+  {{ partial "search" . }}  
 </div>
 

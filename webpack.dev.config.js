@@ -28,7 +28,6 @@ module.exports = {
         loader: 'babel-loader',
         query: { presets: ['es2015'] } },
 
-      // images
       { test: /\.(jpe?g|png|gif|svg)$/i, loader: "file-loader?name=/images/[name].[ext]"},
 
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url-loader?limit=65000&mimetype=application/font-woff&name=/fonts/[name].[ext]' },

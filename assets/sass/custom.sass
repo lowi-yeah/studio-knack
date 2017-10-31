@@ -17,12 +17,12 @@ body
 //   &:hover, &:active
 //     color: $black
 
-a:not(.button)
+a:not(.no-hover)
   color: $link-color
   text-decoration: none
   display: inline-block
   position: relative
-  padding: 0.5rem
+  padding: 0 0.5rem
   transition: all 250ms
   z-index: 1000
   line-height: 1.4
@@ -33,14 +33,14 @@ a:not(.button)
     width: 100%
     height: 1%
     border: 0.5px solid $link-color
-    bottom: 12%
+    bottom: 0
     left: 0
     position: absolute
     transition: height 250ms, border-width 250ms
   &:hover
     &:before
       border-width: 1px
-      height: 76%
+      height: 108%
       
 
   &[target="_blank"]
@@ -58,7 +58,7 @@ a:not(.button)
   border: none
   font-weight: 400
 
-  &:hover, &:focus, &:active
+  &:hover
     +z-depth-focus()
 
 #debug
@@ -90,6 +90,9 @@ a:not(.button)
 pre
   overflow-x: scroll
 
+.shrug 
+  @extend .title
+  @extend .is-2
 
 
 

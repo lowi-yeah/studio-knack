@@ -1,0 +1,58 @@
+#search
+  +layer(2)
+  pointer-events: all
+  padding-top: 6rem
+  flex-direction: column
+
+  .input-frame
+    padding: 0 1.5rem 3rem 1.5rem
+    flex: 0 0 auto
+
+  input
+    font-family: $family-monospace
+
+  .results-frame
+    position: relative
+    max-height: 100%
+    overflow-y: scroll
+    padding: 0 1.5rem 6rem 1.5rem
+
+  #search-results
+    
+    display: grid
+    grid-auto-rows: $grid-row-height
+    grid-row-gap: 4.5rem
+    grid-column-gap: 1.5rem
+  
+    +columns(1)
+  
+    +tablet
+      +columns(2)
+  
+    +desktop
+      +columns(3)
+  
+    +widescreen
+      +columns(4)
+  
+    +fullhd
+      +columns(5)
+
+  .search-result
+    grid-row: span 3
+    +z-depth-2dp
+    +z-depth-transition
+
+    &:hover
+      +z-depth-focus
+
+    .image
+      width: 100%
+      height: 100%
+      background-size: cover
+      margin-bottom: 1rem
+
+    .caption
+      @extend .title
+      @extend .is-4
+

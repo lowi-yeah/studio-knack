@@ -5,6 +5,7 @@ import util         from '../common/util'
 import gradient     from '../common/gradient'
 import pattern      from '../common/pattern'
 import dom          from '../common/dom'
+import Σ            from '../common/search'
 import filter       from './filter'
 
 
@@ -40,11 +41,33 @@ function _showSidebar() {
   sidebar.classList.remove('hidden')}
 
 function _hideSidebar() {
-  console.log('hide sidebar')
   let sidebar = document.getElementById('sidebar')
   sidebar.classList.add('hidden')
   }
 
+function _showSearchbar() {
+  console.log('show searchbar')
+
+  // make the sidebar span the whole window
+  let search  = document.getElementById('search'),
+      input   = document.getElementById('search-input'),
+      τ       = { x: 0 },
+      α       = { duration: _.random(280, 420),
+                  easing:   'random-out'}
+  search.setAttribute('data-open', 1)
+  _.defer(() => input.focus())
+  dom.transform(search, τ, α)
+}
+
+function _hideSearchbar() {
+  console.log('hide searchbar')
+  let search  = document.getElementById('search'),
+      τ       = { x: `${-window.innerWidth}px` },
+      α       = { duration: _.random(280, 420),
+                  easing:   'random-out'}
+  search.setAttribute('data-open', 0)
+  dom.transform(search, τ, α)
+}
 
 function _initMenuItem(ξ, clickFn) {
   let id = ξ.getAttribute('id')
@@ -71,6 +94,7 @@ function _initTocButton() {
         hide          = () => { button.setAttribute('data-open', 0)
                                 morpheus.to('menu-closed')
                                 _hideSidebar()
+                                _hideSearchbar()
                               },
         toggle        = () => button.getAttribute('data-open') === '1' ?
                                 hide() : show() 
@@ -84,6 +108,26 @@ function _initTocButton() {
     // resolve the show, hide & toggle functions
     resolve({show, hide, toggle}) })}
 
+function _initSearch() {
+  return new Promise( resolve => {
+    let searchLink  = document.querySelector('#search-menu > a'),
+        search      = document.getElementById('search'),
+        input       = document.getElementById('search-input'),
+        toggle      = () => search.getAttribute('data-open') === '1' ?
+                              _hideSearchbar() : _showSearchbar() 
+
+    // toggle filter menu on click
+    util.addEvent(searchLink, 'click', toggle)
+
+    // move the search field offscreen
+    dom.transform(search, { x: `${-window.innerWidth}px` })
+
+    // attach change handler to input
+    util.addEvent(input, 'input', _.debounce(() => Σ.search(input.value),240))
+
+    // resolve
+    resolve() })}
+
 function _initItems(toc) {
   // init filter items
   let filterItems = document.querySelectorAll('#menu .filter.item > a'),
@@ -96,7 +140,9 @@ function _initItems(toc) {
 function _initSidebar(toc){
   let sidebar = document.getElementById('sidebar')
   sidebar.classList.add('hidden')
-  _initItems(toc)}
+  _initItems(toc)
+  _initSearch()
+}
 
 function activate(filter) {
   // init filter items
