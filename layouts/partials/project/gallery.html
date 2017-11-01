@@ -1,0 +1,26 @@
+<div  class="gallery block slider js_slider">
+  <div class="js_frame">
+    <ul class="js_slides">
+      {{ range . }}
+        <li class="js_slide">
+          <div  class="worker image" 
+                id="{{ .id }}"
+                data-ratio="{{ .ratio }}"
+                data-size="{{ .size }}"
+                style="background-image: url({{ .tiny }})"
+                data-image-url="{{ .url }}"></div>
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+  <div class="js_prev">
+    <button class="button pattern watch">
+      <i class="material icon">keyboard_arrow_left</i>
+    </button>
+  </div>
+  <div class="js_next"> 
+    <button class="button pattern watch">
+      <i class="material icon">keyboard_arrow_right</i>
+    </button></div>
+  <ul class="slider_navigation_dots"></ul>
+</div>

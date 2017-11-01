@@ -1,6 +1,21 @@
 <style type="text/css">
+  html {
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch /* iOS velocity scrolling */
+  }
 
+  * {
+    box-sizing: inherit;  
+  }
+  *:before, *:after {
+    box-sizing: inherit;  
+  }
+  
   body {
+    background: #ffffff;
     box-sizing: border-box;
     display: block;
     width: 100%;
@@ -13,46 +28,49 @@
     padding-left: 0px;
     padding-right: 0px;
     padding-top: 0px;
+    overflow-x: hidden;
+    overflow-y: scroll
   }
 
-  #dawn {
-    fill: #ffffff;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  svg#studio-knack {
-    z-index: 300;
+  #whiteout {
     position: absolute;
-    left: 0;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: #ffffff;
+    z-index: 1024;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+  }
+
+  #whiteout.invisible {
+    opacity:0;
+  }
+
+  #curtain-frame {
+    z-index: 200;
+    background: transparent;
+    pointer-events: none;
+    position: fixed;
     top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
-    pointer-events: none;
+  }
+
+  #gradients.bg {
+    fill: #ffff00
+  }
+
+  #rainbow {
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  #rainbow.invisible {
+    opacity:0;
   }
   
-  g.knack > rect {
-    mix-blend-mode: multiply;  
-  }
-  
-  #knack {
-    display: none;
-  }
-
-  #toc {
-    display: none;
-  }
-
-  #next {
-    display: none;
-  }
-
-  #menu {
-    display: none;
-  }
-
-  #filter-wrap {
-    display: none;
-  }
- 
 </style>

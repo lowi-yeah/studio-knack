@@ -1,0 +1,319 @@
+
+// the main container
+#wrap[data-type="project"]
+  display: flex
+  flex-direction: column
+  width: 100vw
+  position: relative
+
+  #menu
+    align-items: flex-start
+    margin-top: 0
+    z-index: 5
+
+  #logo-frame
+    z-index: 4
+
+
+#back-btn
+  $btn-height: 2.25rem
+  margin-top: 1.05rem
+  margin-right: 0
+  width: $btn-height
+  height: $btn-height
+  padding: 0
+  pointer-events: all
+  background: transparent
+  display: flex
+  justify-content: center
+  align-self: flex-start
+
+  +z-depth-4dp()
+  +z-depth-transition()
+  
+  &:hover, &:focus, &:active
+    +z-depth-focus()
+
+  .icon
+    flex: 1 0 auto
+    width: 100%
+    height: $btn-height
+    line-height: $btn-height
+    color: $black
+    margin: 0
+    padding-right: 0.25rem
+
+
+#hero-frame
+  position: relative
+
+  .image
+    width: 100%
+    height: 100%
+    position: relative
+    background-position: center;
+    background-size: cover;
+
+article.project.detail
+  flex: 1 0 auto
+  position: relative
+  z-index: 2
+  background: $white
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+  padding-bottom: 6rem
+  +z-depth-2dp
+
+  .hero-body
+    padding-bottom: 1.5rem
+
+    // +desktop
+    padding-left: 3.5rem
+
+
+  section.stats
+    position: relative
+    padding-left: 3.5rem
+    // +z-depth-2dp-inset
+    // border-bottom: 1px solid $grey-light
+
+    .entries
+      padding: 1rem 1.5rem 1rem 0
+      position: relative
+
+    .container 
+      display: flex
+      flex-wrap: wrap
+      flex-direction: column
+
+      +widescreen
+        flex-direction: row
+
+      .entry
+        flex: 0 0 auto
+        color: $grey-dark
+
+        padding: 0
+        margin-bottom: 0.5rem
+
+        +widescreen
+          margin-bottom: 0
+          padding: 0
+          padding-right: 1rem
+          padding-left: 1rem
+
+          &:first-child
+            padding-left: 0
+
+
+        
+
+        display: flex
+
+        &:last-child
+          padding-right: 0
+
+        a
+          color: $grey-dark
+          border-bottom-color: $grey-dark
+
+        .key
+          @extend .smallcaps
+          font-size: $size-6
+          flex: 0 0 auto
+          margin-right: 0.5rem
+          align-self: center
+
+        .value
+          font-size: $size-6
+
+  section.content
+    margin-top: 3rem
+
+    .frame 
+      display: flex
+      flex-flow: row wrap
+      justify-content: space-evenly
+      // align-items: flex-start | flex-end | center | baseline | stretch
+      align-items: center
+      // align-content: flex-start | flex-end | center | space-between | space-around | stretch
+      align-content: space-around
+
+.block
+  flex: 0 0 auto
+  pointer-events: all
+  // height: 100%
+  position: relative
+  margin: 3rem 0
+
+  &.text
+    width: 32rem
+    padding: 1.5rem 1rem
+    background: rgba($white, 0.81)
+    text-align: justify
+    text-justify: inter-word
+
+    +mobile
+      width: 100%
+
+  &.gallery
+    width: 100vw
+    position: relative
+    font-size: 0
+    line-height: 0
+    white-space: nowrap
+    +z-depth-2dp()
+
+    .js_frame
+      position: relative
+      overflow: hidden
+      width: 100%
+      z-index: 0
+
+    .image
+      width: 100vw
+      height: 50vw
+      background-size: cover
+      background-position: center
+
+    .js_prev, .js_next
+      position: absolute
+      top: 0
+      height: 100%
+      display: flex
+      align-items: center
+      align-content: center
+      .button
+        background: transparent
+        width: 2.5rem
+        height: 2.5rem
+        .icon
+          margin: 0
+
+    .js_prev
+      z-index: 1
+      left: -1.5rem
+
+    .js_next
+      z-index: 1
+      right: -1.5rem
+
+    +desktop
+      width: 80vw
+      .image
+        width: 80vw
+        height: 40vw
+
+    +widescreen
+      width: 75vw
+      .image
+        width: 75vw
+        height: 38vw
+
+    +fullhd
+      width: 72vw
+      .image
+        width: 72vw
+        height: 36vw
+
+
+
+  &.image
+    +mobile
+      &[data-ratio="0.5"]
+        flex: 0 0 50vh // mind the vh!
+        height: 100vh
+  
+      &[data-ratio="1"]
+        flex: 0 0 90vw
+        height: 90vw
+  
+      &[data-ratio="2"]
+        flex: 0 0 90vw
+        height: 45vw
+
+    +tablet
+
+      &[data-size="small"]
+        flex: 0 0 33vw
+  
+        &[data-ratio="0.5"]
+          flex: 0 0 25vh // mind the vh!
+          height: 50vh
+  
+        &[data-ratio="1"]
+          height: 33vw
+  
+        &[data-ratio="2"]
+          height: 16.5vw
+  
+  
+      &[data-size="medium"]
+        flex: 0 0 50vw
+  
+        &[data-ratio="0.5"]
+          flex: 0 0 32vh // mind the vh!
+          height: 64vh
+  
+        &[data-ratio="1"]
+          height: 50vw
+  
+        &[data-ratio="2"]
+          height: 25vw
+  
+      &[data-size="large"]
+        flex: 0 0 72vw
+  
+        &[data-ratio="0.5"]
+          height: 144vw
+  
+        &[data-ratio="1"]
+          flex: 0 0 50vw
+          height: 50vw
+  
+        &[data-ratio="2"]
+          height: 36vw
+  
+  
+      &[data-size="fullscreen"]
+        flex: 0 0 100vw
+  
+        &[data-ratio="0.5"]
+          height: 200vw
+  
+        &[data-ratio="1"]
+          height: 100vw
+  
+        &[data-ratio="2"]
+          height: 50vw
+
+    // &[data-ratio="1"]
+      // flex: 0 0 32rem // 512px
+      // height: 32rem
+    
+    // &[data-ratio="0.5"]
+      // flex: 0 0 24rem // 512px
+      // height: 48rem
+
+    .image-frame
+      position: relative
+      width: 100%
+      height: 100%
+      overflow: hidden
+      +z-depth-2dp()
+
+
+    .image
+      height: 100%
+      width: 100%
+      background-size: cover
+      background-position: center
+
+    .caption
+      margin-left: 1rem
+      color: $black-ter
+      font-size: $size-small
+      margin-top: 0.25rem
+
+

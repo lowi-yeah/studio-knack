@@ -1,43 +1,59 @@
 import '../sass/index.sass'
 
-import menu       from './menu'
-import about      from './about'
-import grid       from './grid'
-import initDetail from './init-detail'
-import transition from './transition'
-import hero       from './hero'
-import bam        from './bam'
-import filter     from './filter'
-import boring     from './boring'
-import voronoi    from './voronoi'
-import logo       from './logo'
+import anime      from 'animejs'
 
-function ready(fn) {
-  if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') fn()
-  else document.addEventListener('DOMContentLoaded', fn)
-}
+import menu       from './index/menu'
+// import layout     from './index/layout'
+import grid       from './layout/grid'
+import filter     from './index/filter'
+import images     from './common/images'
+import logo       from './common/logo'
+import util       from './common/util'
+import gradient   from './common/gradient'
+import overlay    from './common/overlay'
+import pattern    from './common/pattern'
+import curtain    from './common/curtain'
+import search     from './common/search'
+
+let Worker = require('worker-loader!./lib/knack.worker.js')
+
+let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
+    EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
+
+let gridOptions = { container:  '#grid',
+                    items:      '.grid-item'}
+
+// function _history() {
+//   window.onpopstate = function(e) {
+//     let f = window.location.pathname.substring(1)
+//     if(f === '') f = 'index'
+//     filter.set(f)
+//   }
+// }
 
 function init() {
-  console.log('ready!')
-  logo.begin().then(() => { voronoi.init()
-                            menu.init() })
-  transition.init()
+  console.log(`ready! ${window.innerWidth} — ${util.getDevice()}`)
+
+  let worker = new Worker()
+  images.init(worker)
+    .then(worker => search.init(worker))
+    .then(worker => { worker.terminate()})
   
 
-
-// logo.init()
-// menu.init()
-// about.init()
-// grid.init(menu)
-// initDetail()
-// filter.init()
-// transition.init()
-// boring.boringHero()
-// hero.init()
-// bam.init()
-// initHover()
-
+  // document.getElementById('footer').style.display = 'flex'
+  
+  window.dawnPromise
+    .then(()  => pattern.init())
+    .then(()  => logo.init())
+    .then(()  => menu.init())
+    .then(()  => grid.init(gridOptions))
+    .then(Φ   => filter.init(Φ))
+    .then(Φ   => overlay.init(Φ))
+    .then(()  => document.body.scroll(0, 1))
+    .then(()  => curtain.open({}))
+    .catch( (reason) => console.log(`rejection: ${reason}`))
 }
 
-ready(setTimeout(init, 100))
+document.addEventListener('DOMContentLoaded', init)
+// ready(setTimeout(init, 100))
 

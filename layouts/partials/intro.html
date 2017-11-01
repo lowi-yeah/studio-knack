@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="<%= settings.language %>">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>{{ .Site.Data.settings.title | safeHTML }}</title>
+    
+    {{ .Site.Data.settings.faviconMetaTags | safeHTML }}
+    {{ if isset .Params "seometatags" }}
+      {{ .Params.seometatags | safeHTML }}
+    {{ else }}
+      {{ .Site.Data.settings.seoMetaTags | safeHTML }}
+    {{ end }}
+    {{ partial "initial-css.html" . }}
+  </head>
+  <body>        
+    
+    
+
+

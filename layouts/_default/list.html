@@ -1,0 +1,18 @@
+{{ partial "intro" . }}
+<div id="wrap" 
+  {{ with .Params.type }} data-type="{{ . }}" {{ end }} >
+  
+  {{ partial "whiteout" . }}
+  {{ partial "gradient.svg" . }}
+  {{ partial "logo.svg" . }}
+  {{ partial "curtain.svg" . }}
+  {{ partial "overlay.svg" . }}
+  <script src="/assets/dawn.js"></script>
+  
+  {{ partial "menu" . }}
+  {{ partial "grid" . }}
+  {{ partial "footer" . }}
+</div>
+<script src="/assets/index.js"></script>
+
+{{ partial "outro.html" . }}

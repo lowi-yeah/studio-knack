@@ -54,6 +54,27 @@
   @return $text-list;
 }
 
+@mixin layer($z-index: 1) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: $z-index;
+  display: flex;
+  pointer-events: none;
+}
+
+// generate 'auto' columns
+@mixin columns($count: 12) {
+  $col: "1fr ";
+  $cols: "";
+  @for $i from 0 to $count {
+    $cols: $cols + $col;
+  }
+  grid-template-columns: unquote("#{$cols}");
+}
+
 // @mixin stripes($color1: #fff, $color2: #000, $angle: 45deg, $width: 4px ) {
 //   background: repeating-linear-gradient(
 //     $angle,

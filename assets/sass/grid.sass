@@ -1,125 +1,137 @@
-@keyframes animatedNext
-  from 
-    background-position: 0 0
-  
-  to 
-    background-position: 6px 0
 
-#next
-  // display: flex
-  pointer-events: none
-  a
-    @extend .title
-    @extend .is-1
-    +text-stroke()
-    font-variant: small-caps
-    flex: 1 0 auto
-    background-color: #ffffff
-    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")
-    background-position: 0 0
+// .grid-wrap
+//   pointer-events: none
+//   // opacity: 0
+//   padding: 0
+//   margin: 0
+//   z-index: 2
+//   position: relative
+//   width: 100%
+//   overflow: hidden
 
-    // workaround for isotope layout
-    margin-top: 480px
-    
-    &:hover
-      animation: animatedNext 1s linear infinite
+$grid-row-height: 3rem !default
+$grid-gap:        0 !default
 
-.page-load-status 
-  display: none
-  position: fixed
-  right: 0
-  bottom: 0
+.grid-wrap 
+  padding: 16rem 0 4.5rem 0
+  position: relative
+  z-index: 3
+
+  +mobile
+    padding: 9rem 0 4.5rem 0
+
+#grid
+  position: relative
   width: 100%
-
-  @keyframes loading 
-    from 
-      width: 0%
-    to 
-      width: 100%
-
-  .infinite-scroll-request
-    $height: 33vh
-    height: $height
-    width: 100%
-    position: relative
-    overflow: hidden
-    background-color: transparent
-    &:before
-      display: block
-      position: absolute
-      content: ""
-      left: 0px
-      width: 0px
-      height: $height
-      // background-color: #ffffff
-      background-color: transparent
-      background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")
-      animation: loading 2s linear infinite
-
-
-
-
-
-// Encode/Decode urls:
-// http://www.utilities-online.info/urlencode/
-
-.grid-item 
-  // color: $black
-  width: 25% 
-  display: flex
-  padding: 6rem 0
-
-  +mobile 
-    width: 100% 
-
-  +tablet
-    width: 50% 
+  height: 100%
+  // margin-bottom: 12rem
   
-  +desktop
-    width: 33.33%
-  
-  +widescreen
-    width: 25%
-  
+  // display: flex
+  // flex-direction: column
+
+  display: grid
+  grid-auto-rows: $grid-row-height
+
+  +columns(1)
+
+  +tablet-only
+    +columns(4)
+
+  +desktop-only
+    +columns(6)
+
+  +widescreen-only
+    +columns(8)
+
   +fullhd
-    width: 25%
+    +columns(12)
 
+  $gap: 0
+  grid-column-gap: $grid-gap
+  grid-row-gap: $grid-gap
   
-  &[size="2"] 
-    width: 66.666% 
-    +mobile 
+  // flex-start | flex-end | center | space-between | space-around | stretch
+  justify-content: space-between
+  justify-items: stretch
+  grid-auto-flow: row
+
+.grid-item
+  display: flex
+  flex-direction: column
+  justify-content: stretch
+  position: relative
+
+  // background: #ff00ff
+  // mix-blend-mode: multiply
+
+  &.hidden
+    display: none
+    visibility: hidden
+
+  .frame
+    flex: 1 0 auto
+    position: relative
+    // display: flex
+    // flex-direction: column
+
+  .content
+    
+    margin: 0
+
+    .image-frame
+      // flex: 1 0 auto
+      // overflow: hidden
       width: 100%
-
-  &[size="3"] 
-    width: 100%
-
-  &[emphasis] 
-    .box
-      +pb('lines-45-b', 8px, $white, $red, 1, 'none')
-      &:hover
-        +pb('lines-45-b', 36px, $white, $red, 1, 'none')
-
-  .box
-    box-shadow: none
-    flex: 1 1 auto
-
-    &:hover 
-      box-shadow: none
-      
-    &:after 
-      transition: background-size .32s linear
+      height: 100%
+      display: flex
+      flex-direction: column
+      position: absolute
+      overflow: hidden
+      +z-depth-4dp
 
     .image
-      width: 100%
+      z-index: 0
+      flex: 1 0 auto
       position: relative
-      img
-        height: 100%
-      .shadow
-        pointer-events: none
-        top: 0
-        position: absolute
-        height: 100%
-        width: 100%
-        +z-depth-6dp-inset()
+      top: 0%
+      left: 0%
+      width: 100%
+      height: 100%
+      background-size: cover
+      background-repeat: no-repeat
+      background-position: center center
+      overflow: hidden
 
+  .caption-frame
+    opacity: 0
+    transition: opacity 0.24s linear
+    position: absolute
+    bottom: 0
+    padding-top: 1.5rem
+    transform: translateY(100%)
+    width: 100%
 
+    &.active
+      opacity: 1
+
+    .caption
+      display: flex
+  
+    .title
+      flex: 1 1 auto
+  
+    .button
+      flex: 0 0 auto
+      margin-top: -0.25rem
+  
+.label
+  // background: #ffff00
+  // mix-blend-mode: multiply
+  margin: 0 !important
+  display: flex
+  align-items: center
+  justify-content: center
+  span 
+    @extend .title
+    flex: 0 1 auto
+    text-align: center

@@ -1,0 +1,29 @@
+<!-- <section class="stats pattern watch"> -->
+<section class="stats">
+      <div class="entries">
+        <div class="container">
+          {{ range $key, $value := . }}
+  
+            <!-- location needs special handling -->
+            {{ if eq $key "location" }}
+              <div class="entry">
+                <div class="key">{{ $key }}</div>
+                <div class="value">{{ $value.href | markdownify }}</div>
+              </div>
+  
+            {{ else if eq $key "client" }}
+              <div class="entry">
+                <div class="key">{{ $key }}</div>
+                <div class="value">{{ $value | markdownify }}</div>
+              </div>
+  
+            {{ else }}
+              <div class="entry">
+                  <div class="key">{{ $key }}</div>
+                  <div class="value">{{ $value }}</div>
+              </div>
+            {{ end }}
+          {{ end }}
+        </div>  
+      </div>  
+</section>

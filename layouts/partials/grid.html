@@ -1,0 +1,49 @@
+<div class="grid-wrap">
+  {{ $conentTypes := .Params.conentTypes}}
+  <div id="grid" class="main grid">
+    {{ range (where .Site.Pages "Type" "in" (slice "architecture" "design" "studio")) }} 
+      <section 
+        class="grid-item"
+        id="{{ .Params.id }}"
+        data-caption="{{ .Title }}"
+        data-visible="{{ in $conentTypes .Params.type }}"
+        data-type="{{ .Params.type }}" >
+        
+        <div class="frame">
+          <div class="content">
+            <div class="image-frame">
+              <div class="worker image blurred" 
+                   style="background-image: url({{ .Params.image.tiny }})"
+                   id="img-{{ .Params.id }}"
+                   data-image-url="{{ .Params.image.url }}" >
+              </div>
+            </div>
+          </div>  
+          <div class="caption-frame"> 
+            <div class="caption"> 
+              <div class="title is-3"> {{ .Title }} </div>
+              <a href="{{ .Permalink }}" class="button no-hover"> more > </a>
+            </div>
+            </div>
+        </div>  
+      </section>
+
+      {{ if .Params.label }}
+        <div class="label" id="{{ .Params.id }}-label">
+          <span>{{ .Params.label }}</span>
+        </div>
+      {{ end }}
+    {{ end }}
+  </div>
+</div>
+
+
+<!-- <div class="page-load-status">
+  <p class="infinite-scroll-request"></p>
+</div>
+
+{{ if .Paginator.HasNext }} 
+  <div id="next" class="container is-fluid">
+    <a class="button" href="{{ .Paginator.Next.URL }}">next</a>
+  </div>  
+{{ end }} -->
