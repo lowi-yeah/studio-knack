@@ -52,7 +52,6 @@ $grid-gap:        0 !default
   
   // flex-start | flex-end | center | space-between | space-around | stretch
   justify-content: space-between
-  // justify-items: center
   justify-items: stretch
   grid-auto-flow: row
 
@@ -61,7 +60,10 @@ $grid-gap:        0 !default
   flex-direction: column
   justify-content: stretch
   position: relative
-  border: 1px solid $grey-light
+
+  // border: 1px solid $grey-light
+  // background: #ff00ff
+  // mix-blend-mode: multiply
 
   &.hidden
     display: none
@@ -123,18 +125,19 @@ $grid-gap:        0 !default
       flex: 0 0 auto
       margin-top: -0.25rem
   
-  .label
+.label
+  // background: #ffff00
+  // mix-blend-mode: multiply
+  margin: 0 !important
+  display: flex
+  align-items: center
+  justify-content: center
+  span 
     @extend .title
     @extend .is-2
-    align-self: flex-start
-    position: absolute
-    top: 0
-    left: 0
-    padding: 0 1.5rem
-    pointer-events: none
-    display: flex;
-    align-items: center
-    justify-content: center
+    flex: 0 1 auto
+    text-align: center
+
 
 
 

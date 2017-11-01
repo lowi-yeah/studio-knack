@@ -31,7 +31,7 @@ function init() {
     .then(() => {
       document.querySelector('.project.detail').style.opacity = 1
       console.log('Welcome!')})
-    .then(()  => window.scrollTo(0, 1))
+    .then(()  => document.body.scroll(0, 1))
     .then(() => curtain.open({}))
 
   

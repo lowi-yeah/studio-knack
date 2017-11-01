@@ -6,12 +6,10 @@ import isMobile       from 'ismobilejs'
 
 
 function _offsetFn() {
-  let ʀ = randomNormal(0, window.innerHeight/8)
+  let ʀ = randomNormal(0, window.innerHeight/6)
         
   return (φ) => {
-    let δ   = 100,
-        // μ is 
-        μ   = (φ.item.clientHeight + window.innerHeight),
+    let μ   = (φ.item.clientHeight + window.innerHeight),
         f   = φ.frame,
         ϕ  = Math.round(Math.abs(ʀ())),
         σ  = scalePow()
@@ -27,14 +25,13 @@ function init(Φ) {
   // do not use parallax on mobile devices
   // if(isMobile.any) return
   // YES! DO IT!
-
   let ƒs      = _.map(Φ, _offsetFn()),
       offset  = 0,
       changed = false
   
-  util.addEvent(window, 'scroll', () => {
+  util.addEvent(document.body, 'scroll', () => {
     changed = true
-    offset  = window.scrollY })
+    offset  = document.body.scrollTop })
   
   util.startAnimation(24, () => {
     if(!changed) return

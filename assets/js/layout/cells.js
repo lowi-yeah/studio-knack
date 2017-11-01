@@ -5,18 +5,12 @@ import isMobile         from 'ismobilejs'
 
 import dom        from '../common/dom'
 import util       from '../common/util'
+import packing    from './bin-packing'
 
-      // Z = { '1': [MIN, MAX],
-      //       '2': [MIN, 0, MAX],
-      //       '3': [MIN, -0.43, 0.43, MAX],
-      //       '4': [MIN, -0.685, 0, 0.685, MAX],
-      //       '5': [MIN, -0.804, -0.206, 0.206, 0.804, MAX]},
+function _inspect(φ) {
+  return `${φ.title} — rowStart: ${φ.rowStart}, rowSpan: ${φ.rowSpan}, colStart: ${φ.colStart}, colSpan: ${φ.colSpan}`
+}
 
-      // Z = { '1': [[MIN, MAX]],
-      //       '2': [[MIN, 0], [0, MAX]],
-      //       '3': [[MIN, -0.43], [-0.43, 0.43], [0.43, MAX]],
-      //       '4': [[MIN, -0.685], [-0.685, 0], [0, 0.685], [0.685, MAX]],
-      //       '5': [[MIN, -0.804], [-0.804, -0.206], [-0.206, 0.206], [0.206, 0.804], [0.804, MAX]] },
 
 const MIN = Number.MIN_SAFE_INTEGER,
       MAX = Number.MAX_SAFE_INTEGER,
@@ -123,11 +117,7 @@ function _height(φ, rowHeight) {
       let β = util.boundingBox(φ.item),
           r = R[φ.ratio],
           h = β.width / r,
-          s = Math.round(h/rowHeight),
-          // t = _.random(1, 4),
-          // b = _.random(3, 5)
-          t = 2,
-          b = 2
+          s = Math.round(h/rowHeight) + 2
 
       if(isMobile.phone) {
         φ.paddingTop    = 1 * rowHeight
@@ -135,12 +125,17 @@ function _height(φ, rowHeight) {
         φ.paddingLeft   = 16
         φ.paddingRight  = 16 } 
       else {
-        φ.paddingTop    = t * rowHeight
-        φ.paddingBottom = b * rowHeight
-        φ.paddingLeft   = _.random(24, 0.125 * β.width)
-        φ.paddingRight  = _.random(24, 0.125 * β.width) }
-      φ.rowSpan = t + s + b
-      φ.item.style['grid-row-end'] = `${t + s + b}`
+
+        let paddingH = _.random(48, 0.32 * β.width),
+            paddingV = paddingH/r
+
+        φ.paddingTop    = paddingV/2
+        φ.paddingBottom = paddingV/2 + (2 * rowHeight)
+        φ.paddingLeft   = paddingH/2
+        φ.paddingRight  = paddingH/2
+      }
+      φ.rowSpan = s
+      φ.item.style['grid-row-end'] = `${s}`
       resolve() }))}
 
 function _setHeight(Φ, {rowHeight}) {
@@ -162,20 +157,19 @@ function _readjustToScreenHeight(Φ, {rowHeight}) {
 
 function jiggle(Φ, {numCols}) {
   return new Promise( resolve => {
-    _(Φ)
-      .shuffle()
-      .each(φ => {
-        // jiggle sideways
-        // get the distances to either the neighbour or the grid edege
-        let δLeft   = φ.neighbours.left ? 
-                        φ.neighbours.left.δ :
-                        φ.colStart-1,
-            δRight  = φ.neighbours.right ? 
-                        φ.neighbours.right.δ :
-                        (numCols - (φ.colStart + φ.colSpan)),
-            δ       = _.random(-δLeft, δRight)
-
-        φ.colStart += δ })
+    // _(Φ)
+    //   .shuffle()
+    //   .each(φ => {
+    //     // jiggle horizontally
+    //     // get the distances to either the neighbour or the grid edege
+    //     let δLeft   = φ.neighbours.left ? 
+    //                     φ.neighbours.left.δ :
+    //                     φ.colStart-1,
+    //         δRight  = φ.neighbours.right ? 
+    //                     φ.neighbours.right.δ :
+    //                     ((numCols + 1) - (φ.colStart + φ.colSpan)),
+    //         δ       = _.random(-δLeft, δRight)
+    //     φ.colStart += δ })
     resolve(Φ) })}
 
 function _calculateWhitespace(φ, gridStyle) {
@@ -237,58 +231,19 @@ function _calculateWhitespace(φ, gridStyle) {
 
   return {above, right, below, left}}
 
-function labels(Φ, gridStyle) {
+function labels(Φ, Λ, gridStyle) {
   return new Promise( resolve => {
     _(Φ)
       .each(φ => {
         if(!φ.label) return 
         if(φ.hidden) return 
             // calculate the whitespace in all directions
-        let whitespace      = _calculateWhitespace(φ, gridStyle),
-            // pick the direction with the largest delta
-            {δ, direction}  = _.reduce(whitespace, (ρ, delta, dir) => {
-                                  if(delta > ρ.δ) {
-                                    ρ.δ = delta
-                                    ρ.direction = dir }
-                                  return ρ }, {δ: 0, direction: null}),
-            frameβ          = util.boundingBox(φ.frame),
-            contentβ        = util.boundingBox(φ.content),
-            imageβ          = util.boundingBox(φ.image),
-            labelβ          = util.boundingBox(φ.label),
-            offset
-        switch(direction) {
-      
-          case 'above': 
-            offset = φ.paddingTop - δ
-            φ.label.style.transform   = `translateY(${offset}px)`
-            φ.label.style.height      = `${δ * 0.618}px`
-            φ.labelPosition           = 'above'
-            break
+        
+        let text = φ.label.text
 
-          case 'below': 
-            let contentHeight = (φ.rowSpan * gridStyle.rowHeight) - (φ.paddingTop + φ.paddingBottom),
-                captionHeight = φ.caption.clientHeight
-
-            offset = φ.paddingTop + contentHeight + captionHeight
-            φ.label.style.transform   = `translateY(${offset}px)`
-            φ.label.style.height      = `${δ * 0.618}px`
-            φ.labelPosition           = 'below'
-            break
-
-          case 'right': 
-            φ.label.style.width         = `${δ}px`
-            φ.label.style.height        = `${frameβ.height * 0.618}px`
-            φ.label.style.transform     = `translateX(${frameβ.width - φ.paddingRight}px)`
-            φ.labelPosition             = 'right'
-            break
-
-          case 'left': 
-            φ.label.style.width         = `${δ}px`
-            φ.label.style.height        = `${frameβ.height * 0.618}px`
-            φ.label.style.transform     = `translateX(${-δ + φ.paddingLeft}px)`
-            φ.labelPosition             = 'left'
-            break
-        }
+        // console.log('text', text)
+        let area = packing.placeLabel(φ, Λ)
+        φ.label.area = area
       })
     resolve(Φ)
   })
@@ -300,14 +255,7 @@ function reset(Φ, gridStyle) {
     _(Φ).each(φ => {
       if(φ.type === filter || filter === 'index') φ.hidden = false
       else φ.hidden = true})
-    resolve(Φ)
-
-    // _setColspan(Φ, gridStyle)
-    //   .then(() => _setRatio(Φ, gridStyle))    // pick an aspect-ratio
-    //   .then(() => _setHeight(Φ, gridStyle))   // set the height based on width & ratio
-    //   .then(() => _readjustToScreenHeight(Φ, gridStyle)) // set to landscape if the item is heigher than the screen
-    //   .then(() => resolve(Φ))
-  })}
+    resolve(Φ) })}
 
 function init(Φ, items, gridStyle) {
   let filter = Φ.filtered || 'index',
@@ -316,11 +264,14 @@ function init(Φ, items, gridStyle) {
                   frame   = item.querySelector('.frame'),
                   content = item.querySelector('.content'),
                   caption = item.querySelector('.caption-frame'),
-                  label   = item.querySelector('.label'),
+                  label   = document.getElementById(`${id}-label`),
                   image   = item.querySelector('.image-frame'),
                   type    = item.getAttribute('data-type'),
                   title   = item.querySelector('.caption > .title').innerHTML,
                   hidden  = !(type === filter || filter === 'index')
+
+              if(label) label.text = label.querySelector('span').innerHTML
+
               return { item, id, frame, content, caption, label, image, type, hidden, title }})
   _.each(Ѻ, ϖ => Φ.push(ϖ))
   return  new Promise( resolve => 
@@ -337,6 +288,9 @@ function update(Φ, gridStyle) {
         if(φ.hidden) {
           φ.item.style.display    = 'none'
           φ.item.style.visibility = 'hidden'
+          if(φ.label) {
+            φ.label.style.display    = 'none'
+            φ.label.style.visibility = 'hidden' }
           resolve() }
         else if(_.isNumber(φ.colStart)) {
           φ.item.style.display    = 'flex'
@@ -350,6 +304,20 @@ function update(Φ, gridStyle) {
           φ.item.style['paddingBottom']     = `${(φ.paddingBottom)}px`
           φ.item.style['paddingRight']      = `${φ.paddingRight}px`
           φ.item.style['paddingLeft']       = `${φ.paddingLeft}px`
+
+          if(φ.label) {
+            let labelArea = φ.label.area
+            φ.label.style.display    = 'flex'
+            φ.label.style.visibility = 'visible'
+            φ.label.style['gridArea'] = `${labelArea.rowStart} / ${labelArea.colStart} / ${labelArea.rowStart + labelArea.rowSpan} / ${labelArea.colStart + labelArea.colSpan}`  
+
+            if(labelArea.rowSpan > 8 * labelArea.colSpan) {
+              let text = φ.label.querySelector('span'),
+                  rotation = _.sample(['-90deg', '90deg'])
+              text.style.transform = `rotate(${rotation})`
+            }
+          }
+
           resolve()}
       else reject(`φ.colStart ain't a number: ${φ.colStart}`) })))
   return new Promise(resolve => 

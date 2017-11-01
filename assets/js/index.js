@@ -49,7 +49,7 @@ function init() {
     .then(()  => grid.init(gridOptions))
     .then(Φ   => filter.init(Φ))
     .then(Φ   => overlay.init(Φ))
-    // .then(()  => window.scrollTo(0, 1))
+    .then(()  => document.body.scroll(0, 1))
     .then(()  => curtain.open({}))
     .catch( (reason) => console.log(`rejection: ${reason}`))
 }

@@ -247,6 +247,9 @@ module.exports = (dato, root, i18n) => {
     let mainIndex = _mainIndex()
     dir.createPost(mainIndex.slug, mainIndex.format, mainIndex.post) })
 
+
+console.log('root', root)
+
   // Architecture
   // ————————————————————————————————
   root.directory('content/architecture', dir => {
@@ -282,7 +285,6 @@ module.exports = (dato, root, i18n) => {
     _.each(projects, ({search}) => searchIndex.push(search))
     dir.createPost(index.slug, index.format, index.post)
   })
-
 
   // build search index
   // console.log('Lunr', lunr)

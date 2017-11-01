@@ -1,9 +1,7 @@
-
 <div class="grid-wrap">
   {{ $conentTypes := .Params.conentTypes}}
-
   <div id="grid" class="main grid">
-    {{ range first 12 (where .Site.Pages "Type" "in" (slice "architecture" "design" "studio")) }} 
+    {{ range (where .Site.Pages "Type" "in" (slice "architecture" "design" "studio")) }} 
       <section 
         class="grid-item"
         id="{{ .Params.id }}"
@@ -29,14 +27,13 @@
             </div>
             </div>
         </div>  
-       
-       <!--  {{ with .Params.label }}
-          <div class="label">
-            <span>{{ . }}</span>
-          </div>
-        {{ end }} -->
-
       </section>
+
+      {{ if .Params.label }}
+        <div class="label" id="{{ .Params.id }}-label">
+          <span>{{ .Params.label }}</span>
+        </div>
+      {{ end }}
     {{ end }}
   </div>
 </div>

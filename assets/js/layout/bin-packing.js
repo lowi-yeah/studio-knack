@@ -5,72 +5,71 @@ import ops      from 'ndarray-ops'
 import util       from '../common/util'
 import neighbours from './neighbours'
 
+function _inspect(φ) {
+  // console.log('φ', φ.id)
+  console.log( φ.id, φ.title)
+  console.log(`\t rowStart: ${φ.rowStart}, colStart: ${φ.colStart}, rowSpan: ${φ.rowSpan}, colSpan: ${φ.colSpan}`)
+ 
+}
+
+
 function _ascii(Λ, rows, cols) {
-  let slice = Λ.hi(rows, cols)
+  // let slice = Λ.hi(rows, cols)
 
   console.log('shape:', Λ.shape)
-  for(var i=0; i<slice.shape[0]; i++) {
+  for(var i=0; i<Λ.shape[0]; i++) {
     let s = `${i}:\t`
-    for(var j=0; j<slice.shape[1]; j++) {
-      let c = 'x'
-      if(slice.get(i,j) === 0) c = '▯'
-      if(slice.get(i,j) === 1) c = '▮'
-      s += `${c} `
+    for(var j=0; j<Λ.shape[1]; j++) {
+      // let c = 'x'
+      // if(Λ.get(i,j) === 0) c = '0'
+      // if(Λ.get(i,j) === 1) c = '1'
+      // s += `${c} `
+
+      s += `${Λ.get(i,j)} `
     }
     console.log(s)
   }
 }
 
-function _inspect(φ) {
-  // console.log('φ', φ.id)
-  console.log(φ.title)
-  console.log(`\t rowStart: ${φ.rowStart}, colStart: ${φ.colStart}, rowSpan: ${φ.rowSpan}, colSpan: ${φ.colSpan}`)
-  
-  let η = _(φ.neighbours)
-            .map((n, dir) => {
-              if(!n) return 
-              let ν = _.map(n.η, Ϟ => Ϟ.id).join(' ')
-              return `${dir}: ${ν} (δ: ${n.δ})`})
-            .compact()
-            .value()
-  console.log(`\t neighbours — ${η.join(' | ')}`)
+let addΛ      = cwise( { args: ["array"], body: function(a) { a += 1 }}),
+    subtractΛ = cwise( { args: ["array"], body: function(a) { a -= 1 }}),
+    setΛ      = cwise( { args: ["array", "scalar"], body: function(a, s) { a = s }}),
+    maxΛ      = cwise( { args: ["array"],
+                         pre:  function()  { this.max = 0 },
+                         body: function(a) { if(a > this.max) this.max += a },
+                         post: function()  { return this.max } })
 
-  // console.log('\trowStart:',  φ.rowStart)
-  // console.log('\trowSpan:',   φ.rowSpan)
-  // console.log('\tcolStart:',  φ.colStart)
-  // console.log('\tcolSpan:',   φ.colSpan)
-  // console.log('\thidden:',    φ.hidden)
-  // console.log('\tpaddingTop:', φ.paddingTop)
-  // console.log('\tpaddingRight:', φ.paddingRight)
-  // console.log('\tpaddingBottom:', φ.paddingBottom)
-  // console.log('\tpaddingLeft:', φ.paddingLeft)
-  // console.log('\tratio:', φ.ratio)
-  // console.log('\ttype:', φ.type)
-}
-
-
-let setΛ    = cwise( { args: ["array"], body: function(a) { a += 1 }}),
-    unsetΛ  = cwise( { args: ["array"], body: function(a) { a -= 1 }}),
-    maxΛ    = cwise( { args: ["array"],
-                       pre:  function()  { this.max = 0 },
-                       body: function(a) { if(a > this.max) this.max += a },
-                       post: function()  { return this.max } })
-
+function growꜰℕsꜰℕ(Λ){
+  return  { upwards:    α => {  let γ = _.clone(α)
+                                γ.y0 = _.max([γ.y0 - 1, 0])
+                                return γ },
+            rightwards: α => {  let γ = _.clone(α)
+                                γ.x1 = _.min([γ.x1 + 1, Λ.shape[1]])
+                                return γ },
+            downwards:  α => {  let γ = _.clone(α)
+                                γ.y1 = _.min([γ.y1 + 1, Λ.shape[0]])
+                                return γ },
+            leftwards:  α => {  let γ = _.clone(α)
+                                γ.x0 = _.max([γ.x0 - 1, 0])
+                                return γ } }}
 
 // update the traversal indices →↓
-function update({x, y}, ς) { 
+function _update({x, y}, ς) { 
   x += 1
   if(x > ς[1]) { x = 1; y += 1 }
   return {x, y} }
 
+function _offsetY({x, y}) { 
+  y += _.random(2, 6)
+  return {x, y} }
+
+  
+
 function _place(φ, Φ, {Λ}) {
-
-  // console.log('----')
-
   if(φ.hidden) return {Λ}
 
   let ς = Λ.shape,
-      ω = {x: 1, y: 1},
+      ω = {x: 0, y: 0},
       w = φ.colSpan,
       h = φ.rowSpan,
       success = false,
@@ -86,42 +85,177 @@ function _place(φ, Φ, {Λ}) {
       break}
 
     // check if φ can fit into the current row
-    let fitRow = ω.x + w <= ς[1] + 1
+    let fitRow = ω.x + w <= ς[1]
     if(!fitRow) { 
-      ω = update(ω, ς)
+      ω = _update(ω, ς)
       continue }
     else {
+      ω = _offsetY(ω)
       candidate = Λ.lo(ω.y,ω.x).hi(h, w)
-      setΛ(candidate)
+      addΛ(candidate)
 
       success = maxΛ(Λ) < 2
       if(!success) { 
-        unsetΛ(candidate)
-        ω = update(ω, ς) } } }
+        subtractΛ(candidate)
+        ω = _update(ω, ς) } } }
 
-  φ.rowStart = ω.y
-  φ.colStart = ω.x
+  φ.rowStart = ω.y + 1
+  φ.colStart = ω.x + 1
+
 
   return {Λ} }
+
+function _slice(area, Λ) { return Λ.hi(area.y1, area.x1).lo(area.y0, area.x0) }
+
+function _randomSeed(φ, Λ, ι) {
+
+  // prevent endless recursion
+  if(ι > 64) return { x0, y0, x1, y1 }
+
+  let dir = _.sample(['right', 'left', 'bottom']),
+      // dir = _.sample(['top', 'right', 'left', 'bottom']),
+      x0, x1, y0, y1
+  switch (dir) {
+      case 'top':
+        // random 1x1 area along the top edge
+        x0 = _.random(φ.colStart, φ.colStart + φ.colSpan - 1)
+        x1 = x0 + 1
+        y0 = φ.rowStart - 2
+        y1 = y0 + 1
+        break
+      case 'right':
+        // random 1x1 area along the right edge
+        x0 = φ.colStart + φ.colSpan - 1,
+        x1 = x0 + 1
+        y0 = _.random(φ.rowStart, φ.rowStart + φ.rowSpan - 1)
+        y1 = y0 + 1
+        break
+      case 'left':
+        // random 1x1 area along the right edge
+        x0 = φ.colStart - 2,
+        x1 = x0 + 1
+        y0 = _.random(φ.rowStart, φ.rowStart + φ.rowSpan - 1)
+        y1 = y0 + 1
+        break
+      case 'bottom':
+        // random 1x1 area along the top edge
+        x0 = _.random(φ.colStart, φ.colStart + φ.colSpan - 1)
+        x1 = x0 + 1
+        y0 = φ.rowStart + φ.rowSpan - 1
+        y1 = y0 + 1
+        break
+    }
+  
+  // try again
+  if(x0 < 0 || x1 > Λ.shape[1]) return _randomSeed(φ, Λ, ι++)
+  return  { x0, y0, x1, y1 } }
+
+// recursive helper function for growing a random area
+// area:  an area of the grid, represented by the corners {x0, y0, x1, y1}
+// Λ:     the ndArray representing our grid
+function _grow(area, Λ) {
+      // pick a random direction
+  let growꜰℕs     = growꜰℕsꜰℕ(Λ),
+      growꜰℕ      = _(growꜰℕs).values().sample(),
+
+      // apply the grow-in-that-direction-fuction to the area
+      // growths resizes the given area by 1 in the chosen direction
+      // (if the grid-dimensions allow it)
+      grownArea   = growꜰℕ(area)
+
+  // check if the area has grown at all 
+
+  // get the corresponding slice from the grid
+  let areaΛ       = _slice(grownArea, Λ)
+  // area++
+  addΛ(areaΛ)   
+
+  // success means that we have not caused an overlap by growing the area
+  let success = maxΛ(Λ) < 2
+  if(success) { 
+    // if we were successful, we clean up after ourselves and keep growing
+    subtractΛ(areaΛ)
+    return _grow(grownArea, Λ) } 
+  else {
+    // if not, we still clean up after ourselves and return the smaller inoffensive area
+    subtractΛ(areaΛ)
+    return area } }
+
+// φ: the cell whose label shall be places
+// Λ: the ndArray representing our grid, 
+// ρ: the reduce result, 
+// ι: the iteration index
+function _randomArea(φ, Λ, ρ) {
+  // grow a random area 
+  // by first selecting a random seed along the edge of the cell
+  let seed    = _randomSeed(φ, Λ, 0),
+      // and then growing it…
+      area    = _grow(seed, Λ),
+
+      // check how bi the result is
+      width   = area.x1 - area.x0,
+      height  = area.y1 - area.y0,
+      size    = width * height
+  if(ρ.size < size) {
+    ρ.width  = width
+    ρ.height = height
+    ρ.size   = size,
+    ρ.area   = area }
+  return ρ }
+
+function placeLabel(φ, Λ) {
+  if(φ.hidden) return
+
+  // we need to find an area in the for the label that is close to it's cell (φ)
+  // and provides enough space to accomodate the text
+  
+  // the way we search for an area is more of a shotgun approch and thus pretty inefficient.
+  // But this does't really matter, because a: we don't have a whole lot of data in our ndArray, 
+  // b: we don't need an optimal result but some result that works,
+  // and c: ndArray is supposed to real quick.
+
+  // we give our search many tries and eventually pick the 'best' one
+  let iterations  = 64,               // the number of tries
+      result      = { width:  0,      // our reduce result
+                      height: 0,
+                      size:   0,
+                      area:   {x0: -1, y0: -1, x1: 0, y1: 0}}
+  _(iterations)
+    .range()
+    .reduce((ρ,ι) => _randomArea(φ, Λ, ρ), result)
+
+      // the resulting area comes from the ndArray and is thus 0-index-based
+      // the css grid however is 1-index-based
+      // adjust accordingly…
+  let rowStart    = result.area.y0 + 1,
+      rowSpan     = result.area.y1 - result.area.y0,
+      colStart    = result.area.x0 + 1,
+      colSpan     = result.area.x1 - result.area.x0,
+
+      // after we have found a place, claim it on the grid
+      // and for good measure, make it larger by 1 in each direction
+      largerArea  = {x0: _.max([result.area.x0 - 1, 0]),
+                       y0: _.max([result.area.y0 - 1, 0]),
+                       x1: _.min([result.area.x1 + 1, Λ.shape[1]]), 
+                       y1: _.min([result.area.y1 + 1, Λ.shape[0]])},
+      areaΛ       = _slice(largerArea, Λ)
+    setΛ(areaΛ, 1)   
+
+  return {rowStart, rowSpan, colStart, colSpan} }
 
 function pack(Φ, gridStyle) {
   // let startτ = performance.now()
   return new Promise(resolve => {
-    let Λ = ndarray(new Uint8Array(gridStyle.numCols * 1024), [1024,gridStyle.numCols])
+    let numLines = _.size(Φ) * 128,
+        Λ = ndarray(new Uint8Array(gridStyle.numCols * numLines), [numLines,gridStyle.numCols])
 
     _.reduce(Φ, (ρ, φ) => _place(φ, Φ, ρ), {Λ})
 
-    _.defer(() => {
-      _.each(Φ, φ => φ.neighbours = neighbours.all(φ, Φ))  
-      _.each(Φ, φ => _inspect(φ))  
-
-      
-      resolve(Φ)
-    })
+    resolve({Φ, Λ})
 
     // _ascii(Λ, 128, gridStyle.numCols)
     // console.log(`packing finished. took ${Math.round(performance.now() - startτ)}ms`)
   })
 }
 
-export default { pack }
+export default { pack, placeLabel }
