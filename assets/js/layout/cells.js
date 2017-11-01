@@ -24,12 +24,22 @@ const MIN = Number.MIN_SAFE_INTEGER,
                                                           square:    [MIN+1, 0],    
                                                           landscape: [0, MAX] }
 
-                          // Cumulative from mean (0 to Z)
-                          // ƒ(0.43) =  Φ(0.43) - ½ = 0.16640
-                          // @see: https://en.wikipedia.org/wiki/Standard_normal_table
-                          else return { portrait:  [MIN, -0.43],
-                                        square:    [-0.43, 0.43],
-                                        landscape: [0.43, MAX] } },
+                          else if(numCols === 8) return { portrait:  [MIN, -0.43],
+                                                          square:    [-0.43, 0.43],
+                                                          landscape: [0.43, MAX] } 
+
+                          else  return { portrait:  [MIN, MIN+1],  //no portarait
+                                         square:    [MIN+1, 0],    
+                                         landscape: [0, MAX] }
+
+                          // // Cumulative from mean (0 to Z)
+                          // // ƒ(0.43) =  Φ(0.43) - ½ = 0.16640
+                          // // @see: https://en.wikipedia.org/wiki/Standard_normal_table
+                          // else return { portrait:  [MIN, -0.43],
+                          //               square:    [-0.43, 0.43],
+                          //               landscape: [0.43, MAX] } 
+
+                                      },
 
       // the maximum and minimum colspans for an elment
       // depending on the number of columns in the layou
@@ -40,11 +50,11 @@ const MIN = Number.MIN_SAFE_INTEGER,
               // 5:  {min: 2, max: 3},
               6:  {min: 3, max: 4},
               // 7:  {min: 3, max: 6},
-              8:  {min: 3, max: 5},
+              8:  {min: 3, max: 4},
               // 9:  {min: 2, max: 6},
               // 10: {min: 2, max: 6},
               // 11: {min: 2, max: 6},
-              12: {min: 3, max: 4} },
+              12: {min: 2, max: 4} },
       // aspect ratios
       R   = { portrait: 1/1.618,
               square: 1,
@@ -117,7 +127,7 @@ function _height(φ, rowHeight) {
       let β = util.boundingBox(φ.item),
           r = R[φ.ratio],
           h = β.width / r,
-          s = Math.round(h/rowHeight) + 2
+          s = Math.ceil(h/rowHeight) + 2
 
       if(isMobile.phone) {
         φ.paddingTop    = 1 * rowHeight
@@ -156,24 +166,21 @@ function _readjustToScreenHeight(Φ, {rowHeight}) {
   return Promise.all(ρ) }
 
 function labels(Φ, Λ) {
+  var sizeΣ = scaleQuantize()
+                .domain([1, 92])
+                .range(['is-1', 'is-2', 'is-3', 'is-4', 'is-5', 'is-6']);
+
   return new Promise( resolve => {
     _(Φ)
       .each(φ => {
         if(!φ.label) return 
         if(φ.hidden) return 
-            // calculate the whitespace in all directions
-        
-        let text = φ.label.text
-
-        // console.log('text', text)
-        let area = packing.placeLabel(φ, Λ)
-
-        console.log('area', area)
+        let text = φ.label.text,
+            area = packing.placeLabel(φ, Λ),
+            size = sizeΣ(text.length)
         φ.label.area = area
-      })
-    resolve(Φ)
-  })
-}
+        φ.label.size = size })
+    resolve(Φ) })}
 
 function reset(Φ) {
   let filter = Φ.filtered || 'index'
@@ -232,23 +239,22 @@ function update(Φ, gridStyle) {
           φ.item.style['paddingLeft']       = `${φ.paddingLeft}px`
 
           if(φ.label) {
-            let labelArea = φ.label.area
+            let labelArea = φ.label.area,
+                size      = labelArea.rowSpan * labelArea.colSpan
 
-            if(labelArea.rowStart === 0) {
+            if(labelArea.rowStart === 0 || size <= 1) {
               φ.label.style.display    = 'none'
               φ.label.style.visibility = 'hidden' }
             else {
               φ.label.style.display    = 'flex'
               φ.label.style.visibility = 'visible'
               φ.label.style['gridArea'] = `${labelArea.rowStart} / ${labelArea.colStart} / ${labelArea.rowStart + labelArea.rowSpan} / ${labelArea.colStart + labelArea.colSpan}`  
-  
-              if(labelArea.rowSpan > 6 * labelArea.colSpan) {
-                let text = φ.label.querySelector('span'),
-                    rotation = _.sample(['-90deg', '90deg'])
-                text.style.transform = `rotate(${rotation})`
-              }
-            }
-          }
+
+              let text = φ.label.querySelector('span')
+              text.classList.add(φ.label.size)
+              if(labelArea.rowSpan > 6 * labelArea.colSpan || labelArea.colSpan === 1) {
+                let rotation = _.sample(['-90deg', '90deg'])
+                text.style.transform = `rotate(${rotation})` }}}
 
           resolve()}
       else reject(`φ.colStart ain't a number: ${φ.colStart}`) })))

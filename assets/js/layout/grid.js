@@ -40,15 +40,12 @@ function _attachEventHandlers(Φ) {
       over        = false,
       isMobile    = util.isMobile(),
         
-      show        = φ => _.delay(() => { 
-                                if(!over) return
-                                overlayId = φ.id
-                                overlay.set(φ) }, 200),
-      hide        = () => _.delay(() => {
-                              if(over) return
+      show        = φ =>  { if(!over) return
+                            overlayId = φ.id
+                            overlay.set(φ) },
+      hide        = () => { if(over) return
                               overlayId = undefined
-                              overlay.remove()  
-                            }, 200),
+                              overlay.remove() },
       toggle      = φ => {     
                       if(φ.id === overlayId) {
                         overlay.remove() 

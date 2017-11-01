@@ -5,8 +5,6 @@ let _         = require('lodash'),
     fs        = require('fs')
 
 let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
-
-
 function _guid(prefix) {
   prefix = `${prefix}-` || ''
   let s4 = () =>  Math.floor((1 + Math.random()) * 0x10000)

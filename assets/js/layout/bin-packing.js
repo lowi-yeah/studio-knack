@@ -30,9 +30,10 @@ let addΛ      = cwise( { args: ["array"], body: function(a) { a += 1 }}),
                          post: function()  { return this.max } })
 
 function growꜰℕsꜰℕ(Λ){
-  return  { upwards:    α => {  let γ = _.clone(α)
-                                γ.y0 = _.max([γ.y0 - 1, 0])
-                                return γ },
+  return  { 
+            // upwards:    α => {  let γ = _.clone(α)
+            //                     γ.y0 = _.max([γ.y0 - 1, 0])
+            //                     return γ },
             rightwards: α => {  let γ = _.clone(α)
                                 γ.x1 = _.min([γ.x1 + 1, Λ.shape[1]])
                                 return γ },
@@ -119,7 +120,7 @@ function _randomSeed(φ, Λ, ι) {
   if(ι > 64) return null
   if(Λ.shape[1] === 1) return null
 
-  let dir = _.sample(['right', 'left', 'bottom']),
+  let dir = _.sample(['right', 'left']),
       // dir = _.sample(['top', 'right', 'left', 'bottom']),
       x0, x1, y0, y1
   switch (dir) {
@@ -135,6 +136,8 @@ function _randomSeed(φ, Λ, ι) {
         x0 = φ.colStart + φ.colSpan - 1,
         x1 = x0 + 1
         y0 = _.random(φ.rowStart, φ.rowStart + φ.rowSpan - 1)
+        // y0 = _.random(φ.rowStart + 1, φ.rowStart + φ.rowSpan - 2)
+        // y0 = φ.rowStart + _.random(0, 3)
         y1 = y0 + 1
         break
       case 'left':
@@ -142,6 +145,8 @@ function _randomSeed(φ, Λ, ι) {
         x0 = φ.colStart - 2,
         x1 = x0 + 1
         y0 = _.random(φ.rowStart, φ.rowStart + φ.rowSpan - 1)
+        // y0 = _.random(φ.rowStart + 1, φ.rowStart + φ.rowSpan - 2)
+        // y0 = φ.rowStart + _.random(0, 3)
         y1 = y0 + 1
         break
       case 'bottom':
@@ -170,7 +175,8 @@ function _grow(area, Λ) {
       // (if the grid-dimensions allow it)
       grownArea   = growꜰℕ(area)
 
-  // check if the area has grown at all 
+  // check if the area has grown at all
+  if( _equalAreas(area, grownArea) ) return area
 
   // get the corresponding slice from the grid
   let areaΛ       = _slice(grownArea, Λ)
@@ -219,7 +225,6 @@ function _equalAreas(α0, α1) {
 function _jiggle(Φ, Λ) {
   return new Promise( resolve => {
     let moveꜰℕs = moveꜰℕsꜰℕ(Λ)
-
     _(24)
       .range()
       .each( ι => {
@@ -247,9 +252,6 @@ function _jiggle(Φ, Λ) {
                 } else {
                   subtractΛ(μΛ)
                   addΛ(αΛ) }})})
-
-    ascii(Λ)
-
     resolve({Φ, Λ}) })}
 
 function placeLabel(φ, Λ) {
@@ -294,7 +296,7 @@ function placeLabel(φ, Λ) {
 
 function pack(Φ, gridStyle) {
   return new Promise(resolve => {
-    let numLines = _.size(Φ) * 24,
+    let numLines = _.size(Φ) * 48,
         Λ = ndarray(new Uint8Array(gridStyle.numCols * numLines), [numLines,gridStyle.numCols])
     _.reduce(Φ, (ρ, φ, ι) => _place(φ, Φ, ι, ρ), {Λ})
     _jiggle(Φ, Λ)

@@ -87,8 +87,8 @@ function set(φ) {
             y:        β.y,
             width:    β.width,
             height:   β.height,
-            duration: _.random(240, 320),
-            easing:   'easeInOutQuad'})
+            duration: _.random(64, 128),
+            easing:   'easeInQuad'})
   else {
     rect.setAttribute('x', β.x)
     rect.setAttribute('y', β.y)
