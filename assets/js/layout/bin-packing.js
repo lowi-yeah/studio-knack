@@ -3,7 +3,6 @@ import cwise    from 'cwise'
 import ops      from 'ndarray-ops'
 
 import util       from '../common/util'
-import neighbours from './neighbours'
 
 function _inspect(φ) {
   // console.log('φ', φ.id)
@@ -13,20 +12,11 @@ function _inspect(φ) {
 }
 
 
-function _ascii(Λ, rows, cols) {
-  // let slice = Λ.hi(rows, cols)
-
+function ascii(Λ, rows, cols) {
   console.log('shape:', Λ.shape)
   for(var i=0; i<Λ.shape[0]; i++) {
     let s = `${i}:\t`
-    for(var j=0; j<Λ.shape[1]; j++) {
-      // let c = 'x'
-      // if(Λ.get(i,j) === 0) c = '0'
-      // if(Λ.get(i,j) === 1) c = '1'
-      // s += `${c} `
-
-      s += `${Λ.get(i,j)} `
-    }
+    for(var j=0; j<Λ.shape[1]; j++) s += `${Λ.get(i,j)} `
     console.log(s)
   }
 }
@@ -53,64 +43,81 @@ function growꜰℕsꜰℕ(Λ){
                                 γ.x0 = _.max([γ.x0 - 1, 0])
                                 return γ } }}
 
+function moveꜰℕsꜰℕ(Λ){
+  return  { 
+            // upwards:    α => {  let γ = _.clone(α),
+            //                         h = α.y1 - α.y0 
+            //                     γ.y0 = _.max([γ.y0 - 1, 0])
+            //                     γ.y1 = γ.y0 + h
+            //                     return γ },
+            rightwards: α => {  let γ = _.clone(α),
+                                    w = α.x1 - α.x0
+                                γ.x1 = _.min([γ.x1 + 1, Λ.shape[1]])
+                                γ.x0 = γ.x1 - w 
+                                return γ },
+            downwards:  α => {  let γ = _.clone(α),
+                                    h = α.y1 - α.y0 
+                                γ.y1 = _.min([γ.y1 + 1, Λ.shape[0]])
+                                γ.y0 = γ.y1 - h
+                                return γ },
+            leftwards:  α => {  let γ = _.clone(α),
+                                    w = α.x1 - α.x0
+                                γ.x0 = _.max([γ.x0 - 1, 0])
+                                γ.x1 = γ.x0 + w
+                                return γ } }}
+
+function _slice(area, Λ) { return Λ.hi(area.y1, area.x1).lo(area.y0, area.x0) }
+
 // update the traversal indices →↓
-function _update({x, y}, ς) { 
-  x += 1
-  if(x > ς[1]) { x = 1; y += 1 }
-  return {x, y} }
+// of an area α
+function _update(α, Λ) { 
+  let w = α.x1 - α.x0
+  α.x0 += 1
+  α.x1 += 1
+
+  if(α.x1 > Λ.shape[1]) { 
+    α.x0  = 0 
+    α.y0 += 1
+    α.x1  = w 
+    α.y1 += 1 }
+  return α }
 
 function _offsetY({x, y}) { 
   y += _.random(2, 6)
   return {x, y} }
 
-  
-
-function _place(φ, Φ, {Λ}) {
+function _place(φ, Φ, ι, {Λ}) {
   if(φ.hidden) return {Λ}
 
-  let ς = Λ.shape,
-      ω = {x: 0, y: 0},
-      w = φ.colSpan,
-      h = φ.rowSpan,
-      success = false,
-      candidate
+  let α = { x0: 0, x1: φ.colSpan, y0: 0, y1: φ.rowSpan},
+      dangerCounter = 0, αΛ
 
-  let dangerCounter = 0
-
-  while(!success) {
-    
+  while(true) { // obacht
     dangerCounter++
     if(dangerCounter > 1024) {
-      console.log('something went horribly worng')
-      break}
+      console.warn('something went horribly worng')
+      return {Λ} }
 
-    // check if φ can fit into the current row
-    let fitRow = ω.x + w <= ς[1]
-    if(!fitRow) { 
-      ω = _update(ω, ς)
-      continue }
-    else {
-      ω = _offsetY(ω)
-      candidate = Λ.lo(ω.y,ω.x).hi(h, w)
-      addΛ(candidate)
-
-      success = maxΛ(Λ) < 2
-      if(!success) { 
-        subtractΛ(candidate)
-        ω = _update(ω, ς) } } }
-
-  φ.rowStart = ω.y + 1
-  φ.colStart = ω.x + 1
-
-
+    // get the slice
+    αΛ = _slice(α, Λ)
+    // and check whether the cell fits
+    addΛ(αΛ)
+    if(maxΛ(Λ) < 2) { 
+      φ.rowStart = α.y0 + 1
+      φ.colStart = α.x0 + 1
+      return {Λ} 
+    } else {
+      subtractΛ(αΛ)
+      α = _update(α, Λ) }} // continue…
   return {Λ} }
 
-function _slice(area, Λ) { return Λ.hi(area.y1, area.x1).lo(area.y0, area.x0) }
+
 
 function _randomSeed(φ, Λ, ι) {
 
   // prevent endless recursion
-  if(ι > 64) return { x0, y0, x1, y1 }
+  if(ι > 64) return null
+  if(Λ.shape[1] === 1) return null
 
   let dir = _.sample(['right', 'left', 'bottom']),
       // dir = _.sample(['top', 'right', 'left', 'bottom']),
@@ -154,7 +161,7 @@ function _randomSeed(φ, Λ, ι) {
 // area:  an area of the grid, represented by the corners {x0, y0, x1, y1}
 // Λ:     the ndArray representing our grid
 function _grow(area, Λ) {
-      // pick a random direction
+  // pick a random direction
   let growꜰℕs     = growꜰℕsꜰℕ(Λ),
       growꜰℕ      = _(growꜰℕs).values().sample(),
 
@@ -188,11 +195,13 @@ function _grow(area, Λ) {
 function _randomArea(φ, Λ, ρ) {
   // grow a random area 
   // by first selecting a random seed along the edge of the cell
-  let seed    = _randomSeed(φ, Λ, 0),
-      // and then growing it…
-      area    = _grow(seed, Λ),
+  let seed    = _randomSeed(φ, Λ, 0)
+  if(_.isNil(seed)) return ρ
 
-      // check how bi the result is
+  // and then growing it…
+  let area    = _grow(seed, Λ),
+
+      // check how big the result is
       width   = area.x1 - area.x0,
       height  = area.y1 - area.y0,
       size    = width * height
@@ -202,6 +211,46 @@ function _randomArea(φ, Λ, ρ) {
     ρ.size   = size,
     ρ.area   = area }
   return ρ }
+
+function _equalAreas(α0, α1) {
+  return α0.x0 === α1.x0 && α0.x1 === α1.x1 && α0.y0 === α1.y0 && α0.y1 === α1.y1
+}
+
+function _jiggle(Φ, Λ) {
+  return new Promise( resolve => {
+    let moveꜰℕs = moveꜰℕsꜰℕ(Λ)
+
+    _(24)
+      .range()
+      .each( ι => {
+        _(Φ)
+          .shuffle()
+          .each(φ => {
+            let x0 = (φ.colStart - 1), 
+                x1 = x0 + φ.colSpan, 
+                y0 = (φ.rowStart - 1), 
+                y1 = y0 + φ.rowSpan, 
+                α  = {x0, x1, y0, y1},
+                ꜰℕ = _(moveꜰℕs).values().sample(),
+                μα = ꜰℕ(α), 
+                αΛ = _slice(α, Λ), 
+                μΛ = _slice(μα, Λ)
+
+                if( _equalAreas(α, μα) ) return
+    
+                subtractΛ(αΛ)
+                addΛ(μΛ)
+                if(maxΛ(Λ) < 2) { 
+                  // success. update the cell
+                  φ.colStart = μα.x0 + 1
+                  φ.rowStart = μα.y0 + 1
+                } else {
+                  subtractΛ(μΛ)
+                  addΛ(αΛ) }})})
+
+    ascii(Λ)
+
+    resolve({Φ, Λ}) })}
 
 function placeLabel(φ, Λ) {
   if(φ.hidden) return
@@ -244,18 +293,11 @@ function placeLabel(φ, Λ) {
   return {rowStart, rowSpan, colStart, colSpan} }
 
 function pack(Φ, gridStyle) {
-  // let startτ = performance.now()
   return new Promise(resolve => {
-    let numLines = _.size(Φ) * 128,
+    let numLines = _.size(Φ) * 24,
         Λ = ndarray(new Uint8Array(gridStyle.numCols * numLines), [numLines,gridStyle.numCols])
+    _.reduce(Φ, (ρ, φ, ι) => _place(φ, Φ, ι, ρ), {Λ})
+    _jiggle(Φ, Λ)
+      .then(() => resolve({Φ, Λ})) })}
 
-    _.reduce(Φ, (ρ, φ) => _place(φ, Φ, ρ), {Λ})
-
-    resolve({Φ, Λ})
-
-    // _ascii(Λ, 128, gridStyle.numCols)
-    // console.log(`packing finished. took ${Math.round(performance.now() - startτ)}ms`)
-  })
-}
-
-export default { pack, placeLabel }
+export default { pack, placeLabel, ascii }

@@ -44,7 +44,7 @@ const MIN = Number.MIN_SAFE_INTEGER,
               // 9:  {min: 2, max: 6},
               // 10: {min: 2, max: 6},
               // 11: {min: 2, max: 6},
-              12: {min: 2, max: 6} },
+              12: {min: 3, max: 4} },
       // aspect ratios
       R   = { portrait: 1/1.618,
               square: 1,
@@ -155,83 +155,7 @@ function _readjustToScreenHeight(Φ, {rowHeight}) {
               else resolve() }))) 
   return Promise.all(ρ) }
 
-function jiggle(Φ, {numCols}) {
-  return new Promise( resolve => {
-    // _(Φ)
-    //   .shuffle()
-    //   .each(φ => {
-    //     // jiggle horizontally
-    //     // get the distances to either the neighbour or the grid edege
-    //     let δLeft   = φ.neighbours.left ? 
-    //                     φ.neighbours.left.δ :
-    //                     φ.colStart-1,
-    //         δRight  = φ.neighbours.right ? 
-    //                     φ.neighbours.right.δ :
-    //                     ((numCols + 1) - (φ.colStart + φ.colSpan)),
-    //         δ       = _.random(-δLeft, δRight)
-    //     φ.colStart += δ })
-    resolve(Φ) })}
-
-function _calculateWhitespace(φ, gridStyle) {
-  let above = 0,
-      // above = φ.paddingTop,
-      below = φ.paddingBottom - φ.caption.clientHeight,
-      left  = φ.paddingLeft,
-      right = φ.paddingRight,
-      η,labelPosition, labelHeight, labelWidth
-
-  // if(φ.neighbours.above) {
-  //   above += φ.neighbours.above.δ
-  //   η = _(φ.neighbours.above.η)
-  //         .map(n => {return {η: n, δ: n.paddingBottom}})
-  //         .sortBy(n => n.δ)
-  //         .first().η
-
-  //   if(η.labelPosition && η.labelPosition === 'below') {
-  //     labelHeight = parseFloat(η.label.style.height)
-  //     above += (η.paddingBottom - labelHeight)
-  //   } else above += η.paddingBottom }
-
-  if(φ.neighbours.below) {
-    below += φ.neighbours.below.δ
-    η = _(φ.neighbours.below.η)
-          .map(n => {return {η: n, δ: n.paddingTop}})
-          .sortBy(n => n.δ)
-          .first().η
-
-    if(η.labelPosition && η.labelPosition === 'above') {
-      labelHeight = parseFloat(η.label.style.height)
-      below += (η.paddingTop - labelHeight)
-    } else below += η.paddingTop
-  }
-
-  if(φ.neighbours.left) {
-    left += φ.neighbours.left.δ
-    η = _(φ.neighbours.left.η)
-          .map(n => {return {η: n, δ: n.paddingRight}})
-          .sortBy(n => n.δ)
-          .first().η
-    if(η.labelPosition && η.labelPosition === 'right') {
-      labelWidth = parseFloat(η.label.style.width)
-      left += (η.paddingRight - labelWidth)
-    } else left += η.paddingRight }
-  else left += (φ.colStart-1) * gridStyle.colWidth
-
-  if(φ.neighbours.right) {
-    right += φ.neighbours.right.δ
-    η = _(φ.neighbours.right.η)
-          .map(n => {return {η: n, δ: n.paddingLeft}})
-          .sortBy(n => n.δ)
-          .first().η
-    if(η.labelPosition && η.labelPosition === 'left') {
-      labelWidth = parseFloat(η.label.style.width)
-      right += (η.paddingLeft - labelWidth)
-    } else right += η.paddingLeft }
-  else right += (gridStyle.numCols + 1 - (φ.colStart + φ.colSpan)) * gridStyle.colWidth
-
-  return {above, right, below, left}}
-
-function labels(Φ, Λ, gridStyle) {
+function labels(Φ, Λ) {
   return new Promise( resolve => {
     _(Φ)
       .each(φ => {
@@ -243,13 +167,15 @@ function labels(Φ, Λ, gridStyle) {
 
         // console.log('text', text)
         let area = packing.placeLabel(φ, Λ)
+
+        console.log('area', area)
         φ.label.area = area
       })
     resolve(Φ)
   })
 }
 
-function reset(Φ, gridStyle) {
+function reset(Φ) {
   let filter = Φ.filtered || 'index'
   return new Promise( resolve => {
     _(Φ).each(φ => {
@@ -307,14 +233,20 @@ function update(Φ, gridStyle) {
 
           if(φ.label) {
             let labelArea = φ.label.area
-            φ.label.style.display    = 'flex'
-            φ.label.style.visibility = 'visible'
-            φ.label.style['gridArea'] = `${labelArea.rowStart} / ${labelArea.colStart} / ${labelArea.rowStart + labelArea.rowSpan} / ${labelArea.colStart + labelArea.colSpan}`  
 
-            if(labelArea.rowSpan > 8 * labelArea.colSpan) {
-              let text = φ.label.querySelector('span'),
-                  rotation = _.sample(['-90deg', '90deg'])
-              text.style.transform = `rotate(${rotation})`
+            if(labelArea.rowStart === 0) {
+              φ.label.style.display    = 'none'
+              φ.label.style.visibility = 'hidden' }
+            else {
+              φ.label.style.display    = 'flex'
+              φ.label.style.visibility = 'visible'
+              φ.label.style['gridArea'] = `${labelArea.rowStart} / ${labelArea.colStart} / ${labelArea.rowStart + labelArea.rowSpan} / ${labelArea.colStart + labelArea.colSpan}`  
+  
+              if(labelArea.rowSpan > 6 * labelArea.colSpan) {
+                let text = φ.label.querySelector('span'),
+                    rotation = _.sample(['-90deg', '90deg'])
+                text.style.transform = `rotate(${rotation})`
+              }
             }
           }
 
@@ -323,7 +255,7 @@ function update(Φ, gridStyle) {
   return new Promise(resolve => 
     Promise.all(ρ).then(() => resolve(Φ))) }
 
-export default { init, jiggle, labels, update, reset }
+export default { init, labels, update, reset }
 
 
 

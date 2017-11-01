@@ -26,13 +26,12 @@ function show() {
 function update(Φ, gridStyle) {
   console.log('update grid')
   return new Promise(resolve => 
-    cells.reset(Φ, gridStyle)
+    cells.reset(Φ)
       .then(Φ => packing.pack(Φ, gridStyle))
       .then(({Φ, Λ}) => {
-            cells.jiggle(Φ, gridStyle)
-              .then(() => cells.labels(Φ, Λ, gridStyle))
-              .then(() => cells.update(Φ, gridStyle))
-              .then(() => resolve(Φ))}))}   
+        cells.labels(Φ, Λ)
+          .then(() => cells.update(Φ, gridStyle))
+          .then(() => resolve(Φ))}))}   
 
 // mouse event handlers for grid item hovers
 // dunno where else to put them
@@ -103,13 +102,12 @@ function init(options) {
           .then(Φ => cells.init(Φ, items, gridStyle))
           .then(Φ => packing.pack(Φ, gridStyle))
           .then(({Φ, Λ}) => {
-            cells.jiggle(Φ, gridStyle)
-              .then(() => cells.labels(Φ, Λ, gridStyle))
-              .then(() => cells.update(Φ, gridStyle))
-              .then(() => _attachEventHandlers(Φ))
-              .then(() => parallax.init(Φ))
-              .then(() => { self.update = _.partial(update, Φ, gridStyle); return Φ})
-              .then(() => resolve(Φ))
+              cells.labels(Φ, Λ, gridStyle)
+                .then(() => cells.update(Φ, gridStyle))
+                .then(() => _attachEventHandlers(Φ))
+                .then(() => parallax.init(Φ))
+                .then(() => { self.update = _.partial(update, Φ, gridStyle); return Φ})
+                .then(() => resolve(Φ))
             })
       })
   })
