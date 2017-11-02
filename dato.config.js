@@ -13,7 +13,6 @@ function _guid(prefix) {
   // return prefix + s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() 
   return prefix + s4() + s4() + '-' + s4() + s4() }
 
-
 // This function helps transforming structures
 // —eg. [{ tagName: 'meta', attributes: { name: 'description', content: 'foobar' } }]—
 // into proper HTML tags: <meta name="description" content="foobar" />

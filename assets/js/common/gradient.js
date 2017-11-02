@@ -60,14 +60,17 @@ function _animate() {
                           s1.setAttribute('stop-color', c1) 
 
                           // workaround to make safari update the changing gradients
-                          rects = document.querySelectorAll('.pattern-frame rect'),
-                          _.each( rects, p => p.setAttribute('width', '101%'))
-                          rect.setAttribute('width', '101%')
-                          _.defer(() => { _.each( rects, p => p.setAttribute('width', '100%'))
-                                          rect.setAttribute('width', '100%')})
+                          // rects = document.querySelectorAll('.pattern-frame rect'),
+                          // _.each( rects, p => p.setAttribute('width', '101%'))
+                          // rect.setAttribute('width', '101%')
+                          // _.defer(() => { _.each( rects, p => p.setAttribute('width', '100%'))
+                          //                 rect.setAttribute('width', '100%')})
                         }
   _.defer(update)
-  util.startAnimation(15, update)
+
+  if( util.getBrowserName() !== 'Safari' ) util.startAnimation(15, update)
+  else console.log('disabling animation on safari')
+  
 }
 
 
