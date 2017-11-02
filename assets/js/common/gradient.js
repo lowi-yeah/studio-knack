@@ -2,7 +2,9 @@ import anime              from 'animejs'
 import Cookie             from 'js-cookie'
 import {scaleLinear,
         scaleSequential } from 'd3-scale'
-import {cubehelix, hsl}        from 'd3-color'
+import {cubehelix, 
+        hsl, 
+        color}            from 'd3-color'
 import {interpolateCubehelix,
         interpolateCubehelixLong,
         interpolateHslLong,
@@ -25,27 +27,77 @@ function _alphaCoordinates(α) {
     'x2': Math.round(50 + Math.sin(α + Math.PI) * 50) + '%',
     'y2': Math.round(50 + Math.cos(α + Math.PI) * 50) + '%' }}
 
+// function _colorMatrix(c0, c1) {
+  
+//   let r0  = c0.r/255,
+//       g0  = c0.g/255,
+//       b0  = c0.b/255,
+//       r1  = c1.r/255,
+//       g1  = c1.g/255,
+//       b1  = c1.b/255,
+
+//       r   = (r0 + r1)/2, 
+//       g   = (g0 + g1)/2, 
+//       b   = (b0 + b1)/2, 
+//       α   = (r1 + b1 + g1)/3, 
+
+//       rς = `${1}  0     0     ${r} 0`,
+//       gς = `0     ${1}  0     ${g} 0`,
+//       bς = `0     0     ${1}  ${b} 0`,
+//       aς = `${0} ${0}   ${0}  ${α} s0`
+//       // aς = `0     0       0     ${1}  0`
+
+//   return [rς, gς, bς, aς].join(' ')}
+
+function _colorMatrix(c) {
+  
+  let ℋ = hsl(c),
+
+      r = c.r/255,
+      g = c.g/255,
+      b = c.b/255,
+
+      α = 1-ℋ.l,
+
+      rς = `${1}  0     0     0     0`,
+      gς = `0     ${1}  0     0     0`,
+      bς = `0     0     ${1}  0     0`,
+      aς = `0.2   0.2   0.2   ${α}  0`
+      // aς = `0     0       0     ${1}  0`
+
+  // console.log('ℋ', ℋ)
+
+  return [rς, gς, bς, aς].join(' ')}
+
+// let avgColorΣ = scaleLinear().domain([0, 1])
+
 function _animate() {
   noise.seed(seed)
   let gradient  = document.getElementById('rainbow-gradient'),
+      matrix    = document.querySelector('#gamma feColorMatrix'),
       [s0, s1]  = gradient.querySelectorAll('stop'),
       offset    = 0,
       colorΣ    = scaleSequential()
                     .domain([-1, 1])
                     .interpolator(interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))),
-                    // .interpolator(interpolateCubehelixLong(cubehelix(0, 1, 0.5), cubehelix(360, 1, 0.5))),
+                    // .interpolator(interpolateHslLong(hsl(0, 1, 0.5), hsl(359, 1, 0.5))),
       rotationΣ = scaleLinear()
                     .domain([-1, 1])
                     .rangeRound([0, 360]),
-      τ, c0, c1, η0, η1, α,
-      update    = () => { 
+      τ, c0, c1, η0, η1, α, cAvg,
+
+      update    = () => {   
                           τ   = (_.now() - offset) 
                           η0  = noise.simplex2(0,  τ / 80000)
-                          η1  = noise.simplex2(42, τ / 80000)
+                          η1  = noise.simplex2(1, τ / 80000)
                           c0  = colorΣ(η0)
                           c1  = colorΣ(η1)
+                          // avgColorΣ.range([c0, c0])
+                          // cAvg = color(avgColorΣ(0.5))
+                          // matrix.setAttribute('values', _colorMatrix(cAvg))
+                          // matrix.setAttribute('values', _colorMatrix( color(c0),  color(c1)))
 
-                          α   = _alphaCoordinates(rotationΣ(noise.simplex2(2, τ / 60000)))
+                          α = _alphaCoordinates(rotationΣ(noise.simplex2(2, τ / 60000)))
                           gradient.setAttribute('x1', α.x1) 
                           gradient.setAttribute('x2', α.x2) 
                           gradient.setAttribute('y1', α.y1) 
@@ -55,7 +107,7 @@ function _animate() {
                           s1.setAttribute('stop-color', c1) 
                         }
   _.defer(update)
-  util.startAnimation(24, update)
+  util.startAnimation(15, update)
 }
 
 

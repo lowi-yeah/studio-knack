@@ -1,7 +1,6 @@
 import '../sass/index.sass'
 
 import {lory}   from 'lory.js'
-// import overlay  from './common/overlay'
 import util     from './common/util'
 import pattern  from './common/pattern'
 import curtain  from './common/curtain'
