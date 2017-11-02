@@ -91,7 +91,7 @@ $grid-gap:        0 !default
       // border: 1px solid $grey-lighter
       // +z-depth-4dp
       +z-depth-transition()
-      +z-depth-2dp()
+      +z-depth-4dp()
 
       &.active
         +z-depth-focus()
@@ -121,11 +121,11 @@ $grid-gap:        0 !default
         background-size: cover
         background-repeat: no-repeat
         background-position: center center
-        transition: opacity 0.24s linear
+        transition: opacity .28s cubic-bezier(.4, 0, .2, 1);
 
   .caption-frame
     opacity: 0
-    transition: opacity 0.24s linear
+    transition: opacity .28s cubic-bezier(.4, 0, .2, 1);
     position: absolute
     bottom: 0
     padding-top: 1.5rem
