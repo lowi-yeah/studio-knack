@@ -26,6 +26,7 @@ function make(item) {
   defs.appendChild(pattern)
   item.setAttribute('fill', `url(#${patternId})`)
   item.setAttribute('data-pattern', patternId) 
+  item.classList.add('pattern-frame') 
 
   update(item)
 }

@@ -40,10 +40,10 @@ function _attachEventHandlers(Φ) {
       isMobile    = util.isMobile(),
         
       show        = φ =>  { φ.caption.classList.add('active')
-                            φ.image.classList.add('active')
+                            φ.imageꜰ.classList.add('active')
                             φ.active = true },
       hide        = φ => {  φ.caption.classList.remove('active')
-                            φ.image.classList.remove('active')
+                            φ.imageꜰ.classList.remove('active')
                             φ.active = false },
       toggle      = φ => {     
                       if(φ.active) hide(φ)

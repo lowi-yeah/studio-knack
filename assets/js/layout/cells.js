@@ -198,7 +198,7 @@ function init(Φ, items, gridStyle) {
                   content = item.querySelector('.content'),
                   caption = item.querySelector('.caption-frame'),
                   label   = document.getElementById(`${id}-label`),
-                  image   = item.querySelector('.image-frame'),
+                  imageꜰ   = item.querySelector('.image-frame'),
                   type    = item.getAttribute('data-type'),
                   title   = item.querySelector('.caption > .title').innerHTML,
                   link    = item.getAttribute('data-link'),
@@ -206,7 +206,7 @@ function init(Φ, items, gridStyle) {
 
               if(label) label.text = label.querySelector('span').innerHTML
 
-              return { item, id, frame, content, caption, label, image, type, hidden, title, link }})
+              return { item, id, frame, content, caption, label, imageꜰ, type, hidden, title, link }})
   _.each(Ѻ, ϖ => Φ.push(ϖ))
   return  new Promise( resolve => 
                 _setColspan(Φ, gridStyle)                 // assign a with to each item

@@ -13,12 +13,18 @@
         <div class="frame">
           <div class="content">
             <div class="image-frame pattern watch">
-              <div class="worker image blurred" 
+              <div class="worker image filter blurred" 
                    style="background-image: url({{ .Params.image.tiny }})"
                    id="img-{{ .Params.id }}"
                    data-image-url="{{ .Params.image.url }}" >
               </div>
+              <div  class="worker image overlay" 
+                  style=""
+                  id="o-img-{{ .Params.id }}"
+                  data-image-url="{{ .Params.image.url }}" >
+              </div>
             </div>
+            
           </div>  
           <div class="caption-frame"> 
             <div class="caption"> 

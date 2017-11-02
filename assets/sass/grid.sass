@@ -96,11 +96,10 @@ $grid-gap:        0 !default
       &.active
         +z-depth-focus()
         cursor: pointer
-        .image
-          filter: none
+        .overlay.image
+          opacity: 1
 
-
-      .image
+      .filter.image
         z-index: 0
         flex: 1 0 auto
         position: relative
@@ -114,7 +113,16 @@ $grid-gap:        0 !default
         overflow: hidden
         filter: url('#gamma')
 
-     
+      .overlay.image
+        opacity: 0
+        width: 100%
+        height: 100%
+        position: absolute
+        background-size: cover
+        background-repeat: no-repeat
+        background-position: center center
+        transition: opacity 0.24s linear
+
   .caption-frame
     opacity: 0
     transition: opacity 0.24s linear
