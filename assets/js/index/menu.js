@@ -62,7 +62,7 @@ function _showSearchbar() {
 function _hideSearchbar() {
   console.log('hide searchbar')
   let search  = document.getElementById('search'),
-      τ       = { x: `${-window.innerWidth}px` },
+      τ       = { x: `${-search.clientWidth}px` },
       α       = { duration: _.random(280, 420),
                   easing:   'random-out'}
   search.setAttribute('data-open', 0)

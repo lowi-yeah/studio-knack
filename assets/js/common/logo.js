@@ -29,7 +29,7 @@ function _title(str) {
 // instead, we need to parse the 'd' attribute of all strings and scale them directly
 function _resize(baseCommands, options) {
   options = options || {}
-  options = _.defaults(options, { δx:16, δy: 16, width: 200})
+  options = _.defaults(options, { δx:72, δy: 24, width: 200})
 
   let σ = options.width/BASEWIDTH,
       h = σ * 809.4,
@@ -95,6 +95,7 @@ function _resize(baseCommands, options) {
 }
 
 function setText(baseCommands, text, options) {
+
   document.getElementById('logo-sub').textContent = _title(text)
   document.getElementById('logo-rect').setAttribute('clip-path', `url(#${baseCommands.id})`)
   
@@ -104,6 +105,7 @@ function setText(baseCommands, text, options) {
 }
 
 function removeText(baseCommands, options) {
+  console.log('removeText')
   document.getElementById('logo-sub').textContent = ''
   document.getElementById('logo-rect').setAttribute('clip-path', `url(#${baseCommands.id})`)
 
@@ -119,8 +121,9 @@ function removeText(baseCommands, options) {
 }
 
 
-function init(text) {
+function init() {
   return new Promise( resolve => {
+
 
     let largePaths      = document.querySelectorAll('#large-logo path'),
         largeCommands   = _.map(largePaths, path => {
@@ -142,16 +145,17 @@ function init(text) {
     // upon init check whether we're at the index page (render big logo),
     // or whether we're at a sub-page (render small logo with texts)
     let wrap      = document.getElementById('wrap'),
-        pageType  = wrap.getAttribute('data-type')
-    if(pageType) {
-      if(_.includes(['architecture', 'design', 'studio'], pageType) ) setText(smallCommands, pageType)
-      if(_.isEqual(pageType, 'project') ) {
+        pageType  = wrap.getAttribute('data-type').toLowerCase()
 
-        // setText(smallCommands, 'wat?', { width: 128, δx:48 } )
-        removeText(smallCommands, { width: 128, δx:48 } )
-      }
-      else removeText(largeCommands)
-    }
+    if(pageType) {
+      
+      if(_.includes(['architecture', 'design', 'studio'], pageType) ) 
+        setText(smallCommands, pageType, { δx: 72 })
+      
+      else if(_.isEqual(pageType, 'project') ) 
+        removeText(smallCommands, { width: 128, δx:48, δy: 16 } )
+      
+      else removeText(largeCommands, { δx: 72 })}
     
     
     

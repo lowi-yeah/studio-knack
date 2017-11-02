@@ -10,7 +10,7 @@ import images     from './common/images'
 import logo       from './common/logo'
 import util       from './common/util'
 import gradient   from './common/gradient'
-import overlay    from './common/overlay'
+// import overlay    from './common/overlay'
 import pattern    from './common/pattern'
 import curtain    from './common/curtain'
 import search     from './common/search'
@@ -48,7 +48,7 @@ function init() {
     .then(()  => menu.init())
     .then(()  => grid.init(gridOptions))
     .then(Φ   => filter.init(Φ))
-    .then(Φ   => overlay.init(Φ))
+    // .then(Φ   => overlay.init(Φ))
     .then(()  => document.body.scroll(0, 1))
     .then(()  => curtain.open({}))
     .catch( (reason) => console.log(`rejection: ${reason}`))

@@ -53,7 +53,7 @@ function _makeSvg(item) {
   item.appendChild(svg)
 
   make(svg) 
-  if(watch) util.addEvent(window, 'scroll', () => update(svg))
+  if(watch) util.addEvent(document.body, 'scroll', () => update(svg))
 }
 
 function update(item) {

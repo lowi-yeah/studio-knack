@@ -1,7 +1,7 @@
 import dom      from '../common/dom'
 import util     from '../common/util'
-import overlay  from '../common/overlay'
 import parallax from '../common/parallax'
+import curtain  from '../common/curtain'
 import cells    from './cells'
 import packing  from './bin-packing'
 
@@ -36,36 +36,30 @@ function update(Φ, gridStyle) {
 // mouse event handlers for grid item hovers
 // dunno where else to put them
 function _attachEventHandlers(Φ) {
-  let overlayId,
-      over        = false,
+  let over        = false,
       isMobile    = util.isMobile(),
         
-      show        = φ =>  { if(!over) return
-                            overlayId = φ.id
-                            overlay.set(φ) },
-      hide        = () => { if(over) return
-                              overlayId = undefined
-                              overlay.remove() },
+      show        = φ =>  { φ.caption.classList.add('active')
+                            φ.image.classList.add('active')
+                            φ.active = true },
+      hide        = φ => {  φ.caption.classList.remove('active')
+                            φ.image.classList.remove('active')
+                            φ.active = false },
       toggle      = φ => {     
-                      if(φ.id === overlayId) {
-                        overlay.remove() 
-                        overlayId = undefined }
-                      else {
-                        overlay.set(φ)
-                        overlayId = φ.id }}
+                      if(φ.active) hide(φ)
+                      else show(φ) }
 
   _.each(Φ, φ => {
     if(isMobile)
       util.addEvent(φ.frame, 'click', () => toggle(φ))
     else {
-      util.addEvent(φ.frame, 'mouseenter', event => {
-        over = true
-        show(φ) }) 
-
-      util.addEvent(φ.frame, 'mouseleave', event => {
-        over = false
-        _.delay(hide, 200) 
-      })}})
+      util.addEvent(φ.frame, 'mouseenter', event => show(φ)) 
+      util.addEvent(φ.frame, 'mouseleave', event => hide(φ))
+      util.addEvent(φ.frame, 'click', event => {
+        console.log('clickedy click', φ.link)
+        curtain.close({toCookie: true}).then(() => window.location = φ.link)
+      })
+    }})
   return Φ }
 
 function _attachFilter(Φ) {
@@ -73,7 +67,6 @@ function _attachFilter(Φ) {
     let filtered  = document.getElementById('wrap')
                       .getAttribute('data-type')
                       .toLowerCase() || 'index'
-    console.log('attaching filter', filtered)
     Φ.filtered = filtered 
     resolve(Φ)})}
 
@@ -108,8 +101,6 @@ function init(options) {
             })
       })
   })
-
-  
 }
 
 export default { init, show }

@@ -18,8 +18,7 @@ function makeResult(lunrResult) {
       item    = document.getElementById(lunrResult.ref),
       title   = item.getAttribute('data-caption'),
       type    = item.getAttribute('data-type'),
-      href    = item.querySelector('.caption a')
-                  .getAttribute('href'),
+      href    = item.getAttribute('data-link'),
       image   = item.querySelector('.image')
       
   let ε = document.createElement('a'),

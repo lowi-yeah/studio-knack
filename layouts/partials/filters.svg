@@ -1,0 +1,18 @@
+<svg
+  id="filters"
+  xmlns="http://www.w3.org/2000/svg">
+   <defs>
+    <filter id="gamma" x="0" y="0" width="100%" height="100%">
+
+      <feComponentTransfer in="SourceGraphic" result="inverse">
+        <feFuncR type="table" tableValues="0.72 0"></feFuncR>
+        <feFuncG type="table" tableValues="0.72 0"></feFuncG>
+        <feFuncB type="table" tableValues="0.72 0"></feFuncB>
+      </feComponentTransfer>
+      <feColorMatrix in="inverse" type="luminanceToAlpha"/>
+    
+      <!-- <feColorMatrix in="SourceGraphic" type="luminanceToAlpha"/> -->
+
+    </filter>
+  </defs>
+</svg>

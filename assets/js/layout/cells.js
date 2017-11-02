@@ -201,11 +201,12 @@ function init(Φ, items, gridStyle) {
                   image   = item.querySelector('.image-frame'),
                   type    = item.getAttribute('data-type'),
                   title   = item.querySelector('.caption > .title').innerHTML,
+                  link    = item.getAttribute('data-link'),
                   hidden  = !(type === filter || filter === 'index')
 
               if(label) label.text = label.querySelector('span').innerHTML
 
-              return { item, id, frame, content, caption, label, image, type, hidden, title }})
+              return { item, id, frame, content, caption, label, image, type, hidden, title, link }})
   _.each(Ѻ, ϖ => Φ.push(ϖ))
   return  new Promise( resolve => 
                 _setColspan(Φ, gridStyle)                 // assign a with to each item

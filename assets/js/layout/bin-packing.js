@@ -225,7 +225,7 @@ function _equalAreas(α0, α1) {
 function _jiggle(Φ, Λ) {
   return new Promise( resolve => {
     let moveꜰℕs = moveꜰℕsꜰℕ(Λ)
-    _(24)
+    _(12)
       .range()
       .each( ι => {
         _(Φ)
