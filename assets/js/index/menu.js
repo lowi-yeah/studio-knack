@@ -133,7 +133,7 @@ function _initItems(toc) {
   let filterItems = document.querySelectorAll('#menu .filter.item > a'),
       filterFn    = item =>
                       () => {
-                        _.delay(() => filter.set(item.getAttribute('data-link')),420)
+                        filter.set(item.getAttribute('data-link'))
                         toc.hide() }
   _.each(filterItems, filterItem => util.addEvent(filterItem, 'click', filterFn(filterItem)))}
 

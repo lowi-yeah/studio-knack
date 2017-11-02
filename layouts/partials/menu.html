@@ -2,11 +2,11 @@
   <button id="toc-btn" class="pattern button"> 
     {{ partial "menu-icon.svg" . }}  
   </button> 
-  <div id="sidebar" class="pattern watch">
+  <div id="sidebar" class="pattern">
     <ul class="items"> 
       {{ range .Params.menu}} 
         <li id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item"  > 
-          <a data-link="{{.href}}" class="title is-2 smallcaps">
+          <a data-link="{{.href}}" class="title is-4 smallcaps">
             {{.text}} 
           </a>
         </li> 

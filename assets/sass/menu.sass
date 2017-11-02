@@ -22,7 +22,7 @@
   pointer-events: all
   background: transparent
   z-index: 3
-  +z-depth-4dp
+  +z-depth-2dp
   +z-depth-transition
   
   &:hover, &:focus, &:active
@@ -51,7 +51,7 @@
     transform: translateX(-100%)
 
   ul.items
-    padding: 6rem 1rem 3rem 1rem
+    padding: 6rem 1rem 3rem 0.75rem
     display: flex
     flex-direction: column
     justify-content: flex-start
@@ -59,7 +59,7 @@
 
     li.item
       @extend .smallcaps
-      margin-bottom: 1.5rem
+      margin-bottom: 1rem
       pointer-events: all
       flex: 0 0 auto
       transition: text-decoration 250ms
@@ -85,8 +85,8 @@
             width: 108%
 
 #search-menu
-  width: 48px
-  height: 48px
+  width: 36px
+  height: 36px
   padding: 0
   pointer-events: all
   background: transparent
