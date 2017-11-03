@@ -29,13 +29,16 @@ function _title(str) {
 // instead, we need to parse the 'd' attribute of all strings and scale them directly
 function _resize(baseCommands, options) {
   options = options || {}
-  options = _.defaults(options, { δx:72, δy: 24, width: 200})
+  options = _.defaults(options, { δx:72, δy: 24, width: 200, relative: false})
 
   let σ = options.width/BASEWIDTH,
       h = σ * 809.4,
-      gridWrap = document.querySelector('.grid-wrap')
-      
-  if(gridWrap) gridWrap.style.paddingTop = `${h + 48}px`
+      logoFrame = document.querySelector('#logo-frame'),
+      gridWrap  = document.querySelector('.grid-wrap')
+  
+  if(options.relative) logoFrame.style.height = `${h + options.δy + 48}px`    
+  else if(gridWrap) gridWrap.style.paddingTop = `${h + 48}px`
+  
 
   _.each(baseCommands, ζ => {
     let c = _.map(ζ.commands, command => {
@@ -105,8 +108,9 @@ function setText(baseCommands, text, options) {
 }
 
 function removeText(baseCommands, options) {
-  console.log('removeText')
-  document.getElementById('logo-sub').textContent = ''
+  let logoSub = document.getElementById('logo-sub')
+  if(logoSub) logoSub.textContent = ''
+
   document.getElementById('logo-rect').setAttribute('clip-path', `url(#${baseCommands.id})`)
 
   // calculate the logo size
@@ -118,6 +122,20 @@ function removeText(baseCommands, options) {
   options = _.defaults(options, { width })
 
   _resize( baseCommands, options )
+
+  // hackedy hack
+  // the about page is special and has a different svg structure
+  // the text itself is solid, but there are 3D extrusions that are gradiented
+  // so if we are in about-land, we also need to resize the characters shapes
+  let fillins = document.getElementById('fillins')
+  if(fillins) {
+    let characters  = fillins.querySelectorAll('path'),
+        commands    = _.map(characters, path => {
+                          let commands = parseSVG(path.getAttribute('d'))
+                          makeAbsolute(commands)
+                          return {path, commands}})
+    _resize( commands, options )
+  }
 }
 
 
@@ -154,9 +172,11 @@ function init() {
       
       else if(_.isEqual(pageType, 'project') ) 
         removeText(smallCommands, { width: 128, δx:48, δy: 16 } )
+
+      else if(_.isEqual(pageType, 'about') ) 
+        removeText(largeCommands, { width: 420, δx:48, relative: true } )
       
       else removeText(largeCommands, { δx: 72 })}
-    
     
     
     resolve() })}

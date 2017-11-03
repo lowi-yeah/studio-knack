@@ -5,6 +5,7 @@ let _         = require('lodash'),
     fs        = require('fs')
 
 let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
+
 function _guid(prefix) {
   prefix = `${prefix}-` || ''
   let s4 = () =>  Math.floor((1 + Math.random()) * 0x10000)
@@ -12,6 +13,14 @@ function _guid(prefix) {
                     .substring(1)
   // return prefix + s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() 
   return prefix + s4() + s4() + '-' + s4() + s4() }
+
+function deleteFolderRecursive(path) {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach((file, index) => {
+      var curPath = path + '/' + file
+      if (fs.lstatSync(curPath).isDirectory()) deleteFolderRecursive(curPath)
+      else fs.unlinkSync(curPath)})
+    fs.rmdirSync(path) }}
 
 // This function helps transforming structures
 // —eg. [{ tagName: 'meta', attributes: { name: 'description', content: 'foobar' } }]—
@@ -31,17 +40,25 @@ function _image(image) {
             tiny:   image.url({ w: width/100, h: height/100, auto: 'compress' }) }}
 
 function _aboutContent(item) {
-  let type = item.entity.itemType.name
+  let type = item.entity.itemType.apiKey
 
-  if(type === 'text')   return {text: item.text}
-  if(type === 'image') { 
-    return {image: _image(item.image)}}
-  if(type === 'teammember') { 
-    return {teammember: {
+  if(type === 'text_block') return {text: item.content}
+
+  if(type === 'image_block') {  
+    if(!item.image) return null
+    let ι = _image(item.image)
+    ι.caption = item.caption
+    ι.size    = item.size
+    return { image: ι}}
+
+  if(type === 'headline_block') return {'head': item.title}
+
+  if(type === 'team_block') { 
+    return {team: {
               image:        _image(item.image),
               name:         item.name,
               role:         item.role,
-              description:  item.description}}}}
+              description:  item.description }}}}
 
 function _projectContent(item) {
   let contentType = item.entity.itemType.apiKey
@@ -192,10 +209,10 @@ module.exports = (dato, root, i18n) => {
     root.addToDataFile(file, 'toml', {title:        dato.site.globalSeo.siteName,
                                       languageCode: i18n.locale })})
 
+
   
   // Global & SEO
   // ————————————————————————————————
-
   // @obacht! no i18n yet
   let settings  = {},
       imageBase = 'https://www.datocms-assets.com',
@@ -233,7 +250,8 @@ module.exports = (dato, root, i18n) => {
   settings.title            = globalSeo.siteName
 
   root.createDataFile('data/settings.yml', 'yaml', settings)
-  
+
+
   // Initialize search-index
   // ————————————————————————————————  
   let searchIndex = []
@@ -244,11 +262,9 @@ module.exports = (dato, root, i18n) => {
     let mainIndex = _mainIndex()
     dir.createPost(mainIndex.slug, mainIndex.format, mainIndex.post) })
 
-
-console.log('root', root)
-
   // Architecture
   // ————————————————————————————————
+  deleteFolderRecursive('content/architecture')
   root.directory('content/architecture', dir => {
     let options   = { type: 'architecture',
                       prefix: 'knck-a'},
@@ -261,6 +277,7 @@ console.log('root', root)
 
   // Design
   // ————————————————————————————————
+  deleteFolderRecursive('content/design')
   root.directory('content/design', dir => {
     let options   = { type: 'design',
                       prefix: 'knck-d'},
@@ -273,6 +290,7 @@ console.log('root', root)
 
   // Studio
   // ————————————————————————————————
+  deleteFolderRecursive('content/studio')
   root.directory('content/studio', dir => {
     let options   = { type: 'studio',
                       prefix: 'knck-s'}
@@ -282,6 +300,16 @@ console.log('root', root)
     _.each(projects, ({search}) => searchIndex.push(search))
     dir.createPost(index.slug, index.format, index.post)
   })
+
+  // about
+  // ————————————————————————————————
+  root.createPost(`content/about.md`, 'yaml', {
+    frontmatter: {
+      content:      dato.about.content.map(item => _aboutContent(item)),
+      // seoMetaTags:  toHtml(dato.aboutPage.seoMetaTags),
+      type:         'extra',
+      layout:       'about' }})
+
 
   // build search index
   // console.log('Lunr', lunr)

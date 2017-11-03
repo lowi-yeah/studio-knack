@@ -51,20 +51,34 @@ function moveꜰℕsꜰℕ(Λ){
             //                     γ.y0 = _.max([γ.y0 - 1, 0])
             //                     γ.y1 = γ.y0 + h
             //                     return γ },
+
+            // duplicate lef and right so that the probability is twice as big for them as ist is for down
             rightwards: α => {  let γ = _.clone(α),
                                     w = α.x1 - α.x0
                                 γ.x1 = _.min([γ.x1 + 1, Λ.shape[1]])
                                 γ.x0 = γ.x1 - w 
                                 return γ },
-            downwards:  α => {  let γ = _.clone(α),
-                                    h = α.y1 - α.y0 
-                                γ.y1 = _.min([γ.y1 + 1, Λ.shape[0]])
-                                γ.y0 = γ.y1 - h
+            rightwardz: α => {  let γ = _.clone(α),
+                                    w = α.x1 - α.x0
+                                γ.x1 = _.min([γ.x1 + 1, Λ.shape[1]])
+                                γ.x0 = γ.x1 - w 
                                 return γ },
+           
             leftwards:  α => {  let γ = _.clone(α),
                                     w = α.x1 - α.x0
                                 γ.x0 = _.max([γ.x0 - 1, 0])
                                 γ.x1 = γ.x0 + w
+                                return γ },
+            leftwardz:  α => {  let γ = _.clone(α),
+                                    w = α.x1 - α.x0
+                                γ.x0 = _.max([γ.x0 - 1, 0])
+                                γ.x1 = γ.x0 + w
+                                return γ },
+
+             downwards:  α => {  let γ = _.clone(α),
+                                    h = α.y1 - α.y0 
+                                γ.y1 = _.min([γ.y1 + 1, Λ.shape[0]])
+                                γ.y0 = γ.y1 - h
                                 return γ } }}
 
 function _slice(area, Λ) { return Λ.hi(area.y1, area.x1).lo(area.y0, area.x0) }
@@ -296,7 +310,7 @@ function placeLabel(φ, Λ) {
 
 function pack(Φ, gridStyle) {
   return new Promise(resolve => {
-    let numLines = _.size(Φ) * 48,
+    let numLines = _.size(Φ) * 64,
         Λ = ndarray(new Uint8Array(gridStyle.numCols * numLines), [numLines,gridStyle.numCols])
     _.reduce(Φ, (ρ, φ, ι) => _place(φ, Φ, ι, ρ), {Λ})
     _jiggle(Φ, Λ)

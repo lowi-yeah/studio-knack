@@ -1,35 +1,119 @@
-#about
-  header
-    height: 100vh
-    display: flex
-    align-items: center
+#wrap[data-type="about"]
+  color: $grey-lighter !important
 
-    .wrap
-      @extend .has-text-centered
-      flex: 1 0 auto
+  a:not(.no-hover) 
+    color: $grey-lighter
+    &:before
+      border-color: $grey-lighter
 
-      h1
-        font-size: 96px
+  .title, .subtitle, h1, h2, h3
+    color: $grey-lighter
+
+  strong
+    color: $grey-lighter
+    font-weight: 700
+
+  #logo-frame
+    z-index: 2 
+    background: $black
+    position: relative
+
+  .grid-wrap
+    background: $black
+    z-index: 1
+    padding-top: 3rem
+
+    & > .container
+      margin-top: -3rem
 
   section.content
-    position: absolute
-    width: 100%
+    margin-top: 3rem
 
-  .about.grid
-    .grid-item.text
-      .box
-        .content
-          box-shadow: none
+    .frame 
+      display: flex
+      flex-flow: row wrap
+      justify-content: flex-start 
+      // align-items: flex-start | flex-end | center | baseline | stretch
+      // align-items: flex-start 
+      // align-content: flex-start | flex-end | center | space-between | space-around | stretch
+      // align-content:  flex-start 
 
-    .grid-item.image
-      .content
-        img
-          border: 2px solid $red
+      .block
+        +tablet
+          width: 50%
 
-    .grid-item.teammember
-      .box
-        .content
-          box-shadow: none
+        &.headline
+          width: 100vw
+          .content
+            flex: 0 0 auto
+            font-size: 4.5rem
+            font-weight: 700
+          
 
+
+        &.text
+          display: flex
+          flex-direction: column
+
+          .content
+            text-align: left
+            display: flex
+            flex-direction: column
+            flex: 1 1 auto
+            justify-content: center
+
+         
+
+        &.team
+          // padding-left: 1rem
+          // padding-right: 1rem
+          display: flex
+          flex-direction: column
+
+          .image-frame
+            position: relative
+            overflow: hidden
+            padding: 0 1rem
+            flex: 1 0 auto
+            
+            // &[data-ratio="0.5"]
+            //   flex: 0 0 50vh // mind the vh!
+            //   height: 100vh
+        
+            &[data-ratio="1"]
+              flex: 0 0 33vw
+              height: 33vw
+
+            &[data-ratio="1.5"]
+              flex: 0 0 33vw
+              height: 22vw
+          
+            // &[data-ratio="2"]
+            //   flex: 0 0 90vw
+            //   height: 45vw
+
+          .text-frame
+            flex: 0 0 auto
+            padding: 1rem 1rem 3rem 1rem
+
+          .description
+            em
+              font-size: $size-7
 
       
+          .image
+            height: 100%
+            width: 100%
+            background-size: cover
+            background-position: center
+      
+
+
+
+
+#fillins
+  fill: $black
+  stroke: $black
+  stroke-width: 2px
+
+#footer

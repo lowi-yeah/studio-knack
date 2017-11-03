@@ -1,69 +1,48 @@
-import _              from 'lodash'
-import isMobile       from 'ismobilejs'
-import anime          from 'animejs'
-import initSlider     from './init-slider'
+import '../sass/index.sass'
 
-let TRANSITION_DURATION = 1000,
-    EASINGS = ['linear', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInSine', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutSine', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc', 'easeInOutBack']
+import anime      from 'animejs'
 
-function _mobile() { return (isMobile.phone || isMobile.seven_inch ) }
+import menu       from './index/menu'
+// import layout     from './index/layout'
+import grid       from './layout/grid'
+import filter     from './index/filter'
+import images     from './common/images'
+import logo       from './common/logo'
+import util       from './common/util'
+import gradient   from './common/gradient'
+// import overlay    from './common/overlay'
+import pattern    from './common/pattern'
+import curtain    from './common/curtain'
+import search     from './common/search'
 
-function _initTransitions() {
-  let δ = _.random(800, 1600),
-      ε = _.sample(EASINGS),
-      ω = { targets:  '#about > header',
-            height:   '320px',
-            easing:   ε,
-            duration: δ},
-      α  = anime(ω) 
+let Worker = require('worker-loader!./lib/knack.worker.js')
 
-  // ω = { targets:        '#about > header > .wrap',
-  //       'margin-left':  '96px',
-  //       easing:         ε,
-  //       duration:       δ}
-  // α  = anime(ω) 
+let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
+    EASINGS     = ['easeInOutQuad', 'easeInOutCubic', 'easeInOutQuart', 'easeInOutQuint', 'easeInOutSine', 'easeInOutExpo', 'easeInOutCirc']
 
-  ω = { targets:      '#about > header > .wrap > h1',
-        'font-size':  '48px',
-        easing:       ε,
-        duration:     δ}
-  α  = anime(ω) 
+let gridOptions = { container:  '#grid',
+                    items:      '.grid-item'}
 
-} 
 
 function init() {
-  let a = document.getElementById('about')
-  if(!a) return
+  console.log(`about ready! ${window.innerWidth} — ${util.getDevice()}`)
 
-  _initTransitions()
+  let worker = new Worker()
+  images.init(worker)
+    .then(worker => search.init(worker))
+    .then(worker => { worker.terminate()})
 
-  // resise elements
-  let gallery = a.querySelector('.grid-item.gallery'),
-      w       = _mobile() ? 100 : _.random(33, 81)
-  gallery.style.width = `${w}%`
+  window.dawnPromise
+    .then(()  => pattern.init())
+    .then(()  => logo.init())
 
-  _.defer(() => initSlider('#about .slider'))
-
-
-  // let isotope   = new Isotope( '.about.grid', { itemSelector: '.grid-item',
-  //                                               layoutMode:   'fitRows'})
-
-  // console.log('_initAbout')
-  // console.log('isotope', isotope)
-
-    // // initialize the existing grid items. then re-layout
-    // _.each(isotope.items, item => {
-    //     let box     = item.element.getElementsByClassName('box')[0],
-    //         content = box.getElementsByClassName('content')[0],
-    //         caption = content.getElementsByClassName('overlay')[0]
-    //                     .getElementsByClassName('text')[0]
-    //     _sizeUp(item.element)
-    //     _randomizePadding(box)
-    //     _resizeCaption(caption)
-    //     _initOverlay(content)})
-
-  //   isotope.layout()
+    // .then(()  => menu.init())
+    // .then(()  => grid.init(gridOptions))
     
-  }
+    .then(()  => document.body.scroll(0, 1))
+    .then(()  => curtain.open({}))
+    .catch( (reason) => console.log(`rejection: ${reason}`))
+}
 
-export default {init: init}
+document.addEventListener('DOMContentLoaded', init)
+

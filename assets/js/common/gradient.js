@@ -27,7 +27,9 @@ function _alphaCoordinates(α) {
     'x2': Math.round(50 + Math.sin(α + Math.PI) * 50) + '%',
     'y2': Math.round(50 + Math.cos(α + Math.PI) * 50) + '%' }}
 
-function _animate() {
+function _animate(interpolator) {
+
+  interpolator = interpolator || interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))
   noise.seed(seed)
   let gradient  = document.getElementById('rainbow-gradient'),
       matrix    = document.querySelector('#gamma feColorMatrix'),
@@ -35,8 +37,7 @@ function _animate() {
       offset    = 0,
       colorΣ    = scaleSequential()
                     .domain([-1, 1])
-                    .interpolator(interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))),
-                    // .interpolator(interpolateHslLong(hsl(0, 1, 0.5), hsl(359, 1, 0.5))),
+                    .interpolator(interpolator),
       rotationΣ = scaleLinear()
                     .domain([-1, 1])
                     .rangeRound([0, 360]),
@@ -81,10 +82,10 @@ function init() {
     // console.log('seed', seed)
     if(!_.isNumber(seed)) {
       seed = Math.random()  
-      console.log('cookie seed!', seed)
       Cookie.set('noise-seed', seed) }
 
-    let γ = document.getElementById('gradient'),
+    let w = document.getElementById('wrap'),
+        γ = document.getElementById('gradient'),
         ℓ = γ.querySelectorAll('linearGradient'),
         δ = { x1: '0%', y1: '0%', x2: '0%', y2: '100%'}
     γ.setAttribute('width',   `${window.innerWidth}px`)
@@ -101,7 +102,11 @@ function init() {
       ι.setAttribute('y2', δ.y2) })
     
     // shuffle()
-    _animate()
+    // if(interpolateHslLong(hsl(0, 1, 0.5), hsl(359, 1, 0.5)))
+    let type = w.getAttribute('data-type').toLowerCase(),
+        interpolator = interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))
+    if(type === 'about') interpolator = interpolateHslLong(hsl(0, 1, 0.5), hsl(359, 1, 0.5))
+    _animate(interpolator)
 
     // set the opacity of the gradients to 0
     // they will appear durin the curtain opening
