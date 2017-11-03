@@ -105,7 +105,7 @@ function init() {
     // if(interpolateHslLong(hsl(0, 1, 0.5), hsl(359, 1, 0.5)))
     let type = w.getAttribute('data-type').toLowerCase(),
         interpolator = interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))
-    if(type === 'about') interpolator = interpolateHslLong(hsl(0, 1, 0.5), hsl(359, 1, 0.5))
+    if(type === 'about') interpolator = interpolateHslLong(hsl(0, 1, 0.64), hsl(359, 1, 0.5))
     _animate(interpolator)
 
     // set the opacity of the gradients to 0

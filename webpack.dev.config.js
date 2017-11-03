@@ -7,7 +7,7 @@ module.exports = {
     dawn:   __dirname + '/assets/js/dawn.js',
     index:  __dirname + '/assets/js/index.js',
     detail: __dirname + '/assets/js/detail.js',
-    about: __dirname + '/assets/js/about.js'
+    about: __dirname  + '/assets/js/about.js'
   },
   resolve: {
     root: __dirname + '/assets/js',
