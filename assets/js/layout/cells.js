@@ -194,19 +194,23 @@ function init(Φ, items, gridStyle) {
   let filter = Φ.filtered || 'index',
       Ѻ = _.map(items, item => { 
               let id      = item.getAttribute('id'),
-                  frame   = item.querySelector('.frame'),
-                  content = item.querySelector('.content'),
-                  caption = item.querySelector('.caption-frame'),
+                  caption = item.querySelector('.caption'),
                   label   = document.getElementById(`${id}-label`),
-                  imageꜰ   = item.querySelector('.image-frame'),
+                  imageꜰ  = item.querySelector('.image-frame'),
+                  textꜰ   = item.querySelector('.text-frame'),
+                  frame,
                   type    = item.getAttribute('data-type'),
-                  title   = item.querySelector('.caption > .title').innerHTML,
+                  title   = item.querySelector('.caption > .title'),
                   link    = item.getAttribute('data-link'),
-                  hidden  = !(type === filter || filter === 'index')
+                  hidden  = !(type === filter || filter === 'index' || type === 'about')
 
               if(label) label.text = label.querySelector('span').innerHTML
+              if(title) title = title.innerHTML
 
-              return { item, id, frame, content, caption, label, imageꜰ, type, hidden, title, link }})
+              if(imageꜰ) frame = imageꜰ
+              if(textꜰ)  frame  = textꜰ
+
+              return { item, id, caption, label, frame, imageꜰ, textꜰ, type, hidden, title, link }})
   _.each(Ѻ, ϖ => Φ.push(ϖ))
   return  new Promise( resolve => 
                 _setColspan(Φ, gridStyle)                 // assign a with to each item

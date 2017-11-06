@@ -10,12 +10,15 @@
     
   <script src="/assets/dawn.js"></script>
   
-  <div id="hero-frame"> 
-  <div class="worker image blurred" 
-       id="hero-image"
-       style="background-image: url({{ .Params.image.tiny }})"
-       data-image-url="{{ .Params.image.url }}" ></div>
-  </div>
+  {{ if .Params.image }}
+    <div id="hero-frame"> 
+      <div class="worker image blurred" 
+           id="hero-image"
+           style="background-image: url({{ .Params.image.tiny }})"
+           data-image-url="{{ .Params.image.url }}" >
+      </div>
+    </div>
+  {{ end }}
   
   <article class="project detail">
     <section class="hero">

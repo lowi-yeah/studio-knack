@@ -39,11 +39,11 @@ function _attachEventHandlers(Φ) {
   let over        = false,
       isMobile    = util.isMobile(),
         
-      show        = φ =>  { φ.caption.classList.add('active')
-                            φ.imageꜰ.classList.add('active')
+      show        = φ =>  { φ.frame.classList.add('active')
+                            if(φ.caption) φ.caption.classList.add('active')
                             φ.active = true },
-      hide        = φ => {  φ.caption.classList.remove('active')
-                            φ.imageꜰ.classList.remove('active')
+      hide        = φ => {  φ.frame.classList.remove('active')
+                            if(φ.caption) φ.caption.classList.remove('active')
                             φ.active = false },
       toggle      = φ => {     
                       if(φ.active) hide(φ)

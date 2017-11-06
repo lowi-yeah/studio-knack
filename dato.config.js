@@ -31,6 +31,9 @@ function _toHtml(tags) {
           .join('') }
 
 function _image(image) {
+  
+  if(!image) return null
+
   let ratio   = ratioΣ(image.width/image.height),
       width   = 1200,
       height  = width / ratio
@@ -77,14 +80,26 @@ function _projectContent(item) {
   } }
 
 function _projectBase(project, index, options) {
-  return {title:        project.title,
-          label:        project.label,
-          image:        _image(project.coverImage),
-          seoMetaTags:  _toHtml(project.seoMetaTags),
-          type:         options.type,
-          id:           options.prefix + '-' + index,
-          // content is being written into the frontmatter instead of the content section of the post
-          content:      _.compact(project.content.map(item => _projectContent(item))) }}
+  let p = {title:        project.title,
+            label:        project.label,
+            image:        _image(project.coverImage),
+            seoMetaTags:  _toHtml(project.seoMetaTags),
+            type:         options.type,
+            id:           options.prefix + '-' + index,
+            // content is being written into the frontmatter instead of the content section of the post
+            content:      _.compact(project.content.map(item => _projectContent(item))) }
+
+  // if we don't have a cove image, find the first text block and set it as 
+  // the 'abstract' for the project to be rendereded instead of the image in the index grid
+  if(!p.image) {
+    let textObj = _(p.content)
+                    .filter( (v, k) => _(v).keys().first() === 'text')
+                    .first()
+    p.abstract = textObj.text
+  }
+
+    
+  return p}
 
 function _projectSearchContent(item) {
   let contentType = item.entity.itemType.apiKey
@@ -98,6 +113,12 @@ function _projectSearchBase(project, index, options) {
           body: content.join(' '),
           type: options.type,
           slug: project.slug,
+          id:   options.prefix + '-' + index}}
+
+function _snippetSearch(snippet, index, options) {
+  return {body: snippet.content,
+          type: options.type,
+          slug: snippet.slug,
           id:   options.prefix + '-' + index}}
 
 function _mapLink(text, coordinates) {
@@ -151,6 +172,14 @@ function _projects(datoProjects, options) {
                 search      = _projectSearchBase(project, index, options)
               return { slug: `${project.slug}.md`, format: 'yaml', post, search }})}
 
+function _snippets(datoSnippets, options) {
+  return _.map(datoSnippets, (snippet, index) => {
+            let frontmatter = {}
+                content     = snippet.content,
+                post        = {frontmatter, content},
+                search      = _snippetSearch(snippet, index, options)
+              return { slug: `${snippet.slug}.md`, format: 'yaml', post, search }})}
+
 function _title(str) {
   return str.replace(/\b\S/g, function(t) { return t.toUpperCase() });
 }
@@ -164,7 +193,6 @@ function _indexMenu(options) {
                                                   href:   τ}
                   return ρ}, {})
   return {menu} }
-
 
 function _index(options) {
   let type        = {type: _title(options.type)},
@@ -299,6 +327,20 @@ module.exports = (dato, root, i18n) => {
     _.each(projects, ({slug, format, post}) => dir.createPost(slug, format, post))
     _.each(projects, ({search}) => searchIndex.push(search))
     dir.createPost(index.slug, index.format, index.post)
+  })
+
+  // Snippets
+  // ————————————————————————————————
+  deleteFolderRecursive('content/snippet')
+  root.directory('content/snippet', dir => {
+    let options   = { type: 'snippet',
+                      prefix: 'knck-slg'}
+        snippets  = _snippets(dato.snippets, options)
+
+    console.log('snippets')
+    console.log(snippets)
+    _.each(snippets, ({slug, format, post}) => dir.createPost(slug, format, post))
+    _.each(snippets, ({search}) => searchIndex.push(search))
   })
 
   // about

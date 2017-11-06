@@ -9,16 +9,20 @@ function _offsetFn() {
   let ʀ = randomNormal(0, window.innerHeight/6)
         
   return (φ) => {
+
     let μ   = (φ.item.clientHeight + window.innerHeight),
-        f   = φ.frame,
         ϕ  = Math.round(Math.abs(ʀ())),
         σ  = scalePow()
                 .domain( [1.1 * μ, 0.38 * μ, -0.1 * μ])
                 .rangeRound( [ϕ, 0, -ϕ])
 
-    return offset => 
-      f.style.transform = `translateY(${σ(φ.item.offsetTop + φ.item.clientHeight - offset)}px)`
-    }}
+    if(φ.imageꜰ) 
+      return offset => φ.imageꜰ.style.transform = `translateY(${σ(φ.item.offsetTop + φ.item.clientHeight - offset)}px)`
+    if(φ.textꜰ)  
+      return offset => φ.textꜰ.style.transform  = `translateY(${σ(φ.item.offsetTop + φ.item.clientHeight - offset)}px)`
+      
+    // else return an empty function
+    return offset => {}}}
 
 function init(Φ) {
 

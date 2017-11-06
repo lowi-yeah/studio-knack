@@ -23,7 +23,6 @@ let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
 let gridOptions = { container:  '#grid',
                     items:      '.grid-item'}
 
-
 function init() {
   console.log(`about ready! ${window.innerWidth} — ${util.getDevice()}`)
 
@@ -35,6 +34,7 @@ function init() {
   window.dawnPromise
     .then(()  => pattern.init())
     .then(()  => logo.init())
+    .then(()  => grid.init(gridOptions))  
 
     // .then(()  => menu.init())
     // .then(()  => grid.init(gridOptions))

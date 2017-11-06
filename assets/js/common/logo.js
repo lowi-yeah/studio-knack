@@ -174,7 +174,7 @@ function init() {
         removeText(smallCommands, { width: 128, δx:48, δy: 16 } )
 
       else if(_.isEqual(pageType, 'about') ) 
-        removeText(largeCommands, { width: 420, δx:48, relative: true } )
+        removeText(largeCommands, { width: 800, δx:48, relative: true } )
       
       else removeText(largeCommands, { δx: 72 })}
     

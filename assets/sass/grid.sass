@@ -68,84 +68,84 @@ $grid-gap:        0 !default
     display: none
     visibility: hidden
 
-  .frame
-    flex: 1 0 auto
+  .text-frame
+    // align-self: center
+    padding: 1.5rem
     position: relative
-    // display: flex
-    // flex-direction: column
+    // border: 1px solid $grey
 
-  .content
-    
-    margin: 0
 
-    .image-frame
-      // flex: 1 0 auto
-      // overflow: hidden
-      width: 100%
-      height: 100%
-      display: flex
-      flex-direction: column
-      position: absolute
-      overflow: hidden
-      mix-blend-mode: multiply
-      // border: 1px solid $grey-lighter
-      // +z-depth-4dp
-      +z-depth-transition()
-      +z-depth-4dp()
+    h1
+      @extend .title
+      @extend .is-1
 
-      &.active
-        +z-depth-focus()
-        cursor: pointer
-        .overlay.image
-          opacity: 1
+    h2
+      @extend .title
+      @extend .is-2
 
-      .filter.image
-        z-index: 0
-        flex: 1 0 auto
-        position: relative
-        top: 0%
-        left: 0%
-        width: 100%
-        height: 100%
-        background-size: cover
-        background-repeat: no-repeat
-        background-position: center center
-        overflow: hidden
-        filter: url('#gamma')
+    h3
+      @extend .title
+      @extend .is-3
 
-      .overlay.image
-        opacity: 0
-        width: 100%
-        height: 100%
-        position: absolute
-        background-size: cover
-        background-repeat: no-repeat
-        background-position: center center
-        transition: opacity .28s cubic-bezier(.4, 0, .2, 1);
 
-  .caption-frame
-    opacity: 0
-    transition: opacity .28s cubic-bezier(.4, 0, .2, 1);
-    position: absolute
-    bottom: 0
-    padding-top: 1.5rem
-    transform: translateY(100%)
-    width: 100%
-    pointer-events: none
+  .image-frame
+    flex: 1 0 auto
+    // overflow: hidden
+    display: flex
+    flex-direction: column
+    position: relative
+    mix-blend-mode: multiply
+    // border: 1px solid $grey-lighter
+    // +z-depth-4dp
+    +z-depth-transition()
+    +z-depth-4dp()
 
     &.active
-      opacity: 1
+      +z-depth-focus()
+      cursor: pointer
+      .overlay.image
+        opacity: 1
+
+    .filter
+      z-index: 0
+      flex: 1 0 auto
+      position: relative
+      top: 0%
+      left: 0%
+      width: 100%
+      height: 100%
+      background-size: cover
+      background-repeat: no-repeat
+      background-position: center center
+      overflow: hidden
+      filter: url('#gamma')
+
+    .overlay
+      opacity: 0
+      width: 100%
+      height: 100%
+      position: absolute
+      background-size: cover
+      background-repeat: no-repeat
+      background-position: center center
+      transition: opacity .28s cubic-bezier(.4, 0, .2, 1);
 
     .caption
-      display: flex
+      opacity: 0
+      transition: opacity .28s cubic-bezier(.4, 0, .2, 1);
+      position: absolute
+      bottom: 0
+      padding-top: 1.5rem
+      transform: translateY(100%)
+      width: 100%
+      pointer-events: none
   
-    .title
-      flex: 1 1 auto
+      &.active
+        opacity: 1
   
-    .button
-      flex: 0 0 auto
-      margin-top: -0.25rem
-  
+      .title
+        flex: 1 1 auto
+
 .label
   // background: #ffff00
   // mix-blend-mode: multiply
@@ -158,4 +158,3 @@ $grid-gap:        0 !default
     flex: 0 1 auto
     text-align: center
     color: $grey
-

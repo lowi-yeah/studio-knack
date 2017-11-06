@@ -6,33 +6,8 @@
   {{ partial "curtain.svg" . }}
   {{ partial "overlay.svg" . }}
   <script src="/assets/dawn.js"></script>
-  <div class="grid-wrap">
-    <section class="content container is-fluid">
-      <div class="frame">
-        {{ range .Params.content }}
-
-          {{ with .image }}
-            {{ partial "project/image" . }}
-          {{ end }}
-      
-          {{ with .text }}
-            {{ partial "project/text" . }}
-          {{ end }}
-
-          {{ with .team }}
-            {{ partial "about/team" . }}
-          {{ end }}
-
-          {{ with .head }}
-            {{ partial "about/headline" . }}
-          {{ end }}
-      
-        {{ end }}
-      </div>
-    </section>
-  </div>
+  {{ partial "about/grid" . }}
 </div>
 {{ partial "footer" . }}
-
 <script src="/assets/about.js"></script>
 {{ partial "outro.html" . }}
