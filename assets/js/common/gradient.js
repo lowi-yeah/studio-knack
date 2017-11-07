@@ -57,8 +57,8 @@ function _animate(interpolator, numStops) {
                         }
   _.defer(update)
 
-  // if( util.getBrowserName() !== 'Safari' ) util.startAnimation(15, update)
-  // else console.log('disabling animation on safari') 
+  if( util.getBrowserName() !== 'Safari' ) util.startAnimation(15, update)
+  else console.log('disabling animation on safari') 
 }
 
 function _makeStops(numStops) {
