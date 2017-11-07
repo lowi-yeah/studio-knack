@@ -54,7 +54,7 @@ const MIN = Number.MIN_SAFE_INTEGER,
               // 9:  {min: 2, max: 6},
               // 10: {min: 2, max: 6},
               // 11: {min: 2, max: 6},
-              12: {min: 2, max: 4} },
+              12: {min: 3, max: 6} },
       // aspect ratios
       R   = { portrait: 1/1.618,
               square: 1,
@@ -64,41 +64,6 @@ function show() {
   console.log('show grid')
 }
 
-// (randomly) set the width/height ratio of each item
-// possible ratios are 0.5, 1, 2
-// for narrower items the probability of a .5-ratio is grater than that of a 2-ratio
-// conversely, for wider items the probability of a 1-ratio is grater than that of a .5-ratio
-function _setRatio(Φ, {numCols}) {
-      // a linear scale used for offsetting the means of the dstandard deviations below
-  let μΣ  = scaleLinear()
-              .domain([0, numCols-1])
-              .range([-1,2]),
-
-      // ȣ is a collection of random normal distribution functions
-      // one for each possible colspan
-      // we use different distributions so that we have some measure of control
-      // over the image ratios in relation to the colspan
-      // if we have a very wide colspan, we want less likelyhood of portraits
-      // whereas we wand more portraits in case of small colspans
-      ȣ   = _(numCols)
-              .range()
-              .map(i => randomNormal(μΣ(i)))
-              .value(),
-      
-      // enter a colspan → get a ratio      
-      Σ = (colSpan) => {let z = Z(numCols),     // get the distribution segments
-                            ʀ = ȣ[colSpan-1]()  // grab a random number
-                        // find the segment in which ʀ resides and return its name
-                        return _.reduce(z, (ρ, segment, ratio) => {
-                                  if( segment[0] < ʀ &&  ʀ <= segment[1]) ρ = ratio
-                                  return ρ }, null)},
-      ρ = _.map(Φ, φ => 
-            new Promise( resolve => {
-                  let r = Σ(φ.colSpan)
-                  φ.ratio = r
-                  φ.item.setAttribute('data-ratio', r)
-                  resolve()})) 
-  return Promise.all(ρ)}
 
 // (randomly) set the col-spans of each item
 // depending on the number of columns in the grid
@@ -111,41 +76,92 @@ function _setColspan(Φ, {numCols}) {
                         let c = Math.round(ȣ())
                         c = _.max([minSpan, c])
                         c = _.min([maxSpan, c])
+
+
+                        if(φ.size && φ.size === 'small')      c = minSpan
+                        if(φ.size && φ.size === 'medium')     c = Math.ceil((maxSpan + minSpan)/2)
+                        if(φ.size && φ.size === 'large')      c = maxSpan
+                        if(φ.size && φ.size === 'fullscreen') c = numCols
+
+                        if(φ.contentType === 'team') c = Math.floor((maxSpan + minSpan)/2)
+
                         φ.colSpan = c
+
+                        // set the values in the dom
                         φ.item.style['grid-column-start'] = '1'
                         φ.item.style['grid-column-end']   = `${c + 1}`
                         φ.item.style['grid-row-start']    = '1'
                         φ.item.style['grid-row-end']      = '2'
+                          
                         resolve() }))) 
   return Promise.all(ρ)}
 
 // set the width & height of each item
 // based on the viewport width and the calculated colspan & ratio values
 function _height(φ, rowHeight) {
+
   return new Promise(resolve => 
     _.defer(() => {
-      let β = util.boundingBox(φ.item),
-          r = R[φ.ratio],
-          h = β.width / r,
-          s = Math.ceil(h/rowHeight) + 2
 
-      if(isMobile.phone) {
-        φ.paddingTop    = 1 * rowHeight
-        φ.paddingBottom = 3 * rowHeight
-        φ.paddingLeft   = 16
-        φ.paddingRight  = 16 } 
-      else {
+      if(_.isEqual(φ.contentType, 'text')) {
+        let τ = φ.item.querySelector('.text-frame'),
+            β = util.boundingBox(τ),
+            s = Math.ceil(β.height/rowHeight)
 
-        let paddingH = _.random(48, 0.32 * β.width),
-            paddingV = paddingH/r
-
-        φ.paddingTop    = paddingV/2
-        φ.paddingBottom = paddingV/2 + (2 * rowHeight)
-        φ.paddingLeft   = paddingH/2
-        φ.paddingRight  = paddingH/2
+        φ.rowSpan = s
+        φ.item.style['grid-row-end'] = `${s}`
       }
-      φ.rowSpan = s
-      φ.item.style['grid-row-end'] = `${s}`
+
+      if(_.isEqual(φ.contentType, 'image')) {
+
+        let β = util.boundingBox(φ.item),
+            r = R[φ.ratio],
+            h = β.width / r,
+            s = Math.ceil(h/rowHeight) + 2
+
+        // if(isMobile.phone) {
+        //   φ.paddingTop    = 1 * rowHeight
+        //   φ.paddingBottom = 3 * rowHeight
+        //   φ.paddingLeft   = 16
+        //   φ.paddingRight  = 16 } 
+        let p = φ.item.getAttribute('data-padding'),
+            hasPadding = p ? !(p === 'none') : true
+
+        if(hasPadding) {
+          let paddingH = _.random(48, 0.32 * β.width),
+              paddingV = paddingH/r
+  
+          φ.paddingTop    = paddingV/2
+          φ.paddingBottom = paddingV/2 + (2 * rowHeight)
+          φ.paddingLeft   = paddingH/2
+          φ.paddingRight  = paddingH/2 }
+
+        φ.rowSpan = s
+        φ.item.style['grid-row-end'] = `${s}`
+      }
+
+      if(_.isEqual(φ.contentType, 'team')) {
+        let width = util.boundingBox(φ.item).width,
+            image = φ.item.querySelector('.image'),
+            ratio = R[image.getAttribute('data-ratio')],
+            imgH  = width / ratio,
+
+            text  = φ.item.querySelector('.text-frame'),
+            textH = util.boundingBox(text).height,
+            s     = Math.ceil((imgH + textH)/rowHeight)
+
+        φ.rowSpan = s
+        φ.item.style['grid-row-end'] = `${s}`
+      }
+
+
+     
+      // else {
+
+     
+      // }
+     
+      
       resolve() }))}
 
 function _setHeight(Φ, {rowHeight}) {
@@ -182,39 +198,64 @@ function labels(Φ, Λ) {
         φ.label.size = size })
     resolve(Φ) })}
 
-function reset(Φ) {
-  let filter = Φ.filtered || 'index'
+function _filter(Φ, filter) {
   return new Promise( resolve => {
     _(Φ).each(φ => {
-      if(φ.type === filter || filter === 'index') φ.hidden = false
+      if(φ.type === filter || filter === 'index'  || φ.type === 'about') φ.hidden = false
       else φ.hidden = true})
-    resolve(Φ) })}
+    resolve(Φ) })
+}
+
+function reset(Φ) {
+  let filter = Φ.filtered || 'index'
+  return _filter(Φ, filter) }
+
+function _makeImageCell(item) {
+  let type        = item.getAttribute('data-type'),
+      contentType = item.getAttribute('data-content-type'),
+      id      = item.getAttribute('id'),
+      caption = item.querySelector('.caption'),
+      title   = item.querySelector('.caption > .title'),
+      label   = document.getElementById(`${id}-label`),
+      link    = item.getAttribute('data-link'),
+      size    = item.getAttribute('data-size'),
+      ratio   = item.getAttribute('data-ratio'),
+      scrollƒ = item.querySelector('.image-frame')
+
+  let result = {item, type, contentType, id, caption, ratio, scrollƒ}
+
+  if(title) result.title = title.innerHTML.trim()
+  if(size)  result.size  = size
+  if(label) {
+    label.text    = label.querySelector('span').innerHTML
+    result.label  = label }
+
+  if(link) 
+    result.link = { frame: item.querySelector('.image-frame'),
+                    href: link }   
+
+  return result
+}
+
+function _makeTextCell(item) {
+  let type        = item.getAttribute('data-type'),
+      contentType = item.getAttribute('data-content-type'),
+      id          = item.getAttribute('id'),
+      size        = item.getAttribute('data-size'),
+      scrollƒ     = item.querySelector('.text-frame')
+  return {item, id, type, contentType, size, scrollƒ}
+}
 
 function init(Φ, items, gridStyle) {
   let filter = Φ.filtered || 'index',
-      Ѻ = _.map(items, item => { 
-              let id      = item.getAttribute('id'),
-                  caption = item.querySelector('.caption'),
-                  label   = document.getElementById(`${id}-label`),
-                  imageꜰ  = item.querySelector('.image-frame'),
-                  textꜰ   = item.querySelector('.text-frame'),
-                  frame,
-                  type    = item.getAttribute('data-type'),
-                  title   = item.querySelector('.caption > .title'),
-                  link    = item.getAttribute('data-link'),
-                  hidden  = !(type === filter || filter === 'index' || type === 'about')
-
-              if(label) label.text = label.querySelector('span').innerHTML
-              if(title) title = title.innerHTML
-
-              if(imageꜰ) frame = imageꜰ
-              if(textꜰ)  frame  = textꜰ
-
-              return { item, id, caption, label, frame, imageꜰ, textꜰ, type, hidden, title, link }})
+      Ѻ = _.map(items, item => _.isEqual(item.getAttribute('data-content-type'), 'image') ?
+                                    _makeImageCell(item) : _makeTextCell(item))
+  
   _.each(Ѻ, ϖ => Φ.push(ϖ))
   return  new Promise( resolve => 
                 _setColspan(Φ, gridStyle)                 // assign a with to each item
-                  .then(() => _setRatio(Φ, gridStyle))    // pick an aspect-ratio
+                  // .then(() => _setRatio(Φ, gridStyle))    // pick an aspect-ratio
+                  .then(() => _filter(Φ, filter))   // set the height based on width & ratio
                   .then(() => _setHeight(Φ, gridStyle))   // set the height based on width & ratio
                   .then(() => _readjustToScreenHeight(Φ, gridStyle)) // set to landscape if the item is heigher than the screen
                   .then(() => resolve(Φ)))}

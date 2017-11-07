@@ -1,44 +1,52 @@
 <div class="grid-wrap">
   {{ $conentTypes := .Params.conentTypes}}
   <div id="grid" class="main grid">
-    {{ range (where .Site.Pages "Type" "in" (slice "architecture" "design" "studio" "snippet")) }} 
-      <section 
-        class="grid-item"
-        id="{{ .Params.id }}"
-        data-caption="{{ .Title }}"
-        data-link="{{ .Permalink }}"
-        data-visible="{{ in $conentTypes .Params.type }}"
-        data-type="{{ .Params.type }}" >
+    {{ range .Params.items }} 
         
-          {{ if .Params.image }}
-              <div class="image-frame pattern watch">
-                <div class="worker image filter blurred" 
-                     style="background-image: url({{ .Params.image.tiny }})"
-                     id="img-{{ .Params.id }}"
-                     data-image-url="{{ .Params.image.url }}" >
-                </div>
-                <div  class="worker image overlay" 
-                    style=""
-                    id="o-img-{{ .Params.id }}"
-                    data-image-url="{{ .Params.image.url }}" >
-                </div>
-                <div class="caption"> 
-                  <div class="title is-3"> {{ .Title }} </div>
-                </div>
+          {{ if (eq .contentType "image") }}
+            <section 
+              class="grid-item"
+              id="{{ .id }}"
+              data-caption="{{ .Title }}"
+              data-link="{{ .Permalink }}"
+              data-type="{{ .type }}"
+              data-content-type="{{ .contentType }}"
+              data-ratio="{{ .image.ratio }}"
+              data-visible="{{ in $conentTypes .type }}" >
+                    <div class="image-frame pattern watch">
+                      <div class="worker image filter blurred" 
+                           style="background-image: url({{ .image.tiny }})"
+                           id="{{ .image.id }}"
+                           data-image-url="{{ .image.url }}" >
+                      </div>
+                      <div class="worker image overlay" 
+                           id="o-{{ .image.id }}"
+                           data-image-url="{{ .image.url }}" >
+                      </div>
+                      <div class="caption"> 
+                        <div class="title is-3"> {{ .title }} </div>
+                      </div>
+                    </div>
+            </section>
+
+           <!--  {{ if .label }}
+              <div class="label" id="{{ .id }}-label">
+                <span>{{ .label }}</span>
               </div>
-          {{ else }}
-              <div class="text-frame">
-                {{ .Content }}
-              </div>
+            {{ end }} -->
+
+          {{ else if (eq .contentType "text") }}
+            <section 
+              class="grid-item"
+              id="{{ .id }}"
+              data-type="{{ .type }}"
+              data-content-type="{{ .contentType }}" >
+                <div class="text-frame">
+                  {{ .text | markdownify }}
+                </div>
+              </section>
           {{ end }}
-
-      </section>
-
-      {{ if .Params.label }}
-        <div class="label" id="{{ .Params.id }}-label">
-          <span>{{ .Params.label }}</span>
-        </div>
-      {{ end }}
+     
     {{ end }}
   </div>
 </div>

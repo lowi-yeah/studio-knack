@@ -1,16 +1,11 @@
 import '../sass/index.sass'
 
-import anime      from 'animejs'
-
 import menu       from './index/menu'
-// import layout     from './index/layout'
 import grid       from './layout/grid'
-import filter     from './index/filter'
 import images     from './common/images'
 import logo       from './common/logo'
 import util       from './common/util'
 import gradient   from './common/gradient'
-// import overlay    from './common/overlay'
 import pattern    from './common/pattern'
 import curtain    from './common/curtain'
 import search     from './common/search'
@@ -23,6 +18,14 @@ let DIRECTIONS  = ['top', 'left', 'bottom', 'right'],
 let gridOptions = { container:  '#grid',
                     items:      '.grid-item'}
 
+// triggered upon js load at the very top
+window.dawnPromise = 
+  gradient.init(0)
+    .then(() => {
+      document.getElementById('whiteout').classList.add('invisible')
+      document.getElementById('rainbow').classList.remove('invisible') })
+
+// triggered after the document is ready
 function init() {
   console.log(`about ready! ${window.innerWidth} — ${util.getDevice()}`)
 
@@ -35,9 +38,6 @@ function init() {
     .then(()  => pattern.init())
     .then(()  => logo.init())
     .then(()  => grid.init(gridOptions))  
-
-    // .then(()  => menu.init())
-    // .then(()  => grid.init(gridOptions))
     
     .then(()  => document.body.scroll(0, 1))
     .then(()  => curtain.open({}))
@@ -45,4 +45,3 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init)
-

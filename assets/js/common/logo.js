@@ -36,7 +36,7 @@ function _resize(baseCommands, options) {
       logoFrame = document.querySelector('#logo-frame'),
       gridWrap  = document.querySelector('.grid-wrap')
   
-  if(options.relative) logoFrame.style.height = `${h + options.δy + 48}px`    
+  if(options.relative) logoFrame.style.height = `${h + options.δy + 64}px`    
   else if(gridWrap) gridWrap.style.paddingTop = `${h + 48}px`
   
 
@@ -116,10 +116,12 @@ function removeText(baseCommands, options) {
   // calculate the logo size
   let padding = 2 * 16,
       button  = 48 + 16,
-      width   = _.min([window.innerWidth - padding - button, 800])
+      width   = 800 
   
   options = options || {}
   options = _.defaults(options, { width })
+
+  options.width = _.min([window.innerWidth - padding - button, options.width])
 
   _resize( baseCommands, options )
 

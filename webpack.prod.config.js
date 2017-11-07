@@ -5,6 +5,7 @@ const extractSass       = new ExtractTextPlugin('all.css')
 module.exports = {
   entry: {
     dawn:   __dirname + '/assets/js/dawn.js',
+    base:   __dirname + '/assets/js/base.js',
     index:  __dirname + '/assets/js/index.js',
     detail: __dirname + '/assets/js/detail.js',
     about:  __dirname + '/assets/js/about.js'

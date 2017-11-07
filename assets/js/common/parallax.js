@@ -16,10 +16,8 @@ function _offsetFn() {
                 .domain( [1.1 * μ, 0.38 * μ, -0.1 * μ])
                 .rangeRound( [ϕ, 0, -ϕ])
 
-    if(φ.imageꜰ) 
-      return offset => φ.imageꜰ.style.transform = `translateY(${σ(φ.item.offsetTop + φ.item.clientHeight - offset)}px)`
-    if(φ.textꜰ)  
-      return offset => φ.textꜰ.style.transform  = `translateY(${σ(φ.item.offsetTop + φ.item.clientHeight - offset)}px)`
+    if(φ.scrollƒ) 
+      return offset => φ.scrollƒ.style.transform = `translateY(${σ(φ.item.offsetTop + φ.item.clientHeight - offset)}px)`
       
     // else return an empty function
     return offset => {}}}

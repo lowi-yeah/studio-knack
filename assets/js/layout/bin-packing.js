@@ -1,12 +1,12 @@
 import ndarray  from 'ndarray'
 import cwise    from 'cwise'
 import ops      from 'ndarray-ops'
-
+import isMobile       from 'ismobilejs'
 import util       from '../common/util'
 
 function _inspect(φ) {
   // console.log('φ', φ.id)
-  console.log( φ.id, φ.title)
+  console.log( φ.id)
   console.log(`\t rowStart: ${φ.rowStart}, colStart: ${φ.colStart}, rowSpan: ${φ.rowSpan}, colSpan: ${φ.colSpan}`)
  
 }
@@ -14,9 +14,11 @@ function _inspect(φ) {
 
 function ascii(Λ, rows, cols) {
   console.log('shape:', Λ.shape)
-  for(var i=0; i<Λ.shape[0]; i++) {
+  rows = rows || Λ.shape[0]
+  cols = cols || Λ.shape[1]
+  for(var i=0; i<rows; i++) {
     let s = `${i}:\t`
-    for(var j=0; j<Λ.shape[1]; j++) s += `${Λ.get(i,j)} `
+    for(var j=0; j<cols; j++) s += `${Λ.get(i,j)} `
     console.log(s)
   }
 }
@@ -52,13 +54,18 @@ function moveꜰℕsꜰℕ(Λ){
             //                     γ.y1 = γ.y0 + h
             //                     return γ },
 
-            // duplicate lef and right so that the probability is twice as big for them as ist is for down
+            // multiply lef and right so that the probability is twice as big for them as ist is for down
             rightwards: α => {  let γ = _.clone(α),
                                     w = α.x1 - α.x0
                                 γ.x1 = _.min([γ.x1 + 1, Λ.shape[1]])
                                 γ.x0 = γ.x1 - w 
                                 return γ },
             rightwardz: α => {  let γ = _.clone(α),
+                                    w = α.x1 - α.x0
+                                γ.x1 = _.min([γ.x1 + 1, Λ.shape[1]])
+                                γ.x0 = γ.x1 - w 
+                                return γ },
+            rightwardſ: α => {  let γ = _.clone(α),
                                     w = α.x1 - α.x0
                                 γ.x1 = _.min([γ.x1 + 1, Λ.shape[1]])
                                 γ.x0 = γ.x1 - w 
@@ -70,6 +77,11 @@ function moveꜰℕsꜰℕ(Λ){
                                 γ.x1 = γ.x0 + w
                                 return γ },
             leftwardz:  α => {  let γ = _.clone(α),
+                                    w = α.x1 - α.x0
+                                γ.x0 = _.max([γ.x0 - 1, 0])
+                                γ.x1 = γ.x0 + w
+                                return γ },
+            leftwardſ:  α => {  let γ = _.clone(α),
                                     w = α.x1 - α.x0
                                 γ.x0 = _.max([γ.x0 - 1, 0])
                                 γ.x1 = γ.x0 + w
@@ -101,10 +113,9 @@ function _offsetY({x, y}) {
   y += _.random(2, 6)
   return {x, y} }
 
-function _place(φ, Φ, ι, {Λ}) {
-  if(φ.hidden) return {Λ}
-
-  let α = { x0: 0, x1: φ.colSpan, y0: 0, y1: φ.rowSpan},
+function _place(φ, Φ, ι, {Λ, x, y}) {
+  if(φ.hidden) return {Λ, x, y}
+  let α = { x0: x, x1: x + φ.colSpan, y0: y, y1: y + φ.rowSpan},
       dangerCounter = 0, αΛ
 
   while(true) { // obacht
@@ -115,18 +126,22 @@ function _place(φ, Φ, ι, {Λ}) {
 
     // get the slice
     αΛ = _slice(α, Λ)
-    // and check whether the cell fits
+    
+    // ++ the slice
     addΛ(αΛ)
+
+    // and check whether the cell fits
     if(maxΛ(Λ) < 2) { 
+      // indeed it does…
       φ.rowStart = α.y0 + 1
       φ.colStart = α.x0 + 1
-      return {Λ} 
-    } else {
+      x = α.x0
+      y = α.y0
+      return {Λ, x, y} } 
+    else {
+      // no, it don't…
       subtractΛ(αΛ)
-      α = _update(α, Λ) }} // continue…
-  return {Λ} }
-
-
+      α = _update(α, Λ) }}} // continue…
 
 function _randomSeed(φ, Λ, ι) {
 
@@ -238,8 +253,11 @@ function _equalAreas(α0, α1) {
 
 function _jiggle(Φ, Λ) {
   return new Promise( resolve => {
+
+    if(isMobile.phone) return resolve({Φ, Λ})
+
     let moveꜰℕs = moveꜰℕsꜰℕ(Λ)
-    _(12)
+    _(8)
       .range()
       .each( ι => {
         _(Φ)
@@ -311,9 +329,9 @@ function placeLabel(φ, Λ) {
 function pack(Φ, gridStyle) {
   return new Promise(resolve => {
     let numLines = _.size(Φ) * 64,
-        Λ = ndarray(new Uint8Array(gridStyle.numCols * numLines), [numLines,gridStyle.numCols])
-    _.reduce(Φ, (ρ, φ, ι) => _place(φ, Φ, ι, ρ), {Λ})
-    _jiggle(Φ, Λ)
-      .then(() => resolve({Φ, Λ})) })}
+        Λ = ndarray(new Uint8Array(gridStyle.numCols * numLines), [numLines,gridStyle.numCols]),
+        x = 0, y = 0
+    _.reduce(Φ, (ρ, φ, ι) => _place(φ, Φ, ι, ρ), {Λ, x, y})
+    _jiggle(Φ, Λ).then(() => resolve({Φ, Λ}))})}
 
 export default { pack, placeLabel, ascii }

@@ -2,9 +2,15 @@ let _         = require('lodash'),
     htmlTag   = require('html-tag'),
     getPixels = require('get-pixels'),
     lunr      = require('lunr'),
-    fs        = require('fs')
+    fs        = require('fs'),
+    Σ         = require('d3-scale')
 
-let ratioΣ = n => _.max([0.5, _.min([Math.round(n * 2)/2, 2])])
+let ſ = Σ.scaleQuantize()
+          .domain([0.5, 1.5])
+          .range(['portrait', 'square', 'landscape']),
+    R = { portrait: 1/1.618,
+          square: 1,
+          landscape: 1.618}
 
 function _guid(prefix) {
   prefix = `${prefix}-` || ''
@@ -31,33 +37,35 @@ function _toHtml(tags) {
           .join('') }
 
 function _image(image) {
-  
   if(!image) return null
 
-  let ratio   = ratioΣ(image.width/image.height),
+  let ratio   = ſ(image.width/image.height),
       width   = 1200,
-      height  = width / ratio
+      height  = Math.ceil(width / R[ratio])
   return {  url:    image.url({ w: width, h: height, auto: 'compress' }),
             id:     _guid('i'),
-            ratio:  ratioΣ(image.width/image.height),
+            ratio:  ſ(image.width/image.height),
             tiny:   image.url({ w: width/100, h: height/100, auto: 'compress' }) }}
 
 function _aboutContent(item) {
   let type = item.entity.itemType.apiKey
 
-  if(type === 'text_block') return {text: item.content}
+  if(type === 'text_block') 
+    return {text: item.content, id: item.id}
 
   if(type === 'image_block') {  
     if(!item.image) return null
     let ι = _image(item.image)
     ι.caption = item.caption
     ι.size    = item.size
-    return { image: ι}}
+    return { image: ι, id: item.id}}
 
-  if(type === 'headline_block') return {'head': item.title}
+  if(type === 'headline_block') 
+    return {'head': item.title, id: item.id}
 
   if(type === 'team_block') { 
     return {team: {
+              id:           item.id,
               image:        _image(item.image),
               name:         item.name,
               role:         item.role,
@@ -76,8 +84,7 @@ function _projectContent(item) {
       return { image: ι}}
 
    if(contentType === 'gallery_block') { 
-    return { gallery: item.images.map(item => _image(item)) } 
-  } }
+    return { gallery: item.images.map(item => _image(item)) }}}
 
 function _projectBase(project, index, options) {
   let p = {title:        project.title,
@@ -95,10 +102,7 @@ function _projectBase(project, index, options) {
     let textObj = _(p.content)
                     .filter( (v, k) => _(v).keys().first() === 'text')
                     .first()
-    p.abstract = textObj.text
-  }
-
-    
+    p.abstract = textObj.text }
   return p}
 
 function _projectSearchContent(item) {
@@ -181,8 +185,7 @@ function _snippets(datoSnippets, options) {
               return { slug: `${snippet.slug}.md`, format: 'yaml', post, search }})}
 
 function _title(str) {
-  return str.replace(/\b\S/g, function(t) { return t.toUpperCase() });
-}
+  return str.replace(/\b\S/g, function(t) { return t.toUpperCase() }) }
 
 function _indexMenu(options) {
   let menu = _(['architecture', 'design', 'studio'])
@@ -194,23 +197,48 @@ function _indexMenu(options) {
                   return ρ}, {})
   return {menu} }
 
-function _index(options) {
+function _indexItems(dato, options) {
+  // console.log('_indexItems', dato)
+  let items = _(['architectures', 'studios', 'designs', 'snippets'])
+                  .map(τ => dato[τ])
+                  .flatten()
+                  .sortBy( ι => ι.entity.updatedAt)
+                  .reverse()
+                  .map(ι => {
+                    let itemType = ι.entity.itemType.apiKey
+                    if(itemType === 'snippet') 
+                      return { id: ι.id, text: ι.content, type: itemType, contentType: 'text' }
+                    else 
+                      return  { id:           ι.id,
+                                Permalink:    `/${itemType}/${ι.slug}/`,
+                                label:        ι.label,
+                                title:        ι.title,
+                                image:        _image(ι.coverImage),
+                                type:         itemType,
+                                contentType:  'image'}})
+                  .value()
+  return {items} }
+
+
+function _index(options, dato) {
   let type        = {type: _title(options.type)},
       conentTypes = {conentTypes: [options.type]},
       menu        = _indexMenu(options),
-      frontmatter = _.merge(type, conentTypes, menu),
+      items       = _indexItems(dato, options),
+      frontmatter = _.merge(type, conentTypes, menu, items),
       content     = '',
       post        = {frontmatter, content}
-  return { slug: `_index.md`, format: 'yaml', post }
-}
+  return { slug: `_index.md`, format: 'yaml', post }}
 
-function _mainIndex() {
+function _mainIndex(dato) {
   let options   = { type: 'index',
                     prefix: 'knck-index'},
       type        = {type: options.type},
       conentTypes = {conentTypes: ['architecture', 'design', 'studio']},
       menu        = _indexMenu(options),
-      frontmatter = _.merge(type, conentTypes, menu),
+      items       = _indexItems(dato, options),
+      frontmatter = _.merge(type, conentTypes, menu, items),
+      // frontmatter = _.merge(type, conentTypes, menu),
       content     = '',
       post        = {frontmatter, content}
   return { slug: `_index.md`, format: 'yaml', post }
@@ -230,14 +258,11 @@ function _mainIndex() {
 // https://github.com/datocms/js-datocms-client/blob/master/docs/dato-cli.md
 
 module.exports = (dato, root, i18n) => {
-  
   // Add to the existing Hugo config files some properties coming from data
   // stored on DatoCMS
   ['config.dev.toml', 'config.prod.toml'].forEach(file => {
     root.addToDataFile(file, 'toml', {title:        dato.site.globalSeo.siteName,
                                       languageCode: i18n.locale })})
-
-
   
   // Global & SEO
   // ————————————————————————————————
@@ -279,7 +304,6 @@ module.exports = (dato, root, i18n) => {
 
   root.createDataFile('data/settings.yml', 'yaml', settings)
 
-
   // Initialize search-index
   // ————————————————————————————————  
   let searchIndex = []
@@ -287,8 +311,10 @@ module.exports = (dato, root, i18n) => {
   // _index.md
   // ————————————————————————————————
   root.directory('content', dir => {
-    let mainIndex = _mainIndex()
-    dir.createPost(mainIndex.slug, mainIndex.format, mainIndex.post) })
+    let mainIndex = _mainIndex(dato)
+    // console.log('mainIndex', mainIndex)
+    dir.createPost(mainIndex.slug, mainIndex.format, mainIndex.post) 
+  })
 
   // Architecture
   // ————————————————————————————————
@@ -297,7 +323,7 @@ module.exports = (dato, root, i18n) => {
     let options   = { type: 'architecture',
                       prefix: 'knck-a'},
         projects  = _projects(dato.architectures, options),
-        index     = _index(options)
+        index     = _index(options, dato)
     _.each(projects, ({slug, format, post}) => dir.createPost(slug, format, post))
     _.each(projects, ({search}) => searchIndex.push(search))
     dir.createPost(index.slug, index.format, index.post)
@@ -310,11 +336,10 @@ module.exports = (dato, root, i18n) => {
     let options   = { type: 'design',
                       prefix: 'knck-d'},
         projects  = _projects(dato.designs, options),
-        index     = _index(options)
+        index     = _index(options, dato)
     _.each(projects, ({slug, format, post}) => dir.createPost(slug, format, post))
     _.each(projects, ({search}) => searchIndex.push(search))
-    dir.createPost(index.slug, index.format, index.post)
-  })
+    dir.createPost(index.slug, index.format, index.post)})
 
   // Studio
   // ————————————————————————————————
@@ -323,11 +348,10 @@ module.exports = (dato, root, i18n) => {
     let options   = { type: 'studio',
                       prefix: 'knck-s'}
         projects  = _projects(dato.studios, options),
-        index     = _index(options)
+        index     = _index(options, dato)
     _.each(projects, ({slug, format, post}) => dir.createPost(slug, format, post))
     _.each(projects, ({search}) => searchIndex.push(search))
-    dir.createPost(index.slug, index.format, index.post)
-  })
+    dir.createPost(index.slug, index.format, index.post)})
 
   // Snippets
   // ————————————————————————————————
@@ -336,9 +360,6 @@ module.exports = (dato, root, i18n) => {
     let options   = { type: 'snippet',
                       prefix: 'knck-slg'}
         snippets  = _snippets(dato.snippets, options)
-
-    console.log('snippets')
-    console.log(snippets)
     _.each(snippets, ({slug, format, post}) => dir.createPost(slug, format, post))
     _.each(snippets, ({search}) => searchIndex.push(search))
   })
@@ -352,7 +373,6 @@ module.exports = (dato, root, i18n) => {
       type:         'extra',
       layout:       'about' }})
 
-
   // build search index
   // console.log('Lunr', lunr)
   var idx = lunr(function () {
@@ -365,9 +385,4 @@ module.exports = (dato, root, i18n) => {
 
   fs.writeFile('public/lunr-knack.json', JSON.stringify(idx, null, 2), 'utf-8', 
       () => console.log('Search-index written to: public/lunr-knack.json'))
-
-
-  // l.setOutput('public/lunr-knack.json')
-  
-
 }

@@ -20,92 +20,138 @@
 
   .grid-wrap
     background: $black
-    z-index: 1
+    z-index: 3
     padding-top: 3rem
 
     & > .container
       margin-top: -3rem
 
-  section.content
-    margin-top: 3rem
+  .grid-item
+    position: relative
+    display: flex
+    flex-direction: column
 
-    .frame 
-      display: flex
-      flex-flow: row wrap
-      justify-content: flex-start 
-      // align-items: flex-start | flex-end | center | baseline | stretch
-      // align-items: flex-start 
-      // align-content: flex-start | flex-end | center | space-between | space-around | stretch
-      // align-content:  flex-start 
+    h1
+      @extend .title
+      @extend .is-1
 
-      .block
-        +tablet
-          width: 50%
+    h2
+      @extend .title
+      @extend .is-2
 
-        &.headline
-          width: 100vw
-          .content
-            flex: 0 0 auto
-            font-size: 4.5rem
-            font-weight: 700
+    h3
+      @extend .title
+      @extend .is-3
+
+    +mobile
+      h1
+        font-size: 2.5rem
+
+      h2
+        font-size: 2rem
+  
+      h3
+        font-size: 1.5rem
+  
+    .text-frame
+      flex: 0 0 auto
+
+      p
+        margin-bottom: 1.5rem
+      
+
+    .image
+      flex: 1 0 auto
+      background-position: center center
+      background-size: contain
+      background-repeat: no-repeat
+
+    &[data-content-type="team"]
+      .description
+        padding-bottom: 3rem
+        // border-bottom: 1px solid $white
+        margin-bottom: 4.5rem
+
+  // section.content
+  //   margin-top: 3rem
+
+  //   .frame 
+  //     display: flex
+  //     flex-flow: row wrap
+  //     justify-content: flex-start 
+  //     // align-items: flex-start | flex-end | center | baseline | stretch
+  //     // align-items: flex-start 
+  //     // align-content: flex-start | flex-end | center | space-between | space-around | stretch
+  //     // align-content:  flex-start 
+
+  //     .block
+  //       +tablet
+  //         width: 50%
+
+  //       &.headline
+  //         width: 100vw
+  //         .content
+  //           flex: 0 0 auto
+  //           font-size: 4.5rem
+  //           font-weight: 700
           
 
 
-        &.text
-          display: flex
-          flex-direction: column
+  //       &.text
+  //         display: flex
+  //         flex-direction: column
 
-          .content
-            text-align: left
-            display: flex
-            flex-direction: column
-            flex: 1 1 auto
-            justify-content: center
+  //         .content
+  //           text-align: left
+  //           display: flex
+  //           flex-direction: column
+  //           flex: 1 1 auto
+  //           justify-content: center
 
          
 
-        &.team
-          // padding-left: 1rem
-          // padding-right: 1rem
-          display: flex
-          flex-direction: column
+  //       &.team
+  //         // padding-left: 1rem
+  //         // padding-right: 1rem
+  //         display: flex
+  //         flex-direction: column
 
-          .image-frame
-            position: relative
-            overflow: hidden
-            padding: 0 1rem
-            flex: 1 0 auto
+  //         .image-frame
+  //           position: relative
+  //           overflow: hidden
+  //           padding: 0 1rem
+  //           flex: 1 0 auto
             
-            // &[data-ratio="0.5"]
-            //   flex: 0 0 50vh // mind the vh!
-            //   height: 100vh
+  //           // &[data-ratio="0.5"]
+  //           //   flex: 0 0 50vh // mind the vh!
+  //           //   height: 100vh
         
-            &[data-ratio="1"]
-              flex: 0 0 33vw
-              height: 33vw
+  //           &[data-ratio="1"]
+  //             flex: 0 0 33vw
+  //             height: 33vw
 
-            &[data-ratio="1.5"]
-              flex: 0 0 33vw
-              height: 22vw
+  //           &[data-ratio="1.5"]
+  //             flex: 0 0 33vw
+  //             height: 22vw
           
-            // &[data-ratio="2"]
-            //   flex: 0 0 90vw
-            //   height: 45vw
+  //           // &[data-ratio="2"]
+  //           //   flex: 0 0 90vw
+  //           //   height: 45vw
 
-          .text-frame
-            flex: 0 0 auto
-            padding: 1rem 1rem 3rem 1rem
+  //         .text-frame
+  //           flex: 0 0 auto
+  //           padding: 1rem 1rem 3rem 1rem
 
-          .description
-            em
-              font-size: $size-7
+  //         .description
+  //           em
+  //             font-size: $size-7
 
       
-          .image
-            height: 100%
-            width: 100%
-            background-size: cover
-            background-position: center
+  //         .image
+  //           height: 100%
+  //           width: 100%
+  //           background-size: cover
+  //           background-position: center
       
 
 
@@ -116,4 +162,12 @@
   stroke: $black
   stroke-width: 2px
 
-#footer
+#imprint
+  padding-top: 3rem
+  padding-bottom: 6rem
+
+
+
+
+
+

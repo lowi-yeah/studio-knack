@@ -24,7 +24,6 @@ function show() {
 }
 
 function update(Φ, gridStyle) {
-  console.log('update grid')
   return new Promise(resolve => 
     cells.reset(Φ)
       .then(Φ => packing.pack(Φ, gridStyle))
@@ -39,25 +38,27 @@ function _attachEventHandlers(Φ) {
   let over        = false,
       isMobile    = util.isMobile(),
         
-      show        = φ =>  { φ.frame.classList.add('active')
+      show        = φ =>  { φ.link.frame.classList.add('active')
                             if(φ.caption) φ.caption.classList.add('active')
                             φ.active = true },
-      hide        = φ => {  φ.frame.classList.remove('active')
+      hide        = φ => {  φ.link.frame.classList.remove('active')
                             if(φ.caption) φ.caption.classList.remove('active')
                             φ.active = false },
       toggle      = φ => {     
                       if(φ.active) hide(φ)
                       else show(φ) }
-
   _.each(Φ, φ => {
+
+    if(!φ.link) return
+    
     if(isMobile)
-      util.addEvent(φ.frame, 'click', () => toggle(φ))
+      util.addEvent(φ.link.frame, 'click', () => toggle(φ))
     else {
-      util.addEvent(φ.frame, 'mouseenter', event => show(φ)) 
-      util.addEvent(φ.frame, 'mouseleave', event => hide(φ))
-      util.addEvent(φ.frame, 'click', event => {
+      util.addEvent(φ.link.frame, 'mouseenter', event => show(φ)) 
+      util.addEvent(φ.link.frame, 'mouseleave', event => hide(φ))
+      util.addEvent(φ.link.frame, 'click', event => {
         console.log('clickedy click', φ.link)
-        curtain.close({toCookie: true}).then(() => window.location = φ.link)
+        curtain.close({toCookie: true}).then(() => window.location = φ.link.href)
       })
     }})
   return Φ }

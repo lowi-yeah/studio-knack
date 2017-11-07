@@ -28,7 +28,7 @@ function set(Φ, filter) {
     .then(() => { if(filter && filter !== 'index') logo.setText(filter)
                   else logo.removeText()})
     .then(() => { menu.activate(filter) })
-    .then(() => _.defer(() => document.body.scrollTo(0, 1)))
+    // .then(() => _.defer(() => document.body.scrollTo(0, 1)))
     .then(() => curtain.open({fromCookie: true}))
   return filter
 }
