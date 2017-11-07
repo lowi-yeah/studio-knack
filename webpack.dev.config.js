@@ -5,19 +5,17 @@ const extractSass       = new ExtractTextPlugin('all.css')
 module.exports = {
   entry: {
     dawn:   __dirname + '/assets/js/dawn.js',
-    index:  __dirname + '/assets/js/index.js',
     base:   __dirname + '/assets/js/base.js',
+    index:  __dirname + '/assets/js/index.js',
     detail: __dirname + '/assets/js/detail.js',
-    about: __dirname  + '/assets/js/about.js'
-  },
+    about: __dirname  + '/assets/js/about.js' },
   resolve: {
     root: __dirname + '/assets/js',
     alias: {} },
   output: {
     path: __dirname + '/public/assets',
     filename: '[name].js',
-    publicPath: '/assets',
-  },
+    publicPath: '/assets' },
   module: {
     loaders: [
       { test: /\.css$/, loader: "style-loader!css-loader" },
