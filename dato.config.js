@@ -366,12 +366,12 @@ module.exports = (dato, root, i18n) => {
 
   // about
   // ————————————————————————————————
-  root.createPost(`content/about.md`, 'yaml', {
-    frontmatter: {
-      content:      dato.about.content.map(item => _aboutContent(item)),
-      // seoMetaTags:  toHtml(dato.aboutPage.seoMetaTags),
-      type:         'extra',
-      layout:       'about' }})
+  // root.createPost(`content/about.md`, 'yaml', {
+  //   frontmatter: {
+  //     content:      dato.about.content.map(item => _aboutContent(item)),
+  //     // seoMetaTags:  toHtml(dato.aboutPage.seoMetaTags),
+  //     type:         'extra',
+  //     layout:       'about' }})
 
   // build search index
   // console.log('Lunr', lunr)
