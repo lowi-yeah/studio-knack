@@ -15,8 +15,7 @@ module.exports = {
   output: {
     path: __dirname + '/public/assets',
     filename: '[name].js',
-    publicPath: '/assets',
-  },
+    publicPath: '/assets' },
   module: {
     loaders: [
       { test: /\.css$/, loader: "style-loader!css-loader" },

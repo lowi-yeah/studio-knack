@@ -38,8 +38,19 @@ function init() {
     .then(()  => pattern.init())
     .then(()  => logo.init())
     .then(()  => grid.init(gridOptions))  
-    
-    .then(()  => document.body.scroll(0, 1))
+  
+    // scroll to the desired position
+    // either the top, or the imprint anchor, depending on the hash
+    .then(()  => {
+      if(window.location.hash) {
+        let element = document.querySelector(window.location.hash)
+        console.log('window.location', window.location.hash)
+        console.log('element', element)
+        if(element) {
+          let offset = util.boundingBox(element).y - 64
+          document.body.scroll(0, offset) } }
+      else document.body.scroll(0, 1) })
+
     .then(()  => curtain.open({}))
     .catch( (reason) => console.log(`rejection: ${reason}`))
 }
