@@ -54,7 +54,7 @@ const MIN = Number.MIN_SAFE_INTEGER,
               // 9:  {min: 2, max: 6},
               // 10: {min: 2, max: 6},
               // 11: {min: 2, max: 6},
-              12: {min: 3, max: 6} },
+              12: {min: 3, max: 4} },
       // aspect ratios
       R   = { portrait: 1/1.618,
               square: 1,

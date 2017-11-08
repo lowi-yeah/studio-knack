@@ -379,9 +379,6 @@ module.exports = (dato, root, i18n) => {
               this.field('title')
               this.field('type')
               this.field('body')
-              searchIndex.forEach(function (doc) {
-                this.add(doc) }, this) })
-
-  fs.writeFile('public/lunr-knack.json', JSON.stringify(idx, null, 2), 'utf-8', 
-      () => console.log('Search-index written to: public/lunr-knack.json'))
+              searchIndex.forEach(function (doc) { this.add(doc) }, this) })
+  root.createDataFile('public/assets/lunr.json', 'json', JSON.stringify(idx, null, 2))
 }
