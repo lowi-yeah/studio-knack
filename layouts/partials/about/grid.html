@@ -1,0 +1,64 @@
+<div class="grid-wrap">
+  {{ $conentTypes := .Params.conentTypes}}
+  <div id="grid" class="main grid">
+    {{ range .Params.content }} 
+
+      {{ if .text }}
+        <section id="a-{{.id}}" class="grid-item" data-type="about" data-content-type="text">
+          <div class="text-frame">
+            {{ .text | markdownify}}
+          </div>
+        </section>
+      {{ else if .head }}
+        <section id="a-{{.id}}" class="grid-item" data-type="about" data-size="fullscreen" data-content-type="text">
+          <div class="text-frame">
+            <h1 class="title is-1">
+              {{.head}}
+            </h1>
+          </div>
+        </section>
+      {{ else if .team }}
+        <section id="a-{{.team.id}}" class="grid-item" data-type="about" data-content-type="team">
+          <div class="worker image filter blurred" 
+               style="background-image: url({{ .team.image.tiny }})"
+               id="img-{{ .team.image.id }}"
+               data-ratio="{{ .team.image.ratio }}"
+               data-image-url="{{ .team.image.url }}" >
+          </div>
+          <div class="text-frame">
+            <div class="title is-2">{{.team.name}}</div>
+            <div class="subtitle">{{.team.role}}</div>
+            <div class="description">
+              {{.team.description | markdownify}}
+            </div>
+          </div>
+            
+        </section>
+      {{ else if .image }}
+        <section id="a-{{.image.id}}" 
+                 class="grid-item" 
+                 data-type="about" 
+                 data-padding="none"
+                  {{ with .image.size }}
+                    data-size="{{ . }}" 
+                  {{ end }}
+                 
+                 data-content-type="image"
+                 data-ratio="{{ .image.ratio }}" >
+          <div class="worker image filter blurred" 
+               style="background-image: url({{ .image.tiny }})"
+               id="img-{{ .image.id }}"
+               data-image-url="{{ .image.url }}" >
+          </div>
+        </section>
+      {{ else }}
+        <section class="grid-item" data-type="about">
+          <pre> {{.}}</pre>
+        </section>
+      {{ end }}
+
+    {{ end }}
+
+   
+  </div>
+</div>

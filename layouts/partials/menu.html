@@ -2,13 +2,28 @@
   <button id="toc-btn" class="pattern button"> 
     {{ partial "menu-icon.svg" . }}  
   </button> 
-
-   <div class="items"> 
-    {{ range (slice "architecture" "design" "studio")  }} 
-      <button id="{{ . }}-menu" data-type="{{ . }}" class="filter item pattern button"> 
-        {{.}} 
-      </button> 
-    {{ end }} 
-  </div> 
+  <div id="sidebar" class="pattern">
+    <ul class="items"> 
+      {{ range .Params.menu}} 
+        <li id="{{ .id }}-menu" data-type="{{ .id }}" class="filter item"  > 
+          <a data-link="{{.href}}" class="title is-4 smallcaps">
+            {{.text}} 
+          </a>
+        </li> 
+      {{ end }} 
+      <li id="about-menu" class="item" > 
+        <a href="/about" class="title is-4 smallcaps">
+          We are Knack!
+        </a>
+      </li> 
+      
+      <li id="search-menu" class="search item"> 
+        <a>
+          {{ partial "search-icon.svg" . }}  
+        </a>
+      </li> 
+    </ul> 
+  </div>
+  {{ partial "search" . }}  
 </div>
 

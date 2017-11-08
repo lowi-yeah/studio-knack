@@ -4,18 +4,18 @@ const extractSass       = new ExtractTextPlugin('all.css')
 
 module.exports = {
   entry: {
-    index:    __dirname + '/assets/js/index.js',
-    dawn:     __dirname + '/assets/js/dawn.js',
-    article:  __dirname + '/assets/js/article.js'
-  },
+    dawn:   __dirname + '/assets/js/dawn.js',
+    base:   __dirname + '/assets/js/base.js',
+    index:  __dirname + '/assets/js/index.js',
+    detail: __dirname + '/assets/js/detail.js',
+    about:  __dirname + '/assets/js/about.js' },
   resolve: {
     root: __dirname + '/assets/js',
     alias: {} },
   output: {
     path: __dirname + '/public/assets',
     filename: '[name].js',
-    publicPath: '/assets',
-  },
+    publicPath: '/assets' },
   module: {
     loaders: [
       { test: /\.css$/, loader: "style-loader!css-loader" },
@@ -31,10 +31,10 @@ module.exports = {
       // images
       { test: /\.(jpe?g|png|gif|svg)$/i, loader: "file-loader?name=/images/[name].[ext]"},
       
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url-loader?limit=65000&mimetype=application/font-woff&name=/assets/fonts/[name].[ext]' },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url-loader?limit=65000&mimetype=application/font-woff2&name=/assets/fonts/[name].[ext]' },
-      { test: /\.[ot]tf(\?v=\d+\.\d+\.\d+)?$/,  loader: 'url-loader?limit=65000&mimetype=application/octet-stream&name=/assets/fonts/[name].[ext]' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,     loader: 'url-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=/assets/fonts/[name].[ext]'}
+      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url-loader?limit=65000&mimetype=application/font-woff&name=/fonts/[name].[ext]' },
+      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url-loader?limit=65000&mimetype=application/font-woff2&name=/fonts/[name].[ext]' },
+      { test: /\.[ot]tf(\?v=\d+\.\d+\.\d+)?$/,  loader: 'url-loader?limit=65000&mimetype=application/octet-stream&name=/fonts/[name].[ext]' },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,     loader: 'url-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=/fonts/[name].[ext]'}
     ]
   },
   plugins: [
@@ -47,7 +47,9 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       compress: { warnings: false },
       comments: false,
-    })  ],
+      parallel: true
+    })  
+    ],
    worker: {
     output: {
       filename: "/hash.worker.js",

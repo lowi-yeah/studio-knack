@@ -1,0 +1,13 @@
+<div  class="team block">
+  <div class="image-frame" data-ratio="{{ .image.ratio }}">
+    <img class="worker image blurred" 
+         id="{{ .image.id }}"
+         src="{{ .image.tiny }}"
+         data-image-url="{{ .image.url }}" />
+  </div>
+  <div class="text-frame">
+    <div class="title is-4 name"> {{ .name }} </div>
+    <div class="subtitle is-5 role"> {{ .role }} </div>
+    <div class="description"> {{ .description | markdownify }} </div>
+  </div>    
+</div>

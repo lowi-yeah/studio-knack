@@ -39,28 +39,27 @@ function mimetype(url) {
   μ  = μ.replace(/^[^\.]*\./, '')
   return μ }
 
+function _image(δ, self) {
+  request.image(δ.url)
+    .then( ι => {
+      var encoded = base64Encode(ι),
+          μ       = mimetype(δ.url),
+          image   = `data:image/${μ};base64,${encoded}`
+      if(δ.bg) image = `url(${image})`
+      self.postMessage( { ι: image, id: δ.id, bg: δ.bg })})
+    .catch( error => self.postMessage( { id: δ.id, error }))
+  }
+
+function _json(δ, self) {
+  request.json(δ.url)
+    .then( j => self.postMessage( j ))
+    .catch( error => self.postMessage( { error }))}
+
 //Listener for events of message type coming from main thread.
 self.addEventListener('message', function(e) {
-  let δ = e.data
-  request.image(δ.url).then( ι => {
-    console.log('δ.bg', δ.bg)
-        var encoded = base64Encode(ι),
-            μ       = mimetype(δ.url),
-            image   = `data:image/${μ};base64,${encoded}`
-        if(δ.bg) image = `url(${image})`
-        self.postMessage( { ι: image, id: δ.id, bg: δ.bg })})
+  let δ = e.data,
+      τ = δ.type
+
+  if(δ.type === 'image')  _image(δ, self)
+  if(δ.type === 'json')   _json(δ, self)
 }, false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-

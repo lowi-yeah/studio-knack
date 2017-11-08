@@ -6,50 +6,40 @@ import isMobile       from 'ismobilejs'
 
 
 function _offsetFn() {
-  let ʀc = randomNormal(window.innerHeight * .32, 1),
-      ʀt = randomNormal(window.innerHeight * .24, 1)
+  let ʀ = randomNormal(0, window.innerHeight/6)
         
-  return (item) => {
-    let δ   = 100,
-        μ   = (item.clientHeight + window.innerHeight),
+  return (φ) => {
 
-        c   = item.querySelector('.content'),
-        ϕc  = ʀc(),
-        σc  = scalePow()
-                // .domain( [-0.38 * β.height, 0.618 * μ, μ + β.height])
-                .domain( [1.2 * μ, 0.38 * μ, -0.2 * μ])
-                .rangeRound( [ϕc, 0, -ϕc]),
+    let μ   = (φ.item.clientHeight + window.innerHeight),
+        ϕ  = Math.round(Math.abs(ʀ())),
+        σ  = scalePow()
+                .domain( [1.1 * μ, 0.38 * μ, -0.1 * μ])
+                .rangeRound( [ϕ, 0, -ϕ])
 
-        t   = item.querySelector('.text'),
-        ϕt  = ʀt(),
-        σt  = scalePow()
-                // .domain( [-0.38 * β.height, 0.618 * μ, μ + β.height])
-                .domain( [1.2 * μ, 0.38 * μ, -0.2 * μ])
-                .rangeRound( [ϕt, 0, -ϕt])
-        
+    if(φ.scrollƒ) 
+      return offset => φ.scrollƒ.style.transform = `translateY(${σ(φ.item.offsetTop + φ.item.clientHeight - offset)}px)`
+      
+    // else return an empty function
+    return offset => {}}}
 
-    return offset => {
-      c.style.transform = `translateY(${σc(item.offsetTop + item.clientHeight - offset)}px)`
-      t.style.transform = `translateY(${σt(item.offsetTop + item.clientHeight - offset)}px)`
-    }}}
-
-function init(items) {
+function init(Φ) {
 
   // do not use parallax on mobile devices
-  if(isMobile.any) return
-
-  let ƒs      = _.map(items, _offsetFn()),
+  // if(isMobile.any) return
+  // YES! DO IT!
+  let ƒs      = _.map(Φ, _offsetFn()),
       offset  = 0,
       changed = false
   
-  util.addEvent(window, 'scroll', () => {
+  util.addEvent(document.body, 'scroll', () => {
     changed = true
-    offset  = window.scrollY })
+    offset  = document.body.scrollTop })
   
   util.startAnimation(24, () => {
     if(!changed) return
     changed = false
-    _.each(ƒs, ƒ => ƒ(offset)) })}
+    _.each(ƒs, ƒ => ƒ(offset)) })
+  return Φ }
 
 
 export default {init}

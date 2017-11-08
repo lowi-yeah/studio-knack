@@ -1,6 +1,6 @@
 
 // the main container
-#project
+#wrap[data-type="project"]
   display: flex
   flex-direction: column
   width: 100vw
@@ -10,6 +10,10 @@
     align-items: flex-start
     margin-top: 0
     z-index: 5
+
+  #logo-frame
+    z-index: 4
+
 
 #back-btn
   $btn-height: 2.25rem
@@ -22,6 +26,7 @@
   background: transparent
   display: flex
   justify-content: center
+  align-self: flex-start
 
   +z-depth-4dp()
   +z-depth-transition()
@@ -56,17 +61,24 @@ article.project.detail
   background: $white
   display: flex
   flex-direction: column
+  min-height: 100vh
+  padding-bottom: 6rem
 
   .hero-body
     padding-bottom: 1.5rem
 
+    // +desktop
+    padding-left: 3.5rem
+
+
   section.stats
     position: relative
+    padding-left: 3.5rem
     // +z-depth-2dp-inset
     // border-bottom: 1px solid $grey-light
 
     .entries
-      padding: 1rem 1.5rem
+      padding: 1rem 1.5rem 1rem 0
       position: relative
 
     .container 
@@ -110,13 +122,13 @@ article.project.detail
           font-size: $size-6
           flex: 0 0 auto
           margin-right: 0.5rem
+          align-self: center
 
         .value
           font-size: $size-6
 
   section.content
     margin-top: 3rem
-
 
     .frame 
       display: flex
@@ -137,7 +149,6 @@ article.project.detail
   &.text
     width: 32rem
     padding: 1.5rem 1rem
-    background: rgba($white, 0.81)
     text-align: justify
     text-justify: inter-word
 
@@ -223,31 +234,31 @@ article.project.detail
     +tablet
 
       &[data-size="small"]
-        flex: 0 0 33vw
+        flex: 0 0 25vw
   
         &[data-ratio="0.5"]
-          flex: 0 0 25vh // mind the vh!
-          height: 50vh
+          flex: 0 0 26vh // mind the vh!
+          height: 42vh
   
         &[data-ratio="1"]
-          height: 33vw
+          height: 25vw
   
         &[data-ratio="2"]
           height: 16.5vw
   
   
       &[data-size="medium"]
-        flex: 0 0 50vw
+        flex: 0 0 33vw
   
         &[data-ratio="0.5"]
           flex: 0 0 32vh // mind the vh!
-          height: 64vh
+          height: 52vh
   
         &[data-ratio="1"]
-          height: 50vw
+          height: 33vw
   
         &[data-ratio="2"]
-          height: 25vw
+          height: 31vw
   
       &[data-size="large"]
         flex: 0 0 72vw

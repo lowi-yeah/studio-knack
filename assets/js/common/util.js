@@ -41,6 +41,7 @@ function fontSize(ε) {
 
 
 function getDevice(width) {
+  width = width || window.innerWidth
   let breakpoints = { 480:  'mobile',
                       769:  'tablet',
                       1000: 'desktop',
@@ -80,9 +81,9 @@ function getCssValuePrefix() {
 
 function boundingBox(item) {
   let β = item.getBoundingClientRect()
-  return { x:       β.left,
+  return { x:       (β.x || β.left),
            width:   β.width,
-           y:       β.top,
+           y:       (β.y || β.top),
            height:  β.height }}
 
 function extent(item) {
@@ -94,6 +95,26 @@ function extent(item) {
 
 function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) }
+
+function getBrowserName() {
+    var name = "Unknown";
+    if(navigator.userAgent.indexOf("MSIE")!=-1){
+        name = "MSIE";
+    }
+    else if(navigator.userAgent.indexOf("Firefox")!=-1){
+        name = "Firefox";
+    }
+    else if(navigator.userAgent.indexOf("Opera")!=-1){
+        name = "Opera";
+    }
+    else if(navigator.userAgent.indexOf("Chrome") != -1){
+        name = "Chrome";
+    }
+    else if(navigator.userAgent.indexOf("Safari")!=-1){
+        name = "Safari";
+    }
+    return name;   
+}
 
 export default {
   addEvent,
@@ -109,5 +130,6 @@ export default {
   isTouchDevice,
   pretty,
   scrollTop,
-  startAnimation
+  startAnimation,
+  getBrowserName
 }

@@ -7,55 +7,29 @@
 
 
 #menu
-  background: transparent
-  +layer(3)
+  +layer(4)
   flex-direction: column
-  align-items: flex-end
-  pointer-events: none
+  align-items: flex-start
 
-  .button
-    border: none
-
-  .filter.button
-    height: 3rem
-
-  .items
-    display: flex
-    flex-direction: column
-    justify-content: flex-end
-    align-items: flex-end
-
-    .button
-      pointer-events: all
-      flex: 1 0 auto
-      margin-bottom: 1rem
-      background: transparent
-      
-      // font-size: 2rem
-      font-weight: 700
-      
-      padding: 0 1rem
-      +z-depth-4dp()
-      +z-depth-transition()
-      
-      &:hover, &:focus, &:active
-        +z-depth-focus()
 
 #toc-btn
-  margin-bottom: 1rem
-  margin-top: 1rem
-  margin-right: 0
+  position: fixed
+  top: 2rem
+  left: 0rem
   width: 48px
   height: 48px
   padding: 0
   pointer-events: all
   background: transparent
-
-  +z-depth-4dp()
-  +z-depth-transition()
+  z-index: 3
+  +z-depth-2dp
+  +z-depth-transition
   
   &:hover, &:focus, &:active
-    +z-depth-focus()
+    +z-depth-4dp
+
+  &[data-open="1"]
+    +z-depth-0dp
   
   svg#menu-icon
     background: transparent
@@ -63,15 +37,70 @@
     z-index: 2
     transform: scale(0.8)
 
+#sidebar
+  height: 100%
+  width: 280px
+  position: relative
+  z-index: 1
+  pointer-events: all
 
-#search
-  background: #ffff00
-  .input
-    margin-left: 1rem
-    margin-right: 1rem
-    align-self: center
+  +z-depth-2dp
+  transition: width 0.4s, transform 0.42s ease-out
+  transform: translateX(0)
+  &.hidden
+    transform: translateX(-100%)
+
+  ul.items
+    padding: 6rem 1rem 3rem 0.75rem
+    display: flex
+    flex-direction: column
+    justify-content: flex-start
+    align-items: flex-start
+
+    li.item
+      @extend .smallcaps
+      margin-bottom: 1rem
+      pointer-events: all
+      flex: 0 0 auto
+      transition: text-decoration 250ms
+
+      a.active
+        &:before
+          border-width: 1px
+          height: 108%
+
+        &:after
+          content: ""
+          z-index: -1
+          width: 0
+          height: 50%
+          border-bottom: 2px solid $link-color
+          top: 0
+          left: -4%
+          position: absolute
+          transition: width 250ms
+
+        &:hover
+          &:after          
+            width: 108%
+
+#search-menu
+  width: 36px
+  height: 36px
+  padding: 0
+  pointer-events: all
+  background: transparent
+  z-index: 2
+
+  a
+    width: 100%
+    height: 100%
+    display: flex
 
 
+#search-icon  
+  background: transparent
+  fill: $link-color
 
 
   

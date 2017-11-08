@@ -1,35 +1,172 @@
-#about
-  header
-    height: 100vh
+#wrap[data-type="about"]
+  color: $grey-lighter !important
+
+  a:not(.no-hover) 
+    color: $grey-lighter
+    &:before
+      border-color: $grey-lighter
+
+  .title, .subtitle, h1, h2, h3
+    color: $grey-lighter
+
+  strong
+    color: $grey-lighter
+    font-weight: 700
+
+  #logo-frame
+    z-index: 2 
+    background: $black
+    position: relative
+
+  .grid-wrap
+    background: $black
+    z-index: 3
+    padding-top: 3rem
+
+    & > .container
+      margin-top: -3rem
+
+  .grid-item
+    position: relative
     display: flex
-    align-items: center
+    flex-direction: column
 
-    .wrap
-      @extend .has-text-centered
-      flex: 1 0 auto
+    h1
+      @extend .title
+      @extend .is-1
 
+    h2
+      @extend .title
+      @extend .is-2
+
+    h3
+      @extend .title
+      @extend .is-3
+
+    +mobile
       h1
-        font-size: 96px
+        font-size: 2.5rem
 
-  section.content
-    position: absolute
-    width: 100%
+      h2
+        font-size: 2rem
+  
+      h3
+        font-size: 1.5rem
+  
+    .text-frame
+      flex: 0 0 auto
 
-  .about.grid
-    .grid-item.text
-      .box
-        .content
-          box-shadow: none
+      p
+        margin-bottom: 1.5rem
+      
 
-    .grid-item.image
-      .content
-        img
-          border: 2px solid $red
+    .image
+      flex: 1 0 auto
+      background-position: center center
+      background-size: contain
+      background-repeat: no-repeat
 
-    .grid-item.teammember
-      .box
-        .content
-          box-shadow: none
+    &[data-content-type="team"]
+      .description
+        padding-bottom: 3rem
+        // border-bottom: 1px solid $white
+        margin-bottom: 4.5rem
 
+  // section.content
+  //   margin-top: 3rem
+
+  //   .frame 
+  //     display: flex
+  //     flex-flow: row wrap
+  //     justify-content: flex-start 
+  //     // align-items: flex-start | flex-end | center | baseline | stretch
+  //     // align-items: flex-start 
+  //     // align-content: flex-start | flex-end | center | space-between | space-around | stretch
+  //     // align-content:  flex-start 
+
+  //     .block
+  //       +tablet
+  //         width: 50%
+
+  //       &.headline
+  //         width: 100vw
+  //         .content
+  //           flex: 0 0 auto
+  //           font-size: 4.5rem
+  //           font-weight: 700
+          
+
+
+  //       &.text
+  //         display: flex
+  //         flex-direction: column
+
+  //         .content
+  //           text-align: left
+  //           display: flex
+  //           flex-direction: column
+  //           flex: 1 1 auto
+  //           justify-content: center
+
+         
+
+  //       &.team
+  //         // padding-left: 1rem
+  //         // padding-right: 1rem
+  //         display: flex
+  //         flex-direction: column
+
+  //         .image-frame
+  //           position: relative
+  //           overflow: hidden
+  //           padding: 0 1rem
+  //           flex: 1 0 auto
+            
+  //           // &[data-ratio="0.5"]
+  //           //   flex: 0 0 50vh // mind the vh!
+  //           //   height: 100vh
+        
+  //           &[data-ratio="1"]
+  //             flex: 0 0 33vw
+  //             height: 33vw
+
+  //           &[data-ratio="1.5"]
+  //             flex: 0 0 33vw
+  //             height: 22vw
+          
+  //           // &[data-ratio="2"]
+  //           //   flex: 0 0 90vw
+  //           //   height: 45vw
+
+  //         .text-frame
+  //           flex: 0 0 auto
+  //           padding: 1rem 1rem 3rem 1rem
+
+  //         .description
+  //           em
+  //             font-size: $size-7
 
       
+  //         .image
+  //           height: 100%
+  //           width: 100%
+  //           background-size: cover
+  //           background-position: center
+      
+
+
+
+
+#fillins
+  fill: $black
+  stroke: $black
+  stroke-width: 2px
+
+#imprint
+  padding-top: 1px
+
+
+
+
+
+

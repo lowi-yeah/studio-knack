@@ -1,46 +1,52 @@
-
 <div class="grid-wrap">
+  {{ $conentTypes := .Params.conentTypes}}
   <div id="grid" class="main grid">
-    {{ range (where .Data.Pages "Type" "in" (slice "architecture" "design" "studio")) }}
-      <section 
-        class="grid-item"
-        data-visible="1"
-        {{ with .Params.id }}             id="{{ . }}"                  {{ end }} 
-        {{ with .Title }}                 data-caption="{{ . }}"        {{ end }} 
-        {{ with .Params.emphasis }}       data-emphasis="{{ . }}"       {{ end }}
-        {{ with .Params.type }}           data-type="{{ . }}"           {{ end }} 
-        {{ with .Params.image.url }}      data-image-url="{{ . }}"      {{ end }} 
-        {{ with .Params.image.palette }}  data-image-palette="{{ . }}"  {{ end }} 
-        >
-        <div class="content">
-          <div class="image-frame">
-            <div class="image blurred" style="background-image: url({{ .Params.image.tiny }})"></div>
-          </div>
-          
-          <div class="overlay"> 
-            <div class="title is-3"> {{ .Title }} </div>
-            <a href="{{ .Permalink }}" class="button"> more > </a>
-          </div>
-          
-        </div>  
-       
+    {{ range .Params.items }} 
+        
+          {{ if (eq .contentType "image") }}
+            <section 
+              class="grid-item"
+              id="{{ .id }}"
+              data-caption="{{ .Title }}"
+              data-link="{{ .Permalink }}"
+              data-type="{{ .type }}"
+              data-content-type="{{ .contentType }}"
+              data-ratio="{{ .image.ratio }}"
+              data-visible="{{ in $conentTypes .type }}" >
+                    <div class="image-frame pattern watch">
+                      <div class="worker image filter blurred" 
+                           style="background-image: url({{ .image.tiny }})"
+                           id="{{ .image.id }}"
+                           data-image-url="{{ .image.url }}" >
+                      </div>
+                      <div class="worker image overlay" 
+                           id="o-{{ .image.id }}"
+                           data-image-url="{{ .image.url }}" >
+                      </div>
+                      <div class="caption"> 
+                        <div class="title is-3"> {{ .title }} </div>
+                      </div>
+                    </div>
+            </section>
 
-        <div class="text">
-          <div class="text-frame">
-            <span>{{ .Params.label }}</span>
-          </div>
-        </div>
-      </section>
+           <!--  {{ if .label }}
+              <div class="label" id="{{ .id }}-label">
+                <span>{{ .label }}</span>
+              </div>
+            {{ end }} -->
+
+          {{ else if (eq .contentType "text") }}
+            <section 
+              class="grid-item"
+              id="{{ .id }}"
+              data-type="{{ .type }}"
+              data-content-type="{{ .contentType }}" >
+                <div class="text-frame">
+                  {{ .text | markdownify }}
+                </div>
+              </section>
+          {{ end }}
+     
     {{ end }}
   </div>
 </div>
-
-<!-- <div class="page-load-status">
-  <p class="infinite-scroll-request"></p>
-</div>
-
-{{ if .Paginator.HasNext }} 
-  <div id="next" class="container is-fluid">
-    <a class="button" href="{{ .Paginator.Next.URL }}">next</a>
-  </div>  
-{{ end }} -->

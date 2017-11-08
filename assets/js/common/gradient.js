@@ -1,7 +1,10 @@
 import anime              from 'animejs'
+import Cookie             from 'js-cookie'
 import {scaleLinear,
         scaleSequential } from 'd3-scale'
-import {cubehelix}        from 'd3-color'
+import {cubehelix, 
+        hsl, 
+        color}            from 'd3-color'
 import {interpolateCubehelix,
         interpolateCubehelixLong,
         interpolateHslLong,
@@ -14,6 +17,8 @@ import util               from './util'
 const XMLNS   = 'http://www.w3.org/2000/svg',
       XLINKNS = 'http://www.w3.org/1999/xlink'
 
+let seed
+
 function _alphaCoordinates(α) {
   α = α * (Math.PI / 180)
   return {
@@ -22,44 +27,65 @@ function _alphaCoordinates(α) {
     'x2': Math.round(50 + Math.sin(α + Math.PI) * 50) + '%',
     'y2': Math.round(50 + Math.cos(α + Math.PI) * 50) + '%' }}
 
-function _animate() {
-  noise.seed(Math.random())
+function _animate(interpolator, numStops) {
+
+  interpolator = interpolator || interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))
+  noise.seed(seed)
   let gradient  = document.getElementById('rainbow-gradient'),
-      [s0, s1]  = gradient.querySelectorAll('stop'),
-      offset    = _.now() * Math.random(),
+      matrix    = document.querySelector('#gamma feColorMatrix'),
+      stops     = gradient.querySelectorAll('stop'),
+      offset    = 0,
       colorΣ    = scaleSequential()
                     .domain([-1, 1])
-                    .interpolator(interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))),
+                    .interpolator(interpolator),
       rotationΣ = scaleLinear()
                     .domain([-1, 1])
                     .rangeRound([0, 360]),
-      τ, c0, c1, η0, η1, α,
+      rect      = document.getElementById('logo-rect'),
+      colors    = ι => {  let η = noise.simplex2(ι, τ / 80000)
+                          return colorΣ(η) },
+      noises, rects, 
+      τ, α,
       update    = () => { 
-                          τ   = (_.now() - offset) 
-                          η0  = noise.simplex2(0, τ / 20000)
-                          η1  = noise.simplex2(42, τ / 20000)
-                          c0  = colorΣ(η0)
-                          c1  = colorΣ(η1)
-
-                          α   = _alphaCoordinates(rotationΣ(noise.simplex2(2, τ / 60000)))
+                          τ = _.now() - offset
+                          α = _alphaCoordinates(rotationΣ(noise.simplex2(200, τ / 60000)))
                           gradient.setAttribute('x1', α.x1) 
                           gradient.setAttribute('x2', α.x2) 
                           gradient.setAttribute('y1', α.y1) 
                           gradient.setAttribute('y2', α.y2) 
-
-                          s0.setAttribute('stop-color', c0) 
-                          s1.setAttribute('stop-color', c1) 
+                          _.each(stops, (ſ, ι) => ſ.setAttribute('stop-color', colors(ι)) )
                         }
   _.defer(update)
-  // util.startAnimation(15, update)
+
+  if( util.getBrowserName() !== 'Safari' ) util.startAnimation(15, update)
+  else console.log('disabling animation on safari') 
 }
 
+function _makeStops(numStops) {
+  let g = document.getElementById('rainbow-gradient')
+  _(numStops)
+    .range()
+    .each(ι => {
+      let ſ = document.createElementNS(XMLNS, 'stop'),
+          o = Math.round(100 * ι/(numStops-1))
+      ſ.setAttribute( 'offset', `${o}%`)
+      g.appendChild(ſ) })}
 
-function init() {
-  console.log('init gradient')
-  
+function init(numStops) {
+  numStops = _.isNumber(numStops)? numStops : 2
+  console.log('init gradient', numStops)
   return new Promise( resolve => {
-    let γ = document.getElementById('gradient'),
+
+    let stops = _makeStops(numStops)
+
+    seed = parseFloat(Cookie.get('noise-seed'))
+    // console.log('seed', seed)
+    if(!_.isNumber(seed)) {
+      seed = Math.random()  
+      Cookie.set('noise-seed', seed) }
+
+    let w = document.getElementById('wrap'),
+        γ = document.getElementById('gradient'),
         ℓ = γ.querySelectorAll('linearGradient'),
         δ = { x1: '0%', y1: '0%', x2: '0%', y2: '100%'}
     γ.setAttribute('width',   `${window.innerWidth}px`)
@@ -75,8 +101,11 @@ function init() {
       ι.setAttribute('x2', δ.x2)
       ι.setAttribute('y2', δ.y2) })
     
-    // shuffle()
-    _animate()
+    // if(interpolateHslLong(hsl(0, 1, 0.5), hsl(359, 1, 0.5)))
+    let type = w.getAttribute('data-type').toLowerCase(),
+        interpolator = interpolateCubehelixLong(cubehelix(0, 0.75, 0.92), cubehelix(360,  0.75, 0.92))
+    if(type === 'about') interpolator = interpolateHslLong(hsl(0, 1, 0.64), hsl(359, 1, 0.5))
+    _animate(interpolator, numStops)
 
     // set the opacity of the gradients to 0
     // they will appear durin the curtain opening
@@ -88,19 +117,5 @@ function init() {
   })
 }
 
-function shuffle() {
-  _.each(document.querySelectorAll('#gradient linearGradient'), 
-    ℓ => {
-      let stops   = ℓ.querySelectorAll('stop.animated'),
-          offsets = _(stops)
-                      .map( s => _.random(100))
-                      .sortBy( s => s)
-                      .value()
-      _.each(stops, (s, i) => {
-        s.setAttribute('offset', `${offsets[i]}%`)
-      })
-    })
-}
-
-export default {init, shuffle}
+export default { init }
 

@@ -1,47 +1,43 @@
-import anime  from 'animejs'
-import util   from '../common/util'
-import logo   from '../common/logo'
-import layout from './layout'
+import anime    from 'animejs'
+import util     from '../common/util'
+import logo     from '../common/logo'
+import curtain  from '../common/curtain'
+import grid     from '../layout/grid'
+import menu     from '../index/menu'
 
-let EASINGS = ['linear', 'easeInOutQuad',
- 'easeInOutCubic', 'easeInOutQuart', 'easeInOutSine']
+function get(Φ) { return Φ.filter }
 
-function get() { return document.getElementById('grid').getAttribute('data-filter') }
+function set(Φ, filter) {
 
-function set(filter) {
-  let currentFilter = get()
-  if(currentFilter && filter === currentFilter) filter = 'all'
-
-  if(filter === 'all')
-    document.getElementById('grid').setAttribute('data-filter', filter)
-  else
-    document.getElementById('grid').setAttribute('data-filter', filter)
-
-  console.log('set', filter)
-
-  // filter the grid items
-  let items     = document.querySelectorAll('.grid-item'),
-      filtered  = _.filter(items, ι => 
-                    {
-                      console.log('item', ι.getAttribute('data-type'))
-                      console.log('currentFilter', filter)
-                      return (ι.getAttribute('data-type') !== filter) && filter !== 'all' 
-                    }),
-      remaining = _.difference(items, filtered)
-
-  console.log('filtered', filtered)
-  console.log('remaining', remaining)
-
-  _.each(filtered,  ι => ι.setAttribute('data-visible', 0))
-  _.each(remaining, ι => ι.setAttribute('data-visible', 1))
-  
-  layout.update() 
+  // special case handling:
+  // in case we're at a sub-page (e.g. /architecture/) which has been loaded directly
+  // (i.e. no by coming from the index page, but rather coming from outside and navigating
+  // directly to the section), we cannot just proceed normally, because we don't have 
+  // all the content available (only the pages belonging to the respective type have been loaded).
+  // in that case, we take a not-ideal shortcut and just navigate back to the index with a hard reload
+  console.log('set filter', filter)
 
 
-  // let text = category === 'all' ? '' : category
-  // logo.setText(text)
+  // reset if we apply the current filter again
+  if(Φ.filtered && Φ.filtered === filter) filter = 'index'
+  Φ.filtered = filter
+  curtain.close({toCookie: true})
+    .then(grid.update)
+    .then(() => { if(filter && filter !== 'index') history.pushState(null, null, `/${filter}`)
+                  else history.pushState(null, null, '/')})
+    .then(() => { if(filter && filter !== 'index') logo.setText(filter)
+                  else logo.removeText()})
+    .then(() => { menu.activate(filter) })
+    // .then(() => _.defer(() => document.body.scrollTo(0, 1)))
+    .then(() => curtain.open({fromCookie: true}))
   return filter
 }
 
+function init(Φ) {
+  this.set = _.partial(set, Φ)
+  this.get = _.partial(get, Φ)
+  return Φ
+}
 
-export default { set, get }
+
+export default { init, get }

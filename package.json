@@ -12,24 +12,26 @@
     "start:hugo": "hugo -w --config config.dev.toml",
     "start:datocms": "dato dump --watch",
     "start:livereload": "livereload public -e 'html' -p 5678",
-    "start": "dato check && concurrently -p \"[{name}]\" -c \"blue,cyan,magenta,yellow\" -k -n hugo,webpack,livereload,dato \"npm run start:hugo\" \"npm run start:assets\" \"npm run start:livereload\" \"npm run start:datocms\"",
-    "index": "hugo-lunr -i \"content/**\" -o public/knack-index.json"
+    "start": "dato check && concurrently -p \"[{name}]\" -c \"blue,cyan,magenta,yellow\" -k -n hugo,webpack,livereload,dato \"npm run start:hugo\" \"npm run start:assets\" \"npm run start:livereload\" \"npm run start:datocms\""
   },
   "dependencies": {
     "animejs": "^2.0.2",
-    "bricks.js": "^1.8.0",
     "bulma": "^0.5.1",
+    "cwise": "^1.0.10",
     "d3-random": "^1.1.0",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",
-    "d3-voronoi": "^1.1.2",
-    "hugo-lunr": "^0.0.4",
     "imagesloaded": "^4.1.1",
     "infinite-scroll": "^3.0.1",
     "ismobilejs": "^0.4.1",
+    "js-cookie": "^2.1.4",
     "livereload": "^0.6.0",
     "lory.js": "^2.2.1",
-    "material-shadows": "^3.0.1"
+    "lunr": "^2.1.4",
+    "material-shadows": "^3.0.1",
+    "ndarray": "^1.0.18",
+    "ndarray-ops": "^1.2.2",
+    "svg-path-parser": "^1.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -41,8 +43,6 @@
     "datocms-client": "^0.3.21",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.11.2",
-    "fontkit": "^1.7.7",
-    "get-pixels": "^3.3.0",
     "html-tag": "^0.2.1",
     "import-glob-loader": "^1.1.0",
     "node-sass": "^3.13.0",

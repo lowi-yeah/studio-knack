@@ -26,6 +26,7 @@ function make(item) {
   defs.appendChild(pattern)
   item.setAttribute('fill', `url(#${patternId})`)
   item.setAttribute('data-pattern', patternId) 
+  item.classList.add('pattern-frame') 
 
   update(item)
 }
@@ -53,7 +54,7 @@ function _makeSvg(item) {
   item.appendChild(svg)
 
   make(svg) 
-  if(watch) util.addEvent(window, 'scroll', () => update(svg))
+  if(watch) util.addEvent(document.body, 'scroll', () => update(svg))
 }
 
 function update(item) {
