@@ -1,16 +1,14 @@
 
 import lunr from 'lunr'
 
-let URL = '/lunr-knack.json',
+let URL = '/assets/lunr.json',
     idx
 
 function init(worker) {
   return new Promise(resolve => {
-    worker.onmessage = function (event) {
-      idx = lunr.Index.load(event.data)
-      // console.log('idx', idx)
-      resolve(worker)
-    }
+    worker.onmessage = event => {
+      idx = lunr.Index.load(JSON.parse(event.data))
+      resolve(worker) }
     worker.postMessage({url: URL, type: 'json'})  })}
 
 function makeResult(lunrResult) {
