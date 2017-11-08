@@ -17,7 +17,7 @@ function _guid(prefix) {
                     .toString(16)
                     .substring(1)
   // return prefix + s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4() 
-  return prefix + s4() + s4() + '-' + s4() + s4() }
+  return prefix + s4() + s4() + '-' + s4() + s4()}
 
 function deleteFolderRecursive(path) {
   if (fs.existsSync(path)) {
@@ -317,7 +317,7 @@ module.exports = (dato, root, i18n) => {
 
   // Architecture
   // ————————————————————————————————
-  // deleteFolderRecursive('content/architecture')
+  deleteFolderRecursive('content/architecture')
   root.directory('content/architecture', dir => {
     let options   = { type: 'architecture',
                       prefix: 'knck-a'},
@@ -330,7 +330,7 @@ module.exports = (dato, root, i18n) => {
 
   // Design
   // ————————————————————————————————
-  // deleteFolderRecursive('content/design')
+  deleteFolderRecursive('content/design')
   root.directory('content/design', dir => {
     let options   = { type: 'design',
                       prefix: 'knck-d'},
@@ -342,7 +342,7 @@ module.exports = (dato, root, i18n) => {
 
   // Studio
   // ————————————————————————————————
-  // deleteFolderRecursive('content/studio')
+  deleteFolderRecursive('content/studio')
   root.directory('content/studio', dir => {
     let options   = { type: 'studio',
                       prefix: 'knck-s'}
@@ -354,7 +354,7 @@ module.exports = (dato, root, i18n) => {
 
   // Snippets
   // ————————————————————————————————
-  // deleteFolderRecursive('content/snippet')
+  deleteFolderRecursive('content/snippet')
   root.directory('content/snippet', dir => {
     let options   = { type: 'snippet',
                       prefix: 'knck-slg'}
@@ -365,12 +365,12 @@ module.exports = (dato, root, i18n) => {
 
   // about
   // ————————————————————————————————
-  // root.createPost(`content/about.md`, 'yaml', {
-  //   frontmatter: {
-  //     content:      dato.about.content.map(item => _aboutContent(item)),
-  //     // seoMetaTags:  toHtml(dato.aboutPage.seoMetaTags),
-  //     type:         'extra',
-  //     layout:       'about' }})
+  root.createPost(`content/about.md`, 'yaml', {
+    frontmatter: {
+      content:      dato.about.content.map(item => _aboutContent(item)),
+      // seoMetaTags:  toHtml(dato.aboutPage.seoMetaTags),
+      type:         'extra',
+      layout:       'about' }})
 
   // build search index
   // console.log('Lunr', lunr)

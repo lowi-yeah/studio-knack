@@ -1,6 +1,6 @@
 import '../sass/index.sass'
 
-import menu       from './index/menu'
+import menu       from './about/menu'
 import grid       from './layout/grid'
 import images     from './common/images'
 import logo       from './common/logo'
