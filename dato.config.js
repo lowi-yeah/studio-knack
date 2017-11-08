@@ -1,6 +1,5 @@
 let _         = require('lodash'),
     htmlTag   = require('html-tag'),
-    getPixels = require('get-pixels'),
     lunr      = require('lunr'),
     fs        = require('fs'),
     Σ         = require('d3-scale')
@@ -318,7 +317,7 @@ module.exports = (dato, root, i18n) => {
 
   // Architecture
   // ————————————————————————————————
-  deleteFolderRecursive('content/architecture')
+  // deleteFolderRecursive('content/architecture')
   root.directory('content/architecture', dir => {
     let options   = { type: 'architecture',
                       prefix: 'knck-a'},
@@ -331,7 +330,7 @@ module.exports = (dato, root, i18n) => {
 
   // Design
   // ————————————————————————————————
-  deleteFolderRecursive('content/design')
+  // deleteFolderRecursive('content/design')
   root.directory('content/design', dir => {
     let options   = { type: 'design',
                       prefix: 'knck-d'},
@@ -343,7 +342,7 @@ module.exports = (dato, root, i18n) => {
 
   // Studio
   // ————————————————————————————————
-  deleteFolderRecursive('content/studio')
+  // deleteFolderRecursive('content/studio')
   root.directory('content/studio', dir => {
     let options   = { type: 'studio',
                       prefix: 'knck-s'}
@@ -355,7 +354,7 @@ module.exports = (dato, root, i18n) => {
 
   // Snippets
   // ————————————————————————————————
-  deleteFolderRecursive('content/snippet')
+  // deleteFolderRecursive('content/snippet')
   root.directory('content/snippet', dir => {
     let options   = { type: 'snippet',
                       prefix: 'knck-slg'}
