@@ -1,5 +1,6 @@
 #wrap[data-type="about"]
   color: $grey-lighter !important
+  background: $black
 
   a:not(.no-hover) 
     color: $grey-lighter
@@ -13,13 +14,38 @@
     color: $grey-lighter
     font-weight: 700
 
+  #back-btn
+    // background: $black
+    width: 3rem
+    height: 3rem
+    box-shadow: none
+    // border: 1px solid red
+    .icon
+      color: $white
+      font-size: 3rem
+      height: 3rem
+      line-height: 3rem
+
+  #mini-logo
+    position: relative
+    font-size: 2.25rem
+    height:  2.25rem
+    line-height:  3rem
+    position: fixed
+    top: 1.34rem
+    left: 2.5rem
+    z-index: 1
+    text-transform: uppercase
+    font-weight: 700
+
+
   #logo-frame
     z-index: 2 
     background: $black
     position: relative
 
   .grid-wrap
-    background: $black
+    // background: $black
     z-index: 3
     padding-top: 3rem
 
