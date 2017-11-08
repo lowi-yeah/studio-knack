@@ -1,6 +1,8 @@
 baseURL = "/"
 Paginate = 1
 
+disableKinds = ["taxonomy","taxonomyTerm"]
+
 # datocms:start
 languageCode = "en"
 # datocms:end
