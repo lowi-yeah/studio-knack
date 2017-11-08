@@ -8,10 +8,15 @@ function init(worker) {
   return new Promise(resolve => {
     worker.onmessage = event => {
       idx = lunr.Index.load(JSON.parse(event.data))
+
+      console.log('search index', JSON.parse(event.data))
+      
       resolve(worker) }
     worker.postMessage({url: URL, type: 'json'})  })}
 
 function makeResult(lunrResult) {
+
+  console.log('make search result', lunrResult)
   let results = document.getElementById('search-results'),
       item    = document.getElementById(lunrResult.ref),
       title   = item.getAttribute('data-caption'),

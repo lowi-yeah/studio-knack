@@ -91,7 +91,7 @@ function _projectBase(project, index, options) {
             image:        _image(project.coverImage),
             seoMetaTags:  _toHtml(project.seoMetaTags),
             type:         options.type,
-            id:           options.prefix + '-' + index,
+            id:           `knck-${project.id}`,
             // content is being written into the frontmatter instead of the content section of the post
             content:      _.compact(project.content.map(item => _projectContent(item))) }
 
@@ -116,13 +116,13 @@ function _projectSearchBase(project, index, options) {
           body: content.join(' '),
           type: options.type,
           slug: project.slug,
-          id:   options.prefix + '-' + index}}
+          id:   `knck-${project.id}`}}
 
 function _snippetSearch(snippet, index, options) {
   return {body: snippet.content,
           type: options.type,
           slug: snippet.slug,
-          id:   options.prefix + '-' + index}}
+          id:   `knck-${snippet.id}`}}
 
 function _mapLink(text, coordinates) {
   let p = { api:        1,  
@@ -206,9 +206,12 @@ function _indexItems(dato, options) {
                   .map(ι => {
                     let itemType = ι.entity.itemType.apiKey
                     if(itemType === 'snippet') 
-                      return { id: ι.id, text: ι.content, type: itemType, contentType: 'text' }
+                      return  { id: `knck-${ι.id}`, 
+                                text: ι.content, 
+                                type: itemType, 
+                                contentType: 'text' }
                     else 
-                      return  { id:           ι.id,
+                      return  { id:           `knck-${ι.id}`,
                                 Permalink:    `/${itemType}/${ι.slug}/`,
                                 label:        ι.label,
                                 title:        ι.title,
@@ -311,7 +314,6 @@ module.exports = (dato, root, i18n) => {
   // ————————————————————————————————
   root.directory('content', dir => {
     let mainIndex = _mainIndex(dato)
-    // console.log('mainIndex', mainIndex)
     dir.createPost(mainIndex.slug, mainIndex.format, mainIndex.post) 
   })
 
@@ -356,11 +358,12 @@ module.exports = (dato, root, i18n) => {
   // ————————————————————————————————
   deleteFolderRecursive('content/snippet')
   root.directory('content/snippet', dir => {
-    let options   = { type: 'snippet',
-                      prefix: 'knck-slg'}
+    let options   = { type: 'snippet'}
         snippets  = _snippets(dato.snippets, options)
     _.each(snippets, ({slug, format, post}) => dir.createPost(slug, format, post))
-    _.each(snippets, ({search}) => searchIndex.push(search))
+
+    // do NOT search through snippets (for now)
+    // _.each(snippets, ({search}) => searchIndex.push(search))
   })
 
   // about
